@@ -11,7 +11,7 @@
       ref="calendar"
       :poppable="false"
       allow-same-day
-      color="#101a52"
+      color="#ff7636"
       type="range"
       @confirm="onCalendarConfirm"
       @select="onCalendarSelect"
@@ -20,23 +20,29 @@
       :maxDate="maxDate"
     >
       <div slot="title" class="calendar-header">
-        <i class="icon" name="fanhui_m" @click="handleBack"></i>
+        <i class="icon" name="fanhui_m" @click="handleBack"
+          ><van-icon name="arrow-left"
+        /></i>
         <div class="title">日期选择</div>
         <span class="clear" v-show="startDate" @click.stop="handleClearDate"
           >清除</span
         >
       </div>
       <div slot="footer" class="calendar-footer dis-flex flex-y-center">
+        <date-time-section></date-time-section>
+
         <div class="flex-box f-14 text">
           <p>开始时间：{{ start }}</p>
           <p>结束时间：{{ end }}</p>
         </div>
         <van-button
-          color="#101a52"
+          color="#ff7636"
           :disabled="isDisabled"
           @click="onCalendarConfirm"
           >确定</van-button
         >
+        <van-button color="#ff7636" @click="onCalendarConfirm1">测试</van-button
+        >count:{{ count }}
       </div>
     </van-calendar>
     <van-popup
@@ -61,9 +67,11 @@
 </template>
 
 <script>
-import { Popup, Picker, Calendar, Button } from 'vant'
+import { Popup, Picker, Calendar, Button, Icon } from 'vant'
+import DateTimeSection from '@/components/DateTimeSection.vue'
 import moment from 'moment'
 import columns from './hooks/columns'
+import { mapGetters, mapMutations } from 'vuex'
 
 function initData() {
   return {
@@ -71,20 +79,24 @@ function initData() {
     show: false,
     isDisabled: true,
     showPicker: false,
-    startDate: '',
-    endDate: '',
-    startTime: '',
-    endTime: '',
+    currentTime: '12:00',
+    // startDate: '',
+    // endDate: '',
+    // startTime: '',
+    // endTime: '',
   }
 }
 
 export default {
   name: 'TintDatetimePicker',
   components: {
-    VanPopup: Popup,
-    VanPicker: Picker,
-    VanCalendar: Calendar,
-    VanButton: Button,
+    DateTimeSection,
+
+    [Popup.name]: Popup,
+    [Picker.name]: Picker,
+    [Calendar.name]: Calendar,
+    [Button.name]: Button,
+    [Icon.name]: Icon,
   },
   data() {
     return {
@@ -117,27 +129,45 @@ export default {
     end() {
       return this.endDate + ' ' + this.endTime
     },
+    ...mapGetters({
+      startTime: 'getStartTime',
+      endTime: 'getEndTime',
+      startDate: 'getStartDate',
+      endDate: 'getEndDate',
+      count: 'getCount',
+    }),
   },
   methods: {
+    ...mapMutations({
+      setStartTime: 'setStartTime',
+      setEndTime: 'setEndTime',
+      setStartDate: 'setStartDate',
+      setEndDate: 'setEndDate',
+      setCount: 'setCount',
+    }),
     // 清除日历数据
     handleClearDate() {
       this.$refs.calendar.reset()
       Object.assign(this.$data, {
         pickerText: '开始时间',
         isDisabled: true,
-        startDate: '',
-        endDate: '',
-        startTime: '',
-        endTime: '',
+        // startDate: '',
+        // endDate: '',
+        // startTime: '',
+        // endTime: '',
       })
+      this.setStartTime('')
+      this.setEndTime('')
+      this.setStartDate('')
+      this.setEndDate('')
     },
     handleCalendarOpened() {
-      const calendarBody =
-        document.getElementsByClassName('van-calendar__body')[0]
-      calendarBody.scrollTo({
-        top: calendarBody.scrollHeight,
-        behavior: 'smooth',
-      })
+      // const calendarBody =
+      //   document.getElementsByClassName('van-calendar__body')[0]
+      // calendarBody.scrollTo({
+      //   top: calendarBody.scrollHeight,
+      //   behavior: 'smooth',
+      // })
     },
     showView() {
       this.show = true
@@ -156,36 +186,53 @@ export default {
       const value = this.$refs.picker.getValues()
       const str = value.join(':')
       if (this.pickerText === '开始时间') {
-        this.startTime = str
+        // this.startTime = str
+        this.setStartTime(str)
         return
       }
-      this.endTime = str
+      // this.endTime = str
+      this.setEndTime(str)
     },
     onPickerChange(el, value) {
       const str = value.join(':')
       if (this.pickerText === '开始时间') {
-        this.startTime = str
+        // this.startTime = str
+        this.setStartTime(str)
         return
       }
-      this.endTime = str
+      // this.endTime = str
+      this.setEndTime(str)
     },
     onCalendarConfirm() {
       this.$emit('confirm', { startTime: this.start, endTime: this.end })
       this.show = false
     },
+    onCalendarConfirm1() {
+      this.setCount(10)
+    },
     onCalendarSelect(val) {
       if (val[1]) {
-        this.endDate = moment(val[1]).format('YYYY-MM-DD')
+        let endDateSelect = moment(val[1]).format('YYYY-MM-DD')
+        this.setEndDate(endDateSelect)
         this.pickerText = '结束时间'
       } else {
         if (this.end) {
-          this.endDate = ''
-          this.endTime = ''
+          // this.endDate = ''
+          // this.endTime = ''
+          this.setEndDate('')
+          this.setEndTime('')
         }
-        this.startDate = moment(val[0]).format('YYYY-MM-DD')
+        let startDateSelect = moment(val[0]).format('YYYY-MM-DD')
+        this.setStartDate(startDateSelect)
         this.pickerText = '开始时间'
       }
       this.showPicker = true
+    },
+    filter(type, options) {
+      if (type === 'minute') {
+        return options.filter(option => option % 5 === 0)
+      }
+      return options
     },
   },
 }
