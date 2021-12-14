@@ -19,7 +19,7 @@
           </van-tab>
           <van-tab title="个人租">
             <!-- <rental-select-time></rental-select-time> -->
-            <van-cell title="选择日期区间" :value="date" @click="showPicker" />
+            <van-cell title="选择日期区间-tint" :value="date" @click="showPicker" />
           </van-tab>
         </van-tabs>
         <van-calendar
