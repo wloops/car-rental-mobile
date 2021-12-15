@@ -1,21 +1,20 @@
 <template>
   <van-popup
     v-model="show"
-    position="left"
+    position="top"
     safe-area-inset-bottom
     class="calendar"
-    @closed="handleCalendarClosed"
+    @closed="onCalendarConfirm"
     @opened="handleCalendarOpened"
   >
     <van-calendar
       ref="calendar"
-      default-date
       color="#ff7636"
       type="range"
       :formatter="formatter"
       :poppable="false"
+      :allow-same-day="true"
       :minDate="minDate"
-      :maxDate="maxDate"
       @confirm="onCalendarConfirm"
       @select="onCalendarSelect"
     >
@@ -36,13 +35,11 @@
           <p>结束时间：{{ end }}</p>
         </div> -->
         <van-button
+          size="large"
           color="#ff7636"
           :disabled="isDisabled"
           @click="onCalendarConfirm"
-          >确定</van-button
-        >
-        <van-button color="#ff7636" @click="onCalendarConfirm1"
-          >测试</van-button
+          >确定时间</van-button
         >
       </div>
     </van-calendar>
@@ -68,7 +65,7 @@
 </template>
 
 <script>
-import { Popup, Picker, Calendar, Button, Icon } from 'vant'
+import { Popup, Picker, Calendar, Button, Icon, DatetimePicker } from 'vant'
 import DateTimeSection from '@/components/DateTimeSection.vue'
 import moment from 'moment'
 import columns from './hooks/columns'
@@ -98,16 +95,27 @@ export default {
     [Calendar.name]: Calendar,
     [Button.name]: Button,
     [Icon.name]: Icon,
+    [DatetimePicker.name]: DatetimePicker,
   },
   data() {
     return {
       // minDate: moment().subtract(90, 'day').toDate(),
       minDate: new Date(),
       // maxDate: new Date(),
-      maxDate: moment().add(90, 'day').toDate(),
+      // maxDate: moment().add(90, 'day').toDate(),
       columns,
       ...initData(),
     }
+  },
+  updated() {
+    this.$nextTick(() => {
+      let anly = (document.getElementsByClassName(
+        'van-calendar__bottom-info'
+      )[1].value = '还车')
+      if (!anly) {
+        this.isDisabled = true
+      }
+    })
   },
   watch: {
     startDate() {
@@ -162,6 +170,7 @@ export default {
       this.setEndDate('')
     },
     handleCalendarOpened() {
+      this.isDisabled = false
       // const calendarBody =
       //   document.getElementsByClassName('van-calendar__body')[0]
       // calendarBody.scrollTo({
@@ -173,8 +182,8 @@ export default {
       this.show = true
     },
     handleCalendarClosed() {
-      this.$refs.calendar.reset()
-      Object.assign(this.$data, initData())
+      // this.$refs.calendar.reset()
+      // Object.assign(this.$data, initData())
     },
     handleBack() {
       this.show = false
@@ -231,18 +240,12 @@ export default {
       this.$emit('confirm', { startTime: this.start, endTime: this.end })
       this.show = false
     },
-    onCalendarConfirm1() {
-      var start = moment([2007, 0, 5])
-      var end = moment([2007, 0, 10])
-      end.to(start) // "5 天前"
-      end.to(start, true) // "5 天"
-      console.log(end.to(start))
-    },
     onCalendarSelect(val) {
       if (val[1]) {
         let endDateSelect = moment(val[1]).format('YYYY-MM-DD')
         this.setEndDate(endDateSelect)
         this.pickerText = '结束时间'
+        this.isDisabled = false
       } else {
         if (this.end) {
           // this.endDate = ''
@@ -256,7 +259,7 @@ export default {
       }
       this.showPicker = true
     },
-    filter(type, options) {
+    pickerFilter(type, options) {
       if (type === 'minute') {
         return options.filter(option => option % 5 === 0)
       }

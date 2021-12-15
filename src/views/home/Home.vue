@@ -1,55 +1,89 @@
 <template>
   <div class="home">
     <div class="homeTopAll">
-      <div class="navTop">
-        <van-nav-bar title="惠租车" left-arrow>
-          <template #left>
-            <span>德保县</span>
-          </template>
-          <template #right>
-            <span>注册/登录</span>
-          </template>
-        </van-nav-bar>
-      </div>
+      <!-- 顶部标题导航 start -->
+      <nav-top-currency></nav-top-currency>
+      <!-- 顶部标题导航 end -->
+
       <div class="switchingRentalMode">
-        <van-tabs v-model="tabsActive" animated>
-          <van-tab title="单位租">
-            <!-- <rental-select-time></rental-select-time> -->
-            <van-cell title="选择日期区间" :value="date" @click="show = true" />
-          </van-tab>
-          <van-tab title="个人租">
-            <!-- <rental-select-time></rental-select-time> -->
-            <van-cell title="选择日期区间-tint" :value="date" @click="showPicker" />
-          </van-tab>
-        </van-tabs>
-        <van-calendar
-          v-model="show"
-          type="range"
-          position="bottom"
-          allow-same-day
-          confirm-text="完成"
-          confirm-disabled-text="请选择结束时间"
-          :formatter="formatter"
-          @confirm="onConfirm"
-        />
-        <tint-datetime-picker ref="tintPicker"></tint-datetime-picker>
+        <van-cell-group inset>
+          <van-tabs v-model="tabsActive" animated>
+            <van-tab title="单位租">
+              <date-time-section
+                :value="date"
+                @click.native="showPicker"
+              ></date-time-section>
+            </van-tab>
+            <van-tab title="个人租">
+              <date-time-section
+                :value="date"
+                @click.native="showPicker"
+              ></date-time-section>
+            </van-tab>
+          </van-tabs>
+          <van-button type="primary" block size="small">去选车</van-button>
+          <tint-datetime-picker ref="tintPicker"></tint-datetime-picker>
+        </van-cell-group>
       </div>
+    </div>
+
+    <div class="swipeAD">
+      <swipe-ad></swipe-ad>
+    </div>
+
+    <div class="otherModule">
+      <van-cell-group inset>
+        <van-grid clickable :column-num="4">
+          <van-grid-item icon="question" text="常见问题" to="/problems" />
+          <van-grid-item
+            icon="smile-comment"
+            text="客户反馈"
+            route
+            to="/feedbacks"
+          />
+          <van-grid-item icon="todo-list" text="租车引导" route to="/guide" />
+          <van-grid-item
+            color="red"
+            icon="friends"
+            text="联系我们"
+            route
+            to="/contactUs"
+          />
+        </van-grid>
+      </van-cell-group>
     </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-// import { rentalSelectTime } from '@/views/home/components/rentalSelectTime.vue'
+import NavTopCurrency from '../../components/NavTopCurrency.vue'
 import TintDatetimePicker from '@/components/TintDatetimePicker.vue'
+import DateTimeSection from '@/components/DateTimeSection.vue'
+import SwipeAd from '@/views/home/components/SwipeAd.vue'
 
-import { NavBar, Tab, Tabs, Cell, CellGroup, Calendar } from 'vant'
+import {
+  NavBar,
+  Tab,
+  Tabs,
+  Cell,
+  CellGroup,
+  Calendar,
+  Button,
+  Col,
+  Row,
+  Icon,
+  Grid,
+  GridItem,
+} from 'vant'
 
 export default {
   name: 'Home',
   components: {
-    // rentalSelectTime,
+    NavTopCurrency,
     TintDatetimePicker,
+    DateTimeSection,
+    SwipeAd,
 
     [NavBar.name]: NavBar,
     [Tab.name]: Tab,
@@ -57,6 +91,12 @@ export default {
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
     [Calendar.name]: Calendar,
+    [Button.name]: Button,
+    [Col.name]: Col,
+    [Row.name]: Row,
+    [Icon.name]: Icon,
+    [Grid.name]: Grid,
+    [GridItem.name]: GridItem,
   },
   data() {
     return {
@@ -95,14 +135,36 @@ export default {
     },
     onConfirm(date) {
       const [start, end] = date
+      console.log(start, end)
       this.show = false
       this.date = `${this.formatDate(start)} - ${this.formatDate(end)}`
+      console.log(this.date)
     },
   },
 }
 </script>
 
-<style long="less">
+<style scoped lang="less">
+.homeTopAll {
+  background: #ffc65f;
+  border-radius: 0 0 5% 5%;
+  padding: 0.5rem;
+}
+.switchingRentalMode .van-button--block {
+  display: block;
+  width: 80%;
+  margin: 0 10% 3%;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.otherModule {
+  color: #a7a9a8;
+  /deep/ .van-grid-item__icon {
+    font-size: 28px;
+    color: #423d5e;
+  }
+}
+
 .content {
   padding: 16px 16px 20px;
 }
