@@ -78,7 +78,7 @@ export default {
       const today = this.formatDate(new Date(new Date().toLocaleDateString()))
       const dayday = this.formatDate(day.date)
 
-      console.log(dayday)
+      // console.log(dayday)
       if (day.type === 'start') {
         day.bottomInfo = '取车'
       } else if (day.type === 'end') {

@@ -9,15 +9,15 @@
   >
     <van-calendar
       ref="calendar"
-      :poppable="false"
-      allow-same-day
+      default-date
       color="#ff7636"
       type="range"
-      @confirm="onCalendarConfirm"
-      @select="onCalendarSelect"
-      :default-date="null"
+      :formatter="formatter"
+      :poppable="false"
       :minDate="minDate"
       :maxDate="maxDate"
+      @confirm="onCalendarConfirm"
+      @select="onCalendarSelect"
     >
       <div slot="title" class="calendar-header">
         <i class="icon" name="fanhui_m" @click="handleBack"
@@ -31,18 +31,19 @@
       <div slot="footer" class="calendar-footer dis-flex flex-y-center">
         <date-time-section></date-time-section>
 
-        <div class="flex-box f-14 text">
+        <!-- <div class="flex-box f-14 text">
           <p>开始时间：{{ start }}</p>
           <p>结束时间：{{ end }}</p>
-        </div>
+        </div> -->
         <van-button
           color="#ff7636"
           :disabled="isDisabled"
           @click="onCalendarConfirm"
           >确定</van-button
         >
-        <van-button color="#ff7636" @click="onCalendarConfirm1">测试</van-button
-        >count:{{ count }}
+        <van-button color="#ff7636" @click="onCalendarConfirm1"
+          >测试</van-button
+        >
       </div>
     </van-calendar>
     <van-popup
@@ -134,7 +135,6 @@ export default {
       endTime: 'getEndTime',
       startDate: 'getStartDate',
       endDate: 'getEndDate',
-      count: 'getCount',
     }),
   },
   methods: {
@@ -203,12 +203,40 @@ export default {
       // this.endTime = str
       this.setEndTime(str)
     },
+    formatDate(date) {
+      return `${date.getMonth() + 1}/${date.getDate()}`
+    },
+    formatter(day) {
+      // const month = day.date.getMonth() + 1
+      // const date = day.date.getDate()
+      const today = this.formatDate(new Date(new Date().toLocaleDateString()))
+      const dayday = this.formatDate(day.date)
+
+      // console.log(dayday)
+      if (day.type === 'start') {
+        day.bottomInfo = '取车'
+      } else if (day.type === 'end') {
+        day.bottomInfo = '还车'
+      } else if (day.type === 'start-end') {
+        day.bottomInfo = '取车/还车'
+      }
+
+      if (dayday === today) {
+        day.topInfo = '今天'
+      }
+
+      return day
+    },
     onCalendarConfirm() {
       this.$emit('confirm', { startTime: this.start, endTime: this.end })
       this.show = false
     },
     onCalendarConfirm1() {
-      this.setCount(10)
+      var start = moment([2007, 0, 5])
+      var end = moment([2007, 0, 10])
+      end.to(start) // "5 天前"
+      end.to(start, true) // "5 天"
+      console.log(end.to(start))
     },
     onCalendarSelect(val) {
       if (val[1]) {

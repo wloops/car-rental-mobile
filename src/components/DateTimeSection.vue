@@ -2,7 +2,7 @@
   <div class="DateTimeSection">
     <div class="startDateCell">
       <p class="startDateMD">{{ startDateM }}月{{ startDateD }}日</p>
-      <p class="startDateTime timeText">周{{ startWeek }} {{ startTime }}</p>
+      <p class="startDateTime timeText">{{ startWeek }} {{ startTime }}</p>
     </div>
     <div class="dayinTotal">
       <van-divider
@@ -13,19 +13,20 @@
           padding: '0 16px',
         }"
       >
-        共<span class="dayinTotalNum">{{ dayinTotalNum }}</span
+        共<span class="dayinTotalNum">{{ dayToDay }}</span
         >天
       </van-divider>
     </div>
     <div class="endDateCell">
       <p class="endDateMD">{{ endDateM }}月{{ endDateD }}日</p>
-      <p class="endDateTime timeText">周{{ endWeek }} {{ endTime }}</p>
+      <p class="endDateTime timeText">{{ endWeek }} {{ endTime }}</p>
     </div>
   </div>
 </template>
 
 <script>
 import { Divider } from 'vant'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'DateTimeSection',
@@ -35,22 +36,43 @@ export default {
   props: {},
   data() {
     return {
-      dayinTotalNum: 1,
-      startDateM: 1,
-      startDateD: 15,
-      startWeek: '二',
-      startTime: '12:30',
-      endDateM: 1,
-      endDateD: 17,
-      endTime: '12:30',
-      endWeek: '三',
+      // dayToDay: 2,
+      // startDateM: 1,
+      // startDateD: 15,
+      // startWeek: '二',
+      // startTime: '12:30',
+      // endDateM: 1,
+      // endDateD: 17,
+      // endTime: '12:30',
+      // endWeek: '三',
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters({
+      startTime: 'getStartTime',
+      endTime: 'getEndTime',
+      startDate: 'getStartDate',
+      endDate: 'getEndDate',
+      startDateM: 'getStartDateM',
+      startDateD: 'getStartDateD',
+      endDateM: 'getEndDateM',
+      endDateD: 'getEndDateD',
+      dayToDay: 'getDayToDay',
+      startWeek: 'getStartWeek',
+      endWeek: 'getEndWeek',
+    }),
+  },
   watch: {},
   created() {},
   mounted() {},
-  methods: {},
+  methods: {
+    ...mapMutations({
+      setStartTime: 'setStartTime',
+      setEndTime: 'setEndTime',
+      setStartDate: 'setStartDate',
+      setEndDate: 'setEndDate',
+    }),
+  },
 }
 </script>
 
