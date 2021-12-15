@@ -62,7 +62,15 @@ export default {
       endWeek: 'getEndWeek',
     }),
   },
-  watch: {},
+  watch: {
+    endDate: {
+      handler(newValue, oldValue) {
+        this.setEndDate(newValue)
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
   created() {},
   mounted() {},
   methods: {

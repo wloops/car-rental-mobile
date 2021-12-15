@@ -9,8 +9,8 @@ export default new Vuex.Store({
     return {
       startDate: '',
       endDate: '',
-      startTime: '09:30',
-      endTime: '09:30',
+      startTime: '',
+      endTime: '',
       startDateM: '',
       startTimeD: '',
       endDateM: '',
@@ -23,16 +23,20 @@ export default new Vuex.Store({
   getters: {
     // getters 可以实时监听state值的变化(最新状态)
     getStartTime(state) {
-      return state.startTime
+      let startTime = moment().add(2, 'h').format('HH:mm')
+      return (state.startTime = startTime)
     },
     getEndTime(state) {
-      return state.endTime
+      let endTime = moment().add(2, 'h').format('HH:mm')
+      return (state.endTime = endTime)
     },
     getStartDate(state) {
-      return state.startDate
+      let startDate = moment().format('YYYY-MM-DD')
+      return (state.startDate = startDate)
     },
     getEndDate(state) {
-      return state.endDate
+      let endDate = moment().add(1, 'days').format('YYYY-MM-DD')
+      return (state.endDate = endDate)
     },
     getStartDateM(state) {
       return state.startDate.split('-')[1]
