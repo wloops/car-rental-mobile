@@ -21,7 +21,9 @@
               ></date-time-section>
             </van-tab>
           </van-tabs>
-          <van-button type="primary" block size="small">去选车</van-button>
+          <van-button color="#ffc65f" block size="small" to="model"
+            >去选车</van-button
+          >
           <tint-datetime-picker ref="tintPicker"></tint-datetime-picker>
         </van-cell-group>
       </div>

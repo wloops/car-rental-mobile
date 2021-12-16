@@ -51,6 +51,11 @@ const routes = [
     name: 'ContactUs',
     component: () => import('@/views/home/pages/ContactUs.vue'),
   },
+  {
+    path: '/model',
+    name: 'Model',
+    component: () => import('@/views/model/SelectModel.vue'),
+  },
 ]
 
 const router = new VueRouter({

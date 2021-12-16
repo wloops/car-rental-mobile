@@ -107,16 +107,6 @@ export default {
       ...initData(),
     }
   },
-  updated() {
-    this.$nextTick(() => {
-      let anly = (document.getElementsByClassName(
-        'van-calendar__bottom-info'
-      )[1].value = '还车')
-      if (!anly) {
-        this.isDisabled = true
-      }
-    })
-  },
   watch: {
     startDate() {
       this.isDisabled = true

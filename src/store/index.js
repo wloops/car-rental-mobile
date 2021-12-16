@@ -7,10 +7,10 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state() {
     return {
-      startDate: '',
-      endDate: '',
-      startTime: '',
-      endTime: '',
+      startDate: moment().format('YYYY-MM-DD'),
+      endDate: moment().add(1, 'days').format('YYYY-MM-DD'),
+      startTime: moment().add(1, 'h').format('HH:mm'),
+      endTime: moment().add(1, 'h').format('HH:mm'),
       startDateM: '',
       startTimeD: '',
       endDateM: '',
@@ -23,20 +23,16 @@ export default new Vuex.Store({
   getters: {
     // getters 可以实时监听state值的变化(最新状态)
     getStartTime(state) {
-      let startTime = moment().add(2, 'h').format('HH:mm')
-      return (state.startTime = startTime)
+      return state.startTime
     },
     getEndTime(state) {
-      let endTime = moment().add(2, 'h').format('HH:mm')
-      return (state.endTime = endTime)
+      return state.endTime
     },
     getStartDate(state) {
-      let startDate = moment().format('YYYY-MM-DD')
-      return (state.startDate = startDate)
+      return state.startDate
     },
     getEndDate(state) {
-      let endDate = moment().add(1, 'days').format('YYYY-MM-DD')
-      return (state.endDate = endDate)
+      return state.endDate
     },
     getStartDateM(state) {
       return state.startDate.split('-')[1]
