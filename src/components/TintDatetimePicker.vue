@@ -24,7 +24,7 @@
         /></i>
         <div class="title">日期选择</div>
         <span class="clear" v-show="startDate" @click.stop="handleClearDate"
-          >清除</span
+          >重置</span
         >
       </div>
       <div slot="footer" class="calendar-footer dis-flex flex-y-center">
@@ -35,7 +35,7 @@
           <p>结束时间：{{ end }}</p>
         </div> -->
         <van-button
-          size="large"
+          block
           color="#ff7636"
           :disabled="isDisabled"
           @click="onCalendarConfirm"
@@ -154,13 +154,14 @@ export default {
         // startTime: '',
         // endTime: '',
       })
-      this.setStartTime('')
-      this.setEndTime('')
-      this.setStartDate('')
-      this.setEndDate('')
+      // this.setStartTime('')
+      // this.setEndTime('')
+      // this.setStartDate('')
+      // this.setEndDate('')
     },
     handleCalendarOpened() {
       this.isDisabled = false
+
       // const calendarBody =
       //   document.getElementsByClassName('van-calendar__body')[0]
       // calendarBody.scrollTo({
@@ -180,7 +181,8 @@ export default {
     },
     handlePopupOpen() {
       if (this.pickerText === '开始时间') {
-        this.$refs.picker.setIndexes([8, 0, 0])
+        this.$refs.picker.setIndexes([9, 30])
+        this.isDisabled = true
       }
       const value = this.$refs.picker.getValues()
       const str = value.join(':')
@@ -223,7 +225,6 @@ export default {
       if (dayday === today) {
         day.topInfo = '今天'
       }
-
       return day
     },
     onCalendarConfirm() {

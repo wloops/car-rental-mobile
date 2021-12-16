@@ -13,8 +13,7 @@
           padding: '0 16px',
         }"
       >
-        共<span class="dayinTotalNum">{{ dayToDay }}</span
-        >天
+        共<span class="dayinTotalNum"> {{ dayToDay }} </span>天
       </van-divider>
     </div>
     <div class="endDateCell">

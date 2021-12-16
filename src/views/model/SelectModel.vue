@@ -8,8 +8,7 @@
     </div>
     <div class="treeSelect">
       <van-tree-select
-        dot
-        height="100%"
+        height="60vh"
         :items="itemsTree"
         :active-id.sync="activeIds"
         :main-active-index.sync="active"
@@ -52,6 +51,13 @@
         </template>
       </van-tree-select>
     </div>
+
+    <footer>
+      <van-goods-action safe-area-inset-bottom style="z-index: 1000">
+        <van-goods-action-button color="##ffc15f" type="warning" text="重置" />
+        <van-goods-action-button color="##ffc65f" type="danger" text="确认" />
+      </van-goods-action>
+    </footer>
   </div>
 </template>
 
@@ -68,6 +74,9 @@ import {
   Cell,
   CellGroup,
   Image as VanImage,
+  GoodsAction,
+  GoodsActionIcon,
+  GoodsActionButton,
 } from 'vant'
 
 export default {
@@ -84,6 +93,9 @@ export default {
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
     [VanImage.name]: VanImage,
+    [GoodsAction.name]: GoodsAction,
+    [GoodsActionIcon.name]: GoodsActionIcon,
+    [GoodsActionButton.name]: GoodsActionButton,
   },
   props: {},
   data() {
