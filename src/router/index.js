@@ -5,56 +5,61 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/login',
+    name: 'login',
+    component: () => import('../views/login/login.vue'),
+  },
+  {
     path: '/',
     // name: 'Layout',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "Layout" */ '@/views/layout/Layout.vue'),
+      import(/* webpackChunkName: "layout" */ '@/views/layout/layout.vue'),
     children: [
       // 子路由
       {
         path: '', // path为空，会作为默认的子路由渲染
-        name: 'Home',
-        component: () => import('@/views/home/Home.vue'),
+        name: 'home',
+        component: () => import('@/views/home/home.vue'),
       },
       {
         path: 'orders',
-        name: 'Orders',
-        component: () => import('@/views/orders/Orders.vue'),
+        name: 'orders',
+        component: () => import('@/views/orders/orders.vue'),
       },
       {
         path: 'my',
-        name: 'My',
-        component: () => import('@/views/my/My.vue'),
+        name: 'my',
+        component: () => import('@/views/my/my.vue'),
       },
     ],
   },
   {
     path: '/problems',
-    name: 'Problems',
-    component: () => import('@/views/home/pages/Problems.vue'),
+    name: 'problems',
+    component: () => import('@/views/home/pages/problems.vue'),
   },
   {
     path: '/feedbacks',
-    name: 'Feedbacks',
-    component: () => import('@/views/home/pages/Feedbacks.vue'),
+    name: 'feedbacks',
+    component: () => import('@/views/home/pages/feedbacks.vue'),
   },
   {
     path: '/guide',
-    name: 'Guide',
-    component: () => import('@/views/home/pages/Guide.vue'),
+    name: 'guide',
+    component: () => import('@/views/home/pages/guide.vue'),
   },
   {
     path: '/contactUs',
-    name: 'ContactUs',
-    component: () => import('@/views/home/pages/ContactUs.vue'),
+    name: 'contactUs',
+    component: () => import('@/views/home/pages/contactUs.vue'),
   },
   {
     path: '/model',
-    name: 'Model',
-    component: () => import('@/views/model/SelectModel.vue'),
+    name: 'model',
+    component: () => import('@/views/model/selectModel.vue'),
   },
 ]
 

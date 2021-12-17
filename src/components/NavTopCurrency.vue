@@ -2,12 +2,12 @@
   <div class="NavTopCurrency">
     <div class="navTop">
       <!-- <van-cell-group> -->
-      <van-nav-bar title="惠租车">
+      <van-nav-bar title="惠租车" @click-right="toLogin">
         <template #left>
           <span>德保县</span>
         </template>
         <template #right>
-          <span>注册/登录</span>
+          <a>注册/登录</a>
         </template>
       </van-nav-bar>
       <!-- </van-cell-group> -->
@@ -32,7 +32,11 @@ export default {
   watch: {},
   created() {},
   mounted() {},
-  methods: {},
+  methods: {
+    toLogin() {
+      this.$router.push('/login')
+    },
+  },
 }
 </script>
 

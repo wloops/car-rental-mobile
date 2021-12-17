@@ -7,7 +7,7 @@
       <swipe-ad></swipe-ad>
     </div>
     <div class="treeSelect">
-      <van-tree-select
+      <!-- <van-tree-select
         height="60vh"
         :items="itemsTree"
         :active-id.sync="activeIds"
@@ -27,75 +27,41 @@
               </template>
             </van-grid-item>
           </van-grid>
-          <van-checkbox-group v-model="result">
-            <van-grid
-              :column-num="2"
-              :gutter="10"
-              clickable
-              v-if="active === 1"
-            >
-              <!-- <van-grid-item v-for="value in 8" :key="value"> -->
-              <van-grid-item>
-                <template #default>
-                  <div class="defaultBox">
-                    <div class="checkbox">
-                      <van-checkbox name="a"></van-checkbox>
-                    </div>
-                    <div class="Img">
-                      <van-image
-                        width="50"
-                        height="50"
-                        src="https://img01.yzcdn.cn/vant/cat.jpeg"
-                      />
-                    </div>
-                    <div class="text">
-                      <p>宝马</p>
-                    </div>
+          <van-grid :column-num="2" :gutter="10" clickable v-if="active === 1">
+            <van-grid-item v-for="value in 8" :key="value" icon="photo-o">
+              <template #default>
+                <div class="defaultBox">
+                  <div class="checkbox">
+                    <van-checkbox v-model="checked" />
                   </div>
-                </template>
-              </van-grid-item>
-              <van-grid-item>
-                <template #default>
-                  <div class="defaultBox">
-                    <div class="checkbox">
-                      <van-checkbox name="b"></van-checkbox>
-                    </div>
-                    <div class="Img">
-                      <van-image
-                        width="50"
-                        height="50"
-                        src="https://img01.yzcdn.cn/vant/cat.jpeg"
-                      />
-                    </div>
-                    <div class="text">
-                      <p>宝马</p>
-                    </div>
+                  <div class="Img">
+                    <van-image
+                      width="50"
+                      height="50"
+                      src="https://img01.yzcdn.cn/vant/cat.jpeg"
+                    />
                   </div>
-                </template>
-              </van-grid-item>
-              <van-grid-item>
-                <template #default>
-                  <div class="defaultBox">
-                    <div class="checkbox">
-                      <van-checkbox name="c"></van-checkbox>
-                    </div>
-                    <div class="Img">
-                      <van-image
-                        width="50"
-                        height="50"
-                        src="https://img01.yzcdn.cn/vant/cat.jpeg"
-                      />
-                    </div>
-                    <div class="text">
-                      <p>宝马</p>
-                    </div>
+                  <div class="text">
+                    <p>宝马</p>
                   </div>
-                </template>
-              </van-grid-item>
-            </van-grid>
-          </van-checkbox-group>
+                </div>
+              </template>
+            </van-grid-item>
+          </van-grid>
         </template>
-      </van-tree-select>
+      </van-tree-select> -->
+      <van-sidebar v-model="activeKey">
+        <van-sidebar-item>
+          <template #title>
+            <div style="height: 0.2rem; line-height: 0.2rem">
+              <p>经济型</p>
+              <p style="font-size: small">￥108起</p>
+            </div>
+          </template>
+        </van-sidebar-item>
+        <van-sidebar-item title="标签名称" />
+        <van-sidebar-item title="标签名称" />
+      </van-sidebar>
     </div>
 
     <footer>
@@ -123,6 +89,8 @@ import {
   GoodsAction,
   GoodsActionIcon,
   GoodsActionButton,
+  Sidebar,
+  SidebarItem,
 } from 'vant'
 
 export default {
@@ -142,11 +110,13 @@ export default {
     [GoodsAction.name]: GoodsAction,
     [GoodsActionIcon.name]: GoodsActionIcon,
     [GoodsActionButton.name]: GoodsActionButton,
+    [Sidebar.name]: Sidebar,
+    [SidebarItem.name]: SidebarItem,
   },
   props: {},
   data() {
     return {
-      result: [],
+      activeKey: 0,
       active: 0,
       activeIds: [1, 2, 3, 4, 5, 6],
       itemsTree: [
