@@ -7,7 +7,7 @@
 
       <div class="switchingRentalMode">
         <van-cell-group inset>
-          <van-tabs v-model="tabsActive" animated>
+          <van-tabs v-model="tabsActive" animated @click="tabsChange">
             <van-tab title="单位租">
               <date-time-section
                 :value="date"
@@ -64,6 +64,8 @@ import TintDatetimePicker from '@/components/TintDatetimePicker.vue'
 import DateTimeSection from '@/components/DateTimeSection.vue'
 import SwipeAd from '@/views/home/components/SwipeAd.vue'
 
+import { mapGetters, mapMutations } from 'vuex'
+
 import {
   NavBar,
   Tab,
@@ -107,7 +109,12 @@ export default {
       show: false,
     }
   },
+
   methods: {
+    ...mapMutations({
+      // 将改变store中值的方法映射到当前组件的methods中
+      setTabName: 'setTabName',
+    }),
     showPicker() {
       this.$refs.tintPicker.showView()
     },
@@ -141,6 +148,9 @@ export default {
       this.show = false
       this.date = `${this.formatDate(start)} - ${this.formatDate(end)}`
       console.log(this.date)
+    },
+    tabsChange(title, name) {
+      this.setTabName(name)
     },
   },
 }

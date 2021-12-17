@@ -5,10 +5,15 @@
         <van-nav-bar
           title=""
           left-arrow
-          right-text="注册"
           @click-left="backPage"
           @click-right="toRegister"
-        />
+        >
+          <template #right v-if="tabName === '个人租'">
+            <div class="register">
+              <a>注册</a>
+            </div>
+          </template>
+        </van-nav-bar>
       </div>
       <div class="logoBox">
         <van-image
@@ -35,13 +40,19 @@
             placeholder="请输入密码"
             :rules="[{ required: true, message: '请输入密码' }]"
           />
-          <p class="unPassword">忘记密码？</p>
+          <p class="unPassword"><a>忘记密码？</a></p>
           <div style="margin: 16px">
             <van-button block type="info" color="#ffc65f" native-type="submit"
               >登录</van-button
             >
           </div>
-          <p class="toPersonalLogin">我是个人用户 <van-icon name="sort" /></p>
+          <p
+            class="toPersonalLogin"
+            v-if="tabName === '单位租'"
+            @click="changePersonal"
+          >
+            我是个人用户 <van-icon name="sort" />
+          </p>
         </van-form>
       </main>
     </div>
@@ -50,6 +61,8 @@
 
 <script>
 import { NavBar, Button, Image as VanImage, Form, Field, Icon } from 'vant'
+
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'login',
@@ -68,11 +81,20 @@ export default {
       password: '',
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters({
+      // 将store中的数据映射到当前组件的data中
+      tabName: 'getTabName',
+    }),
+  },
   watch: {},
   created() {},
   mounted() {},
   methods: {
+    ...mapMutations({
+      // 将store中的方法映射到当前组件的methods中
+      setTabName: 'setTabName',
+    }),
     backPage() {
       this.$router.back()
     },
@@ -81,6 +103,10 @@ export default {
     },
     onSubmit(values) {
       console.log('submit', values)
+    },
+    changePersonal() {
+      this.setTabName('个人租')
+      // this.$router.push('/personalLogin')
     },
   },
 }

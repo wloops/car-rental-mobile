@@ -129,6 +129,7 @@ export default {
       return this.endDate + ' ' + this.endTime
     },
     ...mapGetters({
+      // 将store中的数据映射到当前组件的data中
       startTime: 'getStartTime',
       endTime: 'getEndTime',
       startDate: 'getStartDate',
@@ -137,6 +138,7 @@ export default {
   },
   methods: {
     ...mapMutations({
+      // 将改变store中的值的方法映射到当前组件的methods中
       setStartTime: 'setStartTime',
       setEndTime: 'setEndTime',
       setStartDate: 'setStartDate',
