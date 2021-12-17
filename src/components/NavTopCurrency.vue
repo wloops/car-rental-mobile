@@ -7,7 +7,7 @@
           <span>德保县</span>
         </template>
         <template #right>
-          <a>注册/登录</a>
+          <a>登录</a>
         </template>
       </van-nav-bar>
       <!-- </van-cell-group> -->
