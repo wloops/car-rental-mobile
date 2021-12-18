@@ -1,3 +1,4 @@
+<!-- 车型选择页面 -->
 <template>
   <div class="SelectModel">
     <div class="top-navBar">

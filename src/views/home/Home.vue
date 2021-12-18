@@ -1,3 +1,4 @@
+<!-- 租车主页 -->
 <template>
   <div class="home">
     <div class="homeTopAll">

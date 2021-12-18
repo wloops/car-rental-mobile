@@ -1,3 +1,4 @@
+<!-- 订单确认页面 -->
 <template>
   <div class="confirmOrder">
     <div class="topNav">
