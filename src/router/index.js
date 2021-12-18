@@ -44,22 +44,22 @@ const routes = [
   {
     path: '/problems',
     name: 'problems',
-    component: () => import('@/views/home/pages/problems.vue'),
+    component: () => import('@/views/home/pages/Problems.vue'),
   },
   {
     path: '/feedbacks',
     name: 'feedbacks',
-    component: () => import('@/views/home/pages/feedbacks.vue'),
+    component: () => import('@/views/home/pages/Feedbacks.vue'),
   },
   {
     path: '/guide',
     name: 'guide',
-    component: () => import('@/views/home/pages/guide.vue'),
+    component: () => import('@/views/home/pages/Guide.vue'),
   },
   {
     path: '/contactUs',
     name: 'contactUs',
-    component: () => import('@/views/home/pages/contactUs.vue'),
+    component: () => import('@/views/home/pages/ContactUs.vue'),
   },
   {
     path: '/model',
