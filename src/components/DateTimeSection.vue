@@ -93,7 +93,7 @@ export default {
   padding: 0.625rem;
   .dayinTotal {
     flex: 1;
-    font-size: 0.5rem;
+    // font-size: 0.5rem;
   }
 
   .timeText {
