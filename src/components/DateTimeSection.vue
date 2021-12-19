@@ -97,7 +97,7 @@ export default {
   }
 
   .timeText {
-    font-size: 0.15rem;
+    font-size: 0.8rem;
     color: #565656;
   }
 }
