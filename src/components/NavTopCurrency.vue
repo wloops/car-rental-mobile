@@ -43,7 +43,7 @@ export default {
 <style scoped lang="less">
 .NavTopCurrency {
   // background: #ffc65f;
-  padding: 0.5rem;
+  // padding: 0.5rem;
   /deep/ .van-nav-bar__content {
     border: none;
     background: #ffc65f;
