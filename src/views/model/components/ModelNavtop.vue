@@ -5,7 +5,7 @@
         <van-icon name="arrow-left" size="1.3rem" />
       </template>
       <template #title>
-        <div class="useCarTime">
+        <div class="useCarTime" @click="editTime">
           <p class="useCarTimeText">用车时间</p>
           <p>
             <span class="startDateMD"
@@ -103,10 +103,10 @@ export default {
   // flex-direction: column;
   // justify-content: center;
   // align-items: center;
-  font-size: 0.4rem;
+  font-size: 0.7rem;
   color: #909090;
   .useCarTimeText {
-    font-size: 0.6rem;
+    font-size: 0.8rem;
     font-weight: 500;
   }
   p {

@@ -161,24 +161,23 @@ export default {
 .homeTopAll {
   background: #ffc65f;
   border-radius: 0 0 5% 5%;
-  padding: 0.5rem;
+  padding-bottom: 1rem;
 }
-.switchingRentalMode .van-button--block {
-  display: block;
-  width: 80%;
-  margin: 0 10% 3%;
-  font-size: 0.9rem;
-  font-weight: 600;
+.switchingRentalMode {
+  .van-button--block {
+    display: block;
+    width: 80%;
+    margin: 0 10% 3%;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
 }
+
 .otherModule {
   color: #a7a9a8;
   /deep/ .van-grid-item__icon {
     font-size: 28px;
     color: #423d5e;
   }
-}
-
-.content {
-  padding: 16px 16px 20px;
 }
 </style>

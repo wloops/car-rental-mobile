@@ -23,8 +23,8 @@
               @click="selectCarItem"
             >
               <template #text>
-                <p style="font-size: 0.4rem; line-height: 0.3rem">宝沃BX5</p>
-                <p style="font-size: 0.4rem; line-height: 0.3rem">￥180起</p>
+                <p style="font-size: 0.8rem; line-height: 0.3rem">宝沃BX5</p>
+                <p style="font-size: 0.8rem; line-height: 0.3rem">￥180起</p>
               </template>
             </van-grid-item>
           </van-grid>
@@ -102,7 +102,12 @@
     <footer>
       <van-goods-action safe-area-inset-bottom style="z-index: 1000">
         <van-goods-action-button color="##ffc15f" type="warning" text="重置" />
-        <van-goods-action-button color="##ffc65f" type="danger" text="确认" />
+        <van-goods-action-button
+          color="##ffc65f"
+          type="danger"
+          text="确认"
+          @click="toConfirmOrder"
+        />
       </van-goods-action>
     </footer>
   </div>
@@ -191,6 +196,9 @@ export default {
     },
     toggle(index) {
       this.$refs.checkboxes[index].toggle()
+    },
+    toConfirmOrder() {
+      this.$router.push('/confirm')
     },
   },
 }
