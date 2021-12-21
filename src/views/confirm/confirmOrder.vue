@@ -286,7 +286,10 @@ export default {
     color: #565656;
   }
 }
-
+.van-card {
+  background-color: #fff;
+  padding: 0;
+}
 .tagChecks {
   display: flex;
   justify-content: space-between;
