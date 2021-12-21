@@ -1,6 +1,8 @@
 <!-- 我的页面 -->
 <template>
-  <div class="myPage">myPage</div>
+  <div class="myPage">
+    <div class="userInfo"></div>
+  </div>
 </template>
 
 <script>

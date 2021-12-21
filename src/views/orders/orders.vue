@@ -7,52 +7,21 @@
     <div class="tabs">
       <van-tabs v-model="active" swipeable animated sticky offset-top="2rem">
         <van-tab title="全部">
-          <div class="orderList">
-            <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-              <van-list
-                v-model="loading"
-                :finished="finished"
-                finished-text="没有更多了"
-                @load="onLoad"
-              >
-                <van-grid :gutter="15" :column-num="1">
-                  <van-grid-item v-for="item in list" :key="item">
-                    <div class="orderItem">
-                      <div class="useStatus">
-                        <span
-                          >自驾<van-tag color="#f4f4f4" text-color="#adadad"
-                            >用车</van-tag
-                          ></span
-                        >
-                        <span class="" style="font-size: small; color: #adadad"
-                          >取消</span
-                        >
-                      </div>
-                      <div class="orderInfo">
-                        <p>订单编号 : 161344262346</p>
-                        <p>用车车型 : 雪佛兰新科鲁兹</p>
-                        <p>用车时间 : 2021-12-21至2021-12-21（2天）</p>
-                        <p>订单金额 : ￥178</p>
-                      </div>
-                    </div>
-                  </van-grid-item>
-                </van-grid>
-                <!-- <van-cell-group inset>
-            <van-cell v-for="item in list" :key="item" :title="item" />
-          </van-cell-group> -->
-              </van-list>
-              <div style="height: 3rem"></div>
-            </van-pull-refresh>
-          </div>
+          <orders-list tabA-ative="0"></orders-list>
         </van-tab>
-        <van-tab title="待付款"></van-tab>
-        <van-tab title="未出行"></van-tab>
+        <van-tab title="待付款">
+          <orders-list tabA-ative="1"></orders-list>
+        </van-tab>
+        <van-tab title="未出行">
+          <orders-list tabA-ative="2"></orders-list>
+        </van-tab>
       </van-tabs>
     </div>
   </div>
 </template>
 
 <script>
+import OrdersList from './components/OrdersList.vue'
 import {
   NavBar,
   Tab,
@@ -69,6 +38,8 @@ import {
 export default {
   name: 'orders',
   components: {
+    OrdersList,
+
     [NavBar.name]: NavBar,
     [Tab.name]: Tab,
     [Tabs.name]: Tabs,
@@ -80,51 +51,22 @@ export default {
     [Tag.name]: Tag,
     [PullRefresh.name]: PullRefresh,
   },
-  props: {},
+  props: {
+    tabActive: {
+      type: Number,
+      default: 0,
+    },
+  },
   data() {
     return {
       active: 0,
-      list: [],
-      loading: false,
-      finished: false,
-      refreshing: false,
     }
   },
   computed: {},
   watch: {},
   created() {},
   mounted() {},
-  methods: {
-    onLoad() {
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        if (this.refreshing) {
-          this.list = []
-          this.refreshing = false
-        }
-
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-        // 加载状态结束
-        this.loading = false
-        // 数据全部加载完成
-        if (this.list.length >= 10) {
-          this.finished = true
-        }
-      }, 1000)
-    },
-    onRefresh() {
-      // 清空列表数据
-      this.finished = false
-
-      // 重新加载数据
-      // 将 loading 设置为 true，表示处于加载状态
-      this.loading = true
-      this.onLoad()
-    },
-  },
+  methods: {},
 }
 </script>
 
@@ -134,25 +76,5 @@ export default {
 }
 .van-cell {
   padding: 1rem;
-}
-.orderList {
-  padding-top: 1rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-}
-.orderItem {
-  width: 95%;
-  height: 6.5rem;
-}
-.useStatus {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.orderInfo {
-  font-size: small;
-  color: #6f6f6f;
-  line-height: 0.5rem;
 }
 </style>

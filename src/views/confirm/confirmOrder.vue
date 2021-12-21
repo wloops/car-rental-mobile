@@ -161,6 +161,7 @@
         </van-cell>
       </van-cell-group>
     </div>
+
     <div style="height: 6rem"></div>
     <div class="confirmOrderBox">
       <van-submit-bar :price="3050" button-text="提交订单" @submit="onSubmit">
@@ -174,6 +175,25 @@
           >
         </template>
       </van-submit-bar>
+    </div>
+
+    <div class="orderSuccess">
+      <van-popup v-model="orderSuccessShow" style="width: 100%; height: 100%">
+        <van-nav-bar
+          fixed
+          placeholder
+          right-text="完成"
+          @click-right="toOrders"
+        />
+        下单成功
+        <van-button
+          block
+          color="#fec760"
+          :disabled="isDisabled"
+          @click="toOrders"
+          >查看订单</van-button
+        >
+      </van-popup>
     </div>
   </div>
 </template>
@@ -193,6 +213,8 @@ import {
   Tag,
   RadioGroup,
   Radio,
+  Popup,
+  Button,
 } from 'vant'
 export default {
   name: 'confirmOrder',
@@ -210,6 +232,8 @@ export default {
     [Tag.name]: Tag,
     [RadioGroup.name]: RadioGroup,
     [Radio.name]: Radio,
+    [Popup.name]: Popup,
+    [Button.name]: Button,
   },
   props: {},
   data() {
@@ -220,6 +244,7 @@ export default {
       radio2: '1',
       radio3: '1',
       payChecked: true,
+      orderSuccessShow: false,
     }
   },
   computed: {
@@ -249,6 +274,10 @@ export default {
     },
     onSubmit() {
       // this.$router.push('/pay')
+      this.orderSuccessShow = true
+    },
+    toOrders() {
+      this.$router.push('/orders')
     },
   },
 }
