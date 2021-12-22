@@ -1,11 +1,16 @@
 <template>
-  <div class="Guide">Guide</div>
+  <div class="Guide">
+    <van-nav-bar title="租车指引" left-arrow @click-left="onClickLeft" />
+  </div>
 </template>
 
 <script>
+import { NavBar } from 'vant'
 export default {
   name: 'Guide',
-  components: {},
+  components: {
+    [NavBar.name]: NavBar,
+  },
   props: {},
   data() {
     return {}
@@ -14,7 +19,11 @@ export default {
   watch: {},
   created() {},
   mounted() {},
-  methods: {},
+  methods: {
+    onClickLeft() {
+      this.$router.go(-1)
+    },
+  },
 }
 </script>
 

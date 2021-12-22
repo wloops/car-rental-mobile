@@ -1,11 +1,16 @@
 <template>
-  <div class="ContactUs">ContactUs</div>
+  <div class="ContactUs">
+    <van-nav-bar title="联系我们" left-arrow @click-left="onClickLeft" />
+  </div>
 </template>
 
 <script>
+import { NavBar } from 'vant'
 export default {
   name: 'ContactUs',
-  components: {},
+  components: {
+    [NavBar.name]: NavBar,
+  },
   props: {},
   data() {
     return {}
@@ -14,7 +19,11 @@ export default {
   watch: {},
   created() {},
   mounted() {},
-  methods: {},
+  methods: {
+    onClickLeft() {
+      this.$router.go(-1)
+    },
+  },
 }
 </script>
 
