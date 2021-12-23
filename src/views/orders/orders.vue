@@ -2,7 +2,7 @@
 <template>
   <div class="orders">
     <div class="topNav">
-      <van-nav-bar title="租车订单" left-arrow fixed placeholder />
+      <van-nav-bar title="租车订单" fixed placeholder />
     </div>
     <div class="tabs">
       <van-tabs v-model="active" swipeable animated sticky offset-top="2rem">
