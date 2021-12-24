@@ -64,7 +64,7 @@ export default {
     [Tag.name]: Tag,
     [PullRefresh.name]: PullRefresh,
   },
-  props: {},
+  props: ['thisTab'],
   data() {
     return {
       list: [],

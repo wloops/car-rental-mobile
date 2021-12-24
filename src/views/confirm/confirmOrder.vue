@@ -123,14 +123,14 @@
         <van-cell title="车辆租赁及服务费">
           <template #default>
             <div>
-              <span>￥178</span>
+              <span>￥280</span>
             </div>
           </template>
         </van-cell>
         <van-cell title="司机服务费">
           <template #default>
             <div>
-              <span>￥40*2 ￥178</span>
+              <span>￥40*{{ dayToDay }} ￥40</span>
             </div>
           </template>
         </van-cell>
@@ -164,7 +164,7 @@
 
     <div style="height: 6rem"></div>
     <div class="confirmOrderBox">
-      <van-submit-bar :price="3050" button-text="提交订单" @submit="onSubmit">
+      <van-submit-bar :price="32000" button-text="提交订单" @submit="onSubmit">
         <!-- <template #tip>
           你的收货地址不支持同城送,
           <span @click="onClickEditAddress">修改地址</span>

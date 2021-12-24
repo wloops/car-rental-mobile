@@ -6,10 +6,8 @@ module.exports = {
   // devServer Options don't belong into `configureWebpack`
   publicPath: './',
   devServer: {
-    public: '192.1.2.110:4399',
-
+    // public: '192.1.2.110:4399',
     // hot: true,
-
     // disableHostCheck: true,
   },
 }

@@ -1,6 +1,11 @@
 <template>
   <div class="ModelNavtop">
-    <van-nav-bar @click-left="backHome" @click-right="editTime">
+    <van-nav-bar
+      fixed
+      placeholder
+      @click-left="backHome"
+      @click-right="editTime"
+    >
       <template #left>
         <van-icon name="arrow-left" size="1.3rem" />
       </template>

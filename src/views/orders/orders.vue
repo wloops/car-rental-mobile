@@ -7,13 +7,13 @@
     <div class="tabs">
       <van-tabs v-model="active" swipeable animated sticky offset-top="2rem">
         <van-tab title="全部">
-          <orders-list tabA-ative="0"></orders-list>
+          <orders-list this-tab="0"></orders-list>
         </van-tab>
         <van-tab title="待付款">
-          <orders-list tabA-ative="1"></orders-list>
+          <orders-list this-tab="1"></orders-list>
         </van-tab>
         <van-tab title="未出行">
-          <orders-list tabA-ative="2"></orders-list>
+          <orders-list this-tab="2"></orders-list>
         </van-tab>
       </van-tabs>
     </div>
@@ -51,12 +51,7 @@ export default {
     [Tag.name]: Tag,
     [PullRefresh.name]: PullRefresh,
   },
-  props: {
-    tabActive: {
-      type: Number,
-      default: 0,
-    },
-  },
+  props: {},
   data() {
     return {
       active: 0,
