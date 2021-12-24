@@ -94,6 +94,9 @@ export default {
 }
 .footerBtn {
   display: flex;
+  position: fixed;
+  bottom: 1.2rem;
+  width: 90%;
   justify-content: space-between;
   align-items: center;
   margin: 2rem 1rem 0;
