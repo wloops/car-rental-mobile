@@ -123,14 +123,14 @@
         <van-cell title="车辆租赁及服务费">
           <template #default>
             <div>
-              <span>￥178</span>
+              <span>￥280</span>
             </div>
           </template>
         </van-cell>
         <van-cell title="司机服务费">
           <template #default>
             <div>
-              <span>￥40*2 ￥178</span>
+              <span>￥40*{{ dayToDay }} ￥40</span>
             </div>
           </template>
         </van-cell>
@@ -161,9 +161,10 @@
         </van-cell>
       </van-cell-group>
     </div>
+
     <div style="height: 6rem"></div>
     <div class="confirmOrderBox">
-      <van-submit-bar :price="3050" button-text="提交订单" @submit="onSubmit">
+      <van-submit-bar :price="32000" button-text="提交订单" @submit="onSubmit">
         <!-- <template #tip>
           你的收货地址不支持同城送,
           <span @click="onClickEditAddress">修改地址</span>
@@ -174,6 +175,40 @@
           >
         </template>
       </van-submit-bar>
+    </div>
+
+    <div class="orderSuccess">
+      <van-popup v-model="orderSuccessShow" style="width: 100%; height: 100%">
+        <div class="orderSuccessContainer">
+          <van-nav-bar
+            fixed
+            placeholder
+            right-text="完成"
+            @click-right="toOrders"
+          />
+          <van-icon name="checked" color="#fec760" size="50" />
+          <p v-if="tabName === '单位租'">下单成功</p>
+          <p v-else>预订成功</p>
+          <p style="font-size: small; color: #bcbcbc">
+            请保持手机畅通，如行程有变，请在规定时间取消订单
+          </p>
+          <template v-if="tabName === '单位租'" class="btnBox">
+            <van-button
+              block
+              color="#fec760"
+              style="width: 90%; margin-top: 3rem"
+              to="orders"
+              >查看订单</van-button
+            >
+          </template>
+          <template v-else>
+            <div class="btnBox1">
+              <van-button block type="default" to="orders">查看订单</van-button>
+              <van-button block color="#fec760">去支付</van-button>
+            </div>
+          </template>
+        </div>
+      </van-popup>
     </div>
   </div>
 </template>
@@ -193,6 +228,9 @@ import {
   Tag,
   RadioGroup,
   Radio,
+  Popup,
+  Button,
+  Icon,
 } from 'vant'
 export default {
   name: 'confirmOrder',
@@ -210,6 +248,9 @@ export default {
     [Tag.name]: Tag,
     [RadioGroup.name]: RadioGroup,
     [Radio.name]: Radio,
+    [Popup.name]: Popup,
+    [Button.name]: Button,
+    [Icon.name]: Icon,
   },
   props: {},
   data() {
@@ -220,6 +261,7 @@ export default {
       radio2: '1',
       radio3: '1',
       payChecked: true,
+      orderSuccessShow: false,
     }
   },
   computed: {
@@ -249,6 +291,10 @@ export default {
     },
     onSubmit() {
       // this.$router.push('/pay')
+      this.orderSuccessShow = true
+    },
+    toOrders() {
+      this.$router.push('/orders')
     },
   },
 }
@@ -286,7 +332,10 @@ export default {
     color: #565656;
   }
 }
-
+.van-card {
+  background-color: #fff;
+  padding: 0;
+}
 .tagChecks {
   display: flex;
   justify-content: space-between;
@@ -317,6 +366,29 @@ export default {
   .payTitle {
     font-weight: 600;
     color: #565656;
+  }
+}
+
+.orderSuccessContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: -10rem;
+  height: 100%;
+  padding: 0.5rem;
+  .btnBox1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    .van-button {
+      width: 45%;
+      margin-top: 3rem;
+
+      margin-left: 0.5rem;
+    }
   }
 }
 </style>

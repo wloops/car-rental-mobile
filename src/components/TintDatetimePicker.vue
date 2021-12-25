@@ -30,10 +30,6 @@
       <div slot="footer" class="calendar-footer dis-flex flex-y-center">
         <date-time-section></date-time-section>
 
-        <!-- <div class="flex-box f-14 text">
-          <p>开始时间：{{ start }}</p>
-          <p>结束时间：{{ end }}</p>
-        </div> -->
         <van-button
           block
           color="#ff7636"
@@ -47,6 +43,8 @@
       v-model="showPicker"
       round
       position="bottom"
+      closeable
+      close-icon="passed"
       @opened="handlePopupOpen"
     >
       <van-picker
@@ -65,7 +63,15 @@
 </template>
 
 <script>
-import { Popup, Picker, Calendar, Button, Icon, DatetimePicker } from 'vant'
+import {
+  Popup,
+  Picker,
+  Calendar,
+  Button,
+  Icon,
+  DatetimePicker,
+  Toast,
+} from 'vant'
 import DateTimeSection from '@/components/DateTimeSection.vue'
 import moment from 'moment'
 import columns from './hooks/columns'
@@ -96,6 +102,7 @@ export default {
     [Button.name]: Button,
     [Icon.name]: Icon,
     [DatetimePicker.name]: DatetimePicker,
+    [Toast.name]: Toast,
   },
   data() {
     return {
@@ -179,7 +186,11 @@ export default {
       // Object.assign(this.$data, initData())
     },
     handleBack() {
-      this.show = false
+      if (this.isDisabled === true) {
+        Toast.fail('请选择还车的时间')
+      } else {
+        this.show = false
+      }
     },
     handlePopupOpen() {
       if (this.pickerText === '开始时间') {

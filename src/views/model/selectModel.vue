@@ -9,113 +9,78 @@
     </div>
     <div class="treeSelect">
       <van-tree-select
-        height="60vh"
+        height="70vh"
         :items="itemsTree"
         :active-id.sync="activeIds"
         :main-active-index.sync="active"
       >
         <template #content>
-          <van-grid :column-num="2" :gutter="10" clickable v-if="active === 0">
+          <van-grid :column-num="1" :gutter="10" clickable v-if="active === 0">
             <van-grid-item
               v-for="value in 8"
               :key="value"
               icon="photo-o"
               @click="selectCarItem"
             >
-              <template #text>
-                <p style="font-size: 0.8rem; line-height: 0.3rem">宝沃BX5</p>
-                <p style="font-size: 0.8rem; line-height: 0.3rem">￥180起</p>
+              <template>
+                <div class="carCard">
+                  <div class="carImg">
+                    <van-image
+                      width="5rem"
+                      height="5rem"
+                      fit="contain"
+                      src="http://res.tintjs.com/img/宝沃BX7.png"
+                    />
+                  </div>
+                  <div class="carInfo">
+                    <div class="carName">宝沃BX7</div>
+                    <div class="carMsg">2.0T自动 | SUV5座</div>
+                    <div class="carPrice">￥280 <span>日均</span></div>
+                  </div>
+                </div>
               </template>
             </van-grid-item>
           </van-grid>
-          <van-checkbox-group v-model="result">
-            <van-grid
-              :column-num="2"
-              :gutter="10"
-              clickable
-              v-if="active === 1"
+          <van-grid :column-num="1" :gutter="10" clickable v-if="active === 1">
+            <van-grid-item
+              v-for="value in 8"
+              :key="value"
+              icon="photo-o"
+              @click="selectCarItem"
             >
-              <!-- <van-grid-item v-for="value in 8" :key="value"> -->
-              <van-grid-item>
-                <template #default>
-                  <div class="defaultBox">
-                    <div class="checkbox">
-                      <van-checkbox name="a"></van-checkbox>
-                    </div>
-                    <div class="Img">
-                      <van-image
-                        width="50"
-                        height="50"
-                        src="https://img01.yzcdn.cn/vant/cat.jpeg"
-                      />
-                    </div>
-                    <div class="text">
-                      <p>宝马</p>
-                    </div>
+              <template>
+                <div class="carCard">
+                  <div class="carImg">
+                    <van-image
+                      width="5rem"
+                      height="5rem"
+                      fit="contain"
+                      src="http://res.tintjs.com/img/奥迪A6.png"
+                    />
                   </div>
-                </template>
-              </van-grid-item>
-              <van-grid-item>
-                <template #default>
-                  <div class="defaultBox">
-                    <div class="checkbox">
-                      <van-checkbox name="b"></van-checkbox>
-                    </div>
-                    <div class="Img">
-                      <van-image
-                        width="50"
-                        height="50"
-                        src="https://img01.yzcdn.cn/vant/cat.jpeg"
-                      />
-                    </div>
-                    <div class="text">
-                      <p>宝马</p>
-                    </div>
+                  <div class="carInfo">
+                    <div class="carName">奥迪A6</div>
+                    <div class="carMsg">2.0T自动 | SUV5座</div>
+                    <div class="carPrice">￥280 <span>日均</span></div>
                   </div>
-                </template>
-              </van-grid-item>
-              <van-grid-item>
-                <template #default>
-                  <div class="defaultBox">
-                    <div class="checkbox">
-                      <van-checkbox name="c"></van-checkbox>
-                    </div>
-                    <div class="Img">
-                      <van-image
-                        width="50"
-                        height="50"
-                        src="https://img01.yzcdn.cn/vant/cat.jpeg"
-                      />
-                    </div>
-                    <div class="text">
-                      <p>宝马</p>
-                    </div>
-                  </div>
-                </template>
-              </van-grid-item>
-            </van-grid>
-          </van-checkbox-group>
+                </div>
+              </template>
+            </van-grid-item>
+          </van-grid>
+          <!-- 车辆详情 -->
+          <div class="carDetails">
+            <car-details ref="showCarDetails"></car-details>
+          </div>
         </template>
       </van-tree-select>
     </div>
-
-    <footer>
-      <van-goods-action safe-area-inset-bottom style="z-index: 1000">
-        <van-goods-action-button color="##ffc15f" type="warning" text="重置" />
-        <van-goods-action-button
-          color="##ffc65f"
-          type="danger"
-          text="确认"
-          @click="toConfirmOrder"
-        />
-      </van-goods-action>
-    </footer>
   </div>
 </template>
 
 <script>
 import ModelNavtop from './components/ModelNavtop.vue'
 import SwipeAd from './components/SwipeAd.vue'
+import CarDetails from '@/components/CarDetails.vue'
 
 import {
   TreeSelect,
@@ -136,6 +101,7 @@ export default {
   components: {
     ModelNavtop,
     SwipeAd,
+    CarDetails,
 
     [TreeSelect.name]: TreeSelect,
     [Grid.name]: Grid,
@@ -184,6 +150,20 @@ export default {
         },
       ],
       checked: false,
+      carInfo: [
+        {
+          carName: '宝沃BX7',
+          carMsg: '2.0T自动 | SUV5座',
+          carPrice: '￥280 <span>日均</span>',
+          carImg: 'http://res.tintjs.com/img/宝沃BX7.png',
+        },
+        {
+          carName: '奥迪A6',
+          carMsg: '2.0T自动 | SUV5座',
+          carPrice: '￥280 <span>日均</span>',
+          carImg: 'http://res.tintjs.com/img/奥迪A6.png',
+        },
+      ],
     }
   },
   computed: {},
@@ -193,6 +173,7 @@ export default {
   methods: {
     selectCarItem() {
       console.log('selectCarItem')
+      this.$refs.showCarDetails.showPopup()
     },
     toggle(index) {
       this.$refs.checkboxes[index].toggle()
@@ -205,11 +186,11 @@ export default {
 </script>
 
 <style scoped lang="less">
-/deep/ .van-grid-item__content--center {
-  border: 1px solid #ededed;
+// /deep/ .van-grid-item__content--center {
+//   border: 1px solid #ededed;
 
-  position: relative;
-}
+//   position: relative;
+// }
 
 .checkbox {
   position: absolute;
@@ -219,5 +200,34 @@ export default {
 }
 .text {
   line-height: 0.2rem;
+}
+.carCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .carName {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0.5rem;
+    color: rgb(75, 72, 72);
+  }
+  .carMsg {
+    margin: 0.5rem;
+    font-size: smaller;
+  }
+  .carPrice {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0.5rem;
+    color: #ffba1c;
+    span {
+      font-size: x-small;
+      color: rgb(168, 164, 164);
+    }
+  }
+}
+/deep/ .van-grid-item__content {
+  padding: 0;
 }
 </style>

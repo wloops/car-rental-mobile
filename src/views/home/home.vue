@@ -8,14 +8,14 @@
 
       <div class="switchingRentalMode">
         <van-cell-group inset>
-          <van-tabs v-model="tabsActive" animated @click="tabsChange">
-            <van-tab title="单位租">
+          <van-tabs v-model="tabsActiveName" animated @click="tabsChange">
+            <van-tab title="单位租" name="单位租">
               <date-time-section
                 :value="date"
                 @click.native="showPicker"
               ></date-time-section>
             </van-tab>
-            <van-tab title="个人租">
+            <van-tab title="个人租" name="个人租">
               <date-time-section
                 :value="date"
                 @click.native="showPicker"
@@ -105,10 +105,19 @@ export default {
   },
   data() {
     return {
-      tabsActive: 0,
+      tabsActiveName: '单位租',
       date: '',
       show: false,
     }
+  },
+  watch: {
+    // 监听tabsActiveName，并提交到vuex的state中
+    tabsActiveName: {
+      handler(newValue, oldValue) {
+        this.setTabName(newValue)
+      },
+      immediate: true, // 初始化时立即触发
+    },
   },
 
   methods: {
@@ -151,7 +160,7 @@ export default {
       console.log(this.date)
     },
     tabsChange(title, name) {
-      this.setTabName(name)
+      // this.setTabName(name)
     },
   },
 }
