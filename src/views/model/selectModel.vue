@@ -172,7 +172,7 @@ export default {
   mounted() {},
   methods: {
     selectCarItem() {
-      console.log('selectCarItem')
+      // console.log('selectCarItem')
       this.$refs.showCarDetails.showPopup()
     },
     toggle(index) {

@@ -41,7 +41,7 @@ export default {
 
 <style scoped lang="less">
 .SwipeAd {
-  padding: 0.7rem;
+  padding: 0.7rem 0;
 }
 .my-swipe {
   // margin-top: 0.7rem;

@@ -55,15 +55,85 @@
         </van-grid>
       </van-cell-group>
     </div>
+
+    <div class="carRecommend">
+      <div class="recommendTitle">好车推荐</div>
+      <span class="recommendText">超值特惠，出行首选</span>
+      <van-grid :column-num="2" :gutter="10" clickable>
+        <van-grid-item @click="showItem">
+          <van-image
+            fit="contain"
+            src="http://res.tintjs.com/img/宝沃BX7.png"
+          />
+          <div class="recommendPrice">
+            <span class="oneDay">短期优惠</span>
+            <van-button
+              color="linear-gradient(to right, #fff ,#f8c764)"
+              size="mini"
+            >
+              ￥100
+            </van-button>
+          </div>
+        </van-grid-item>
+        <van-grid-item @click="showItem">
+          <van-image
+            fit="contain"
+            src="http://res.tintjs.com/img/别克GL8.png"
+          />
+          <div class="recommendPrice">
+            <span class="oneDay">短期优惠</span>
+            <van-button
+              color="linear-gradient(to right, #fff ,#f8c764)"
+              size="mini"
+            >
+              ￥100
+            </van-button>
+          </div>
+        </van-grid-item>
+        <van-grid-item @click="showItem">
+          <van-image fit="contain" src="http://res.tintjs.com/img/奥迪A6.png" />
+          <div class="recommendPrice">
+            <span class="oneDay">短期优惠</span>
+            <van-button
+              color="linear-gradient(to right, #fff ,#f8c764)"
+              size="mini"
+            >
+              ￥100
+            </van-button>
+          </div>
+        </van-grid-item>
+        <van-grid-item @click="showItem">
+          <van-image
+            fit="contain"
+            src="http://res.tintjs.com/img/沃尔沃S90.png"
+          />
+          <div class="recommendPrice">
+            <span class="oneDay">短期优惠</span>
+            <van-button
+              color="linear-gradient(to right, #fff ,#f8c764)"
+              size="mini"
+            >
+              ￥100
+            </van-button>
+          </div>
+        </van-grid-item>
+      </van-grid>
+    </div>
+    <!-- 车辆详情 -->
+    <div class="carDetails">
+      <car-details ref="showCarDetails"></car-details>
+    </div>
+    <div style="height: 5rem"></div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import NavTopCurrency from '../../components/NavTopCurrency.vue'
+import NavTopCurrency from '@/components/NavTopCurrency.vue'
 import TintDatetimePicker from '@/components/TintDatetimePicker.vue'
 import DateTimeSection from '@/components/DateTimeSection.vue'
 import SwipeAd from '@/views/home/components/SwipeAd.vue'
+import CarDetails from '@/components/CarDetails.vue'
 
 import { mapGetters, mapMutations } from 'vuex'
 
@@ -80,6 +150,7 @@ import {
   Icon,
   Grid,
   GridItem,
+  Image as VanImage,
 } from 'vant'
 
 export default {
@@ -89,6 +160,7 @@ export default {
     TintDatetimePicker,
     DateTimeSection,
     SwipeAd,
+    CarDetails,
 
     [NavBar.name]: NavBar,
     [Tab.name]: Tab,
@@ -102,6 +174,7 @@ export default {
     [Icon.name]: Icon,
     [Grid.name]: Grid,
     [GridItem.name]: GridItem,
+    [VanImage.name]: VanImage,
   },
   data() {
     return {
@@ -162,6 +235,13 @@ export default {
     tabsChange(title, name) {
       // this.setTabName(name)
     },
+    showItem() {
+      this.selectCarItem()
+    },
+    selectCarItem() {
+      // console.log('selectCarItem')
+      this.$refs.showCarDetails.showPopup()
+    },
   },
 }
 </script>
@@ -187,6 +267,44 @@ export default {
   /deep/ .van-grid-item__icon {
     font-size: 28px;
     color: #423d5e;
+  }
+}
+.carRecommend {
+  .recommendTitle {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #423d5e;
+    margin: 1rem 0 0.5rem 1rem;
+  }
+  .recommendText {
+    font-size: 0.9rem;
+    color: #a7a9a8;
+    margin-left: 1rem;
+    margin-top: -0.5rem;
+  }
+  .recommendPrice {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    // padding: 0.5rem 0;
+    .oneDay {
+      font-size: 0.7rem;
+      color: #a7a9a8;
+    }
+  }
+  .van-image {
+    width: 5rem;
+    height: 5rem;
+  }
+  .van-button--default {
+    color: #111 !important;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  /deep/ .van-grid-item {
+    border-radius: 50%;
   }
 }
 </style>

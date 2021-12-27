@@ -17,6 +17,7 @@
           <div class="carName">宝沃BX7</div>
           <div class="carMsg">2.0T自动 | SUV5座</div>
         </div>
+        <date-time-section @click.native="showPicker"></date-time-section>
         <div class="footerBtn">
           <div class="carPrice">￥280 <span>日均</span></div>
           <van-button
@@ -29,14 +30,21 @@
         </div>
       </template>
     </van-popup>
+    <tint-datetime-picker ref="tintPicker"></tint-datetime-picker>
   </div>
 </template>
 
 <script>
+import DateTimeSection from '@/components/DateTimeSection.vue'
+import TintDatetimePicker from '@/components/TintDatetimePicker.vue'
 import { Popup, Cell, Image as VanImage, Button } from 'vant'
+
 export default {
   name: 'CarDetails',
   components: {
+    DateTimeSection,
+    TintDatetimePicker,
+
     [Popup.name]: Popup,
     [Cell.name]: Cell,
     [VanImage.name]: VanImage,
@@ -63,6 +71,9 @@ export default {
     },
     toConfirmOrder() {
       this.$router.push('/confirm')
+    },
+    showPicker() {
+      this.$refs.tintPicker.showView()
     },
   },
 }
