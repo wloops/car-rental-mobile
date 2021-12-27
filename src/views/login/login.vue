@@ -54,6 +54,13 @@
           >
             我是个人用户 <van-icon name="sort" />
           </p>
+          <p
+            class="toPersonalLogin"
+            v-if="tabName === '个人租'"
+            @click="changeCompany"
+          >
+            我是单位用户 <van-icon name="sort" />
+          </p>
         </van-form>
       </main>
     </div>
@@ -108,6 +115,10 @@ export default {
     changePersonal() {
       this.setTabName('个人租')
       // this.$router.push('/personalLogin')
+    },
+    changeCompany() {
+      this.setTabName('单位租')
+      // this.$router.push('/companyLogin')
     },
   },
 }
