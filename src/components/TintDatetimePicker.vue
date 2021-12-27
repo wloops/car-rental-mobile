@@ -194,7 +194,9 @@ export default {
     },
     handlePopupOpen() {
       if (this.pickerText === '开始时间') {
-        this.$refs.picker.setIndexes([9, 30])
+        let startTimeH = this.startTime.split(':')[0]
+        let startTimeM = this.startTime.split(':')[1]
+        this.$refs.picker.setIndexes([startTimeH, startTimeM])
         this.isDisabled = true
       }
       const value = this.$refs.picker.getValues()
