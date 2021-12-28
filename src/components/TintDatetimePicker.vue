@@ -29,7 +29,20 @@
       </div>
       <div slot="footer" class="calendar-footer dis-flex flex-y-center">
         <date-time-section></date-time-section>
-
+        <van-picker
+          ref="picker"
+          :columns="columns1"
+          visible-item-count="3"
+          item-height="32"
+          @change="useCarTimeChange"
+        >
+          <template #columns-top>
+            <div class="useCarTimeTitle">
+              <span>取车时间</span>
+              <span>还车时间</span>
+            </div>
+          </template>
+        </van-picker>
         <van-button
           block
           color="#ff7636"
@@ -39,26 +52,6 @@
         >
       </div>
     </van-calendar>
-    <van-popup
-      v-model="showPicker"
-      round
-      position="bottom"
-      closeable
-      close-icon="passed"
-      @opened="handlePopupOpen"
-    >
-      <van-picker
-        ref="picker"
-        show-toolbar
-        :columns="columns"
-        @cancel="showPicker = false"
-        @change="onPickerChange"
-        swipe-duration="500"
-        visible-item-count="5"
-      >
-        <div class="picker-title">{{ pickerText }}</div>
-      </van-picker>
-    </van-popup>
   </van-popup>
 </template>
 
@@ -74,20 +67,12 @@ import {
 } from 'vant'
 import DateTimeSection from '@/components/DateTimeSection.vue'
 import moment from 'moment'
-import columns from './hooks/columns'
 import { mapGetters, mapMutations } from 'vuex'
 
 function initData() {
   return {
-    pickerText: '开始时间',
     show: false,
     isDisabled: true,
-    showPicker: false,
-    currentTime: '12:00',
-    // startDate: '',
-    // endDate: '',
-    // startTime: '',
-    // endTime: '',
   }
 }
 
@@ -110,23 +95,132 @@ export default {
       minDate: new Date(),
       // maxDate: new Date(),
       // maxDate: moment().add(90, 'day').toDate(),
-      columns,
       ...initData(),
+      columns1: [
+        // 第一列
+        {
+          values: [
+            '00:00',
+            '00:30',
+            '01:00',
+            '01:30',
+            '02:00',
+            '02:30',
+            '03:00',
+            '03:30',
+            '04:00',
+            '04:30',
+            '05:00',
+            '05:30',
+            '06:00',
+            '06:30',
+            '07:00',
+            '07:30',
+            '08:00',
+            '08:30',
+            '09:00',
+            '09:30',
+            '10:00',
+            '10:30',
+            '11:00',
+            '11:30',
+            '12:00',
+            '12:30',
+            '13:00',
+            '13:30',
+            '14:00',
+            '14:30',
+            '15:00',
+            '15:30',
+            '16:00',
+            '16:30',
+            '17:00',
+            '17:30',
+            '18:00',
+            '18:30',
+            '19:00',
+            '19:30',
+            '20:00',
+            '20:30',
+            '21:00',
+            '21:30',
+            '22:00',
+            '22:30',
+            '23:00',
+            '23:30',
+          ],
+          defaultIndex: 2,
+        },
+        // 第二列
+        {
+          values: [
+            '00:00',
+            '00:30',
+            '01:00',
+            '01:30',
+            '02:00',
+            '02:30',
+            '03:00',
+            '03:30',
+            '04:00',
+            '04:30',
+            '05:00',
+            '05:30',
+            '06:00',
+            '06:30',
+            '07:00',
+            '07:30',
+            '08:00',
+            '08:30',
+            '09:00',
+            '09:30',
+            '10:00',
+            '10:30',
+            '11:00',
+            '11:30',
+            '12:00',
+            '12:30',
+            '13:00',
+            '13:30',
+            '14:00',
+            '14:30',
+            '15:00',
+            '15:30',
+            '16:00',
+            '16:30',
+            '17:00',
+            '17:30',
+            '18:00',
+            '18:30',
+            '19:00',
+            '19:30',
+            '20:00',
+            '20:30',
+            '21:00',
+            '21:30',
+            '22:00',
+            '22:30',
+            '23:00',
+            '23:30',
+          ],
+          defaultIndex: 1,
+        },
+      ],
     }
   },
   watch: {
-    startDate() {
-      this.isDisabled = true
-    },
-    endTime(val) {
-      if (!val) {
-        return
-      }
-      if (moment(this.end).isBefore(moment(this.start))) {
-        this.startTime = this.endTime
-      }
-      this.isDisabled = false
-    },
+    // startDate() {
+    //   this.isDisabled = true
+    // },
+    // endTime(val) {
+    //   if (!val) {
+    //     return
+    //   }
+    //   if (moment(this.end).isBefore(moment(this.start))) {
+    //     this.startTime = this.endTime
+    //   }
+    //   this.isDisabled = false
+    // },
   },
   computed: {
     start() {
@@ -156,34 +250,19 @@ export default {
     handleClearDate() {
       this.$refs.calendar.reset()
       Object.assign(this.$data, {
-        pickerText: '开始时间',
         isDisabled: true,
-        // startDate: '',
-        // endDate: '',
-        // startTime: '',
-        // endTime: '',
       })
-      // this.setStartTime('')
-      // this.setEndTime('')
-      // this.setStartDate('')
-      // this.setEndDate('')
     },
     handleCalendarOpened() {
+      console.log(this.startTime, this.endTime)
+      this.$refs.picker.setColumnValue(0, this.startTime)
+      this.$refs.picker.setColumnValue(1, this.endTime)
+      console.log('value:', this.$refs.picker.getColumnValue(0))
+      console.log('value:', this.$refs.picker.getColumnValue(1))
       this.isDisabled = false
-
-      // const calendarBody =
-      //   document.getElementsByClassName('van-calendar__body')[0]
-      // calendarBody.scrollTo({
-      //   top: calendarBody.scrollHeight,
-      //   behavior: 'smooth',
-      // })
     },
     showView() {
       this.show = true
-    },
-    handleCalendarClosed() {
-      // this.$refs.calendar.reset()
-      // Object.assign(this.$data, initData())
     },
     handleBack() {
       if (this.isDisabled === true) {
@@ -191,33 +270,6 @@ export default {
       } else {
         this.show = false
       }
-    },
-    handlePopupOpen() {
-      if (this.pickerText === '开始时间') {
-        let startTimeH = this.startTime.split(':')[0]
-        let startTimeM = this.startTime.split(':')[1]
-        this.$refs.picker.setIndexes([startTimeH, startTimeM])
-        this.isDisabled = true
-      }
-      const value = this.$refs.picker.getValues()
-      const str = value.join(':')
-      if (this.pickerText === '开始时间') {
-        // this.startTime = str
-        this.setStartTime(str)
-        return
-      }
-      // this.endTime = str
-      this.setEndTime(str)
-    },
-    onPickerChange(el, value) {
-      const str = value.join(':')
-      if (this.pickerText === '开始时间') {
-        // this.startTime = str
-        this.setStartTime(str)
-        return
-      }
-      // this.endTime = str
-      this.setEndTime(str)
     },
     formatDate(date) {
       return `${date.getMonth() + 1}/${date.getDate()}`
@@ -229,6 +281,7 @@ export default {
       const dayday = this.formatDate(day.date)
 
       // console.log(dayday)
+      // 自定义日期选择时显示的文本
       if (day.type === 'start') {
         day.bottomInfo = '取车'
       } else if (day.type === 'end') {
@@ -247,29 +300,30 @@ export default {
       this.show = false
     },
     onCalendarSelect(val) {
-      if (val[1]) {
-        let endDateSelect = moment(val[1]).format('YYYY-MM-DD')
-        this.setEndDate(endDateSelect)
-        this.pickerText = '结束时间'
-        this.isDisabled = false
-      } else {
-        if (this.end) {
-          // this.endDate = ''
-          // this.endTime = ''
-          this.setEndDate('')
-          this.setEndTime('')
-        }
+      // console.log(val)
+
+      if (val[0]) {
         let startDateSelect = moment(val[0]).format('YYYY-MM-DD')
         this.setStartDate(startDateSelect)
-        this.pickerText = '开始时间'
+        this.isDisabled = true
+        console.log('取车日期', val[0])
+        if (val[1]) {
+          console.log('还车日期', val[1])
+          let endDateSelect = moment(val[1]).format('YYYY-MM-DD')
+          this.setEndDate(endDateSelect)
+          this.isDisabled = false
+        }
       }
-      this.showPicker = true
     },
     pickerFilter(type, options) {
       if (type === 'minute') {
         return options.filter(option => option % 5 === 0)
       }
       return options
+    },
+    useCarTimeChange(el, val) {
+      this.setStartTime(val[0])
+      this.setEndTime(val[1])
     },
   },
 }
@@ -321,5 +375,13 @@ export default {
     justify-content: center;
     font-weight: 500;
   }
+}
+.useCarTimeTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-around;
 }
 </style>
