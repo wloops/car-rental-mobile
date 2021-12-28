@@ -31,7 +31,7 @@
         <date-time-section></date-time-section>
         <van-picker
           ref="picker"
-          :columns="columns1"
+          :columns="columnsToday"
           visible-item-count="3"
           item-height="32"
           @change="useCarTimeChange"
@@ -69,6 +69,8 @@ import DateTimeSection from '@/components/DateTimeSection.vue'
 import moment from 'moment'
 import { mapGetters, mapMutations } from 'vuex'
 
+var _ = require('lodash')
+
 function initData() {
   return {
     show: false,
@@ -96,7 +98,8 @@ export default {
       // maxDate: new Date(),
       // maxDate: moment().add(90, 'day').toDate(),
       ...initData(),
-      columns1: [
+      columnsToday: [],
+      columns: [
         // 第一列
         {
           values: [
@@ -149,7 +152,7 @@ export default {
             '23:00',
             '23:30',
           ],
-          defaultIndex: 2,
+          defaultIndex: 0,
         },
         // 第二列
         {
@@ -203,7 +206,7 @@ export default {
             '23:00',
             '23:30',
           ],
-          defaultIndex: 1,
+          defaultIndex: 0,
         },
       ],
     }
@@ -237,6 +240,10 @@ export default {
       endDate: 'getEndDate',
     }),
   },
+  created() {
+    // 初始化时间选择器
+    this.columnsToday = _.cloneDeep(this.columns) // 结合lodash的cloneDeep方法，深拷贝数组
+  },
   methods: {
     ...mapMutations({
       // 将改变store中的值的方法映射到当前组件的methods中
@@ -254,11 +261,9 @@ export default {
       })
     },
     handleCalendarOpened() {
-      console.log(this.startTime, this.endTime)
+      // 打开日历时，时间选择器设置默认时间段
       this.$refs.picker.setColumnValue(0, this.startTime)
       this.$refs.picker.setColumnValue(1, this.endTime)
-      console.log('value:', this.$refs.picker.getColumnValue(0))
-      console.log('value:', this.$refs.picker.getColumnValue(1))
       this.isDisabled = false
     },
     showView() {
@@ -301,9 +306,29 @@ export default {
     },
     onCalendarSelect(val) {
       // console.log(val)
+      const today = moment(new Date()).format('YYYY-MM-DD')
 
       if (val[0]) {
         let startDateSelect = moment(val[0]).format('YYYY-MM-DD')
+        this.$refs.picker.setColumnValue(0, this.startTime)
+        this.$refs.picker.setColumnValue(1, this.endTime)
+        // 如果选择的日期是今天，则重新设置时间选择器的默认时间段
+        if (startDateSelect === today) {
+          this.columnsToday[0].values = this.columns[0].values.filter(item => {
+            let startTimeValue = this.$refs.picker
+              .getColumnValue(0)
+              .split(':')[0]
+
+            if (item.split(':')[0] >= startTimeValue) {
+              return true
+            }
+            return false
+          })
+        } else {
+          this.columnsToday = this.columns
+        }
+        // console.log('columns:', this.columns)
+        // console.log('columsToday:', this.columnsToday)
         this.setStartDate(startDateSelect)
         this.isDisabled = true
         console.log('取车日期', val[0])
