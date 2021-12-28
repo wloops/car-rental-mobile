@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import moment from 'moment'
+import { nextTimeOf } from '@/utils'
 
 Vue.use(Vuex)
 
@@ -26,11 +27,14 @@ export default new Vuex.Store({
     // getters 可以实时监听state值的变化(最新状态)
     getStartTime(state) {
       // 实时监听state值里的开始时间的最新状态的变化
-      return state.startTime
+
+      // 调用nextTimeOf()函数，设置默认结束时间
+      return nextTimeOf(state.startTime)
     },
     getEndTime(state) {
       // 实时监听state值里的结束时间的最新状态的变化
-      return state.endTime
+      // 调用nextTimeOf()函数，设置默认结束时间
+      return nextTimeOf(state.endTime)
     },
     getStartDate(state) {
       // 实时监听state值里的开始日期的最新状态的变化
