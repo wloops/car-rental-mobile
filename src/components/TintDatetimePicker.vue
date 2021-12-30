@@ -28,7 +28,8 @@
           >重置</span
         >
       </div>
-      <div slot="footer" class="calendar-footer dis-flex flex-y-center">
+      <div slot="footer" class="calendar-footer">
+        <!-- 显示当前选择的日期/时间/星期，以及共计几天 -->
         <date-time-section></date-time-section>
         <van-picker
           ref="picker"
@@ -323,30 +324,16 @@ export default {
         if (val[1]) {
           // console.log('还车日期', val[1])
           let endDateSelect = moment(val[1]).format('YYYY-MM-DD')
-          this.getTodayTime(endDateSelect, 1)
+          // 如果选择的日期是今天，则重新设置时间选择器的默认时间段
+          this.setTodayTime(endDateSelect, 1)
           this.setEndDate(endDateSelect)
           this.isDisabled = false
         }
-        // // 如果选择的日期是今天，则重新设置时间选择器的默认时间段
-        this.getTodayTime(startDateSelect, 0)
-
-        // if (startDateSelect === today) {
-        //   this.columnsToday[0].values = this.columns[0].values.filter(item => {
-        //     let startTimeValue = this.$refs.picker
-        //       .getColumnValue(0)
-        //       .split(':')[0]
-
-        //     if (item.split(':')[0] >= startTimeValue) {
-        //       return true
-        //     }
-        //     return false
-        //   })
-        // } else {
-        //   this.columnsToday = this.columns
-        // }
+        // 如果选择的日期是今天，则重新设置时间选择器的默认时间段
+        this.setTodayTime(startDateSelect, 0)
       }
     },
-    getTodayTime(time, i) {
+    setTodayTime(time, i) {
       // 如果选择的日期是今天，则重新设置时间选择器的默认时间段
       const today = moment(new Date()).format('YYYY-MM-DD')
       if (time === today) {
@@ -361,12 +348,6 @@ export default {
       } else {
         this.columnsToday[i].values = this.columns[i].values
       }
-    },
-    pickerFilter(type, options) {
-      if (type === 'minute') {
-        return options.filter(option => option % 5 === 0)
-      }
-      return options
     },
     useCarTimeChange(el, val) {
       this.setStartTime(val[0])
@@ -415,6 +396,9 @@ export default {
 
     .text {
       line-height: 20px;
+    }
+    .van-button {
+      margin-bottom: 0.5rem;
     }
   }
 
