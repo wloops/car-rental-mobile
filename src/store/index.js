@@ -9,7 +9,7 @@ export default new Vuex.Store({
   state() {
     return {
       startDate: moment().format('YYYY-MM-DD'), // 默认开始日期
-      endDate: moment().add(1, 'days').format('YYYY-MM-DD'), // 默认结束日期
+      endDate: moment().add(2, 'days').format('YYYY-MM-DD'), // 默认结束日期
       startTime: moment().add(1, 'h').format('HH:mm'), // 默认开始时间
       endTime: moment().add(1, 'h').format('HH:mm'), // 默认结束时间
       startDateM: '', // 开始日期的月份

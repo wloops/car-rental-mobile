@@ -15,6 +15,7 @@
       :poppable="false"
       :allow-same-day="true"
       :minDate="minDate"
+      :default-date="defaultDate"
       @confirm="onCalendarConfirm"
       @select="onCalendarSelect"
     >
@@ -27,7 +28,8 @@
           >重置</span
         >
       </div>
-      <div slot="footer" class="calendar-footer dis-flex flex-y-center">
+      <div slot="footer" class="calendar-footer">
+        <!-- 显示当前选择的日期/时间/星期，以及共计几天 -->
         <date-time-section></date-time-section>
         <van-picker
           ref="picker"
@@ -95,6 +97,7 @@ export default {
     return {
       // minDate: moment().subtract(90, 'day').toDate(),
       minDate: new Date(),
+      defaultDate: [new Date(), moment().add(2, 'day').toDate()],
       // maxDate: new Date(),
       // maxDate: moment().add(90, 'day').toDate(),
       ...initData(),
@@ -152,7 +155,7 @@ export default {
             '23:00',
             '23:30',
           ],
-          defaultIndex: 0,
+          defaultIndex: 20,
         },
         // 第二列
         {
@@ -206,7 +209,7 @@ export default {
             '23:00',
             '23:30',
           ],
-          defaultIndex: 0,
+          defaultIndex: 20,
         },
       ],
     }
@@ -306,45 +309,45 @@ export default {
     },
     onCalendarSelect(val) {
       // console.log(val)
-      const today = moment(new Date()).format('YYYY-MM-DD')
+      // const today = moment(new Date()).format('YYYY-MM-DD')
 
       if (val[0]) {
         let startDateSelect = moment(val[0]).format('YYYY-MM-DD')
         this.$refs.picker.setColumnValue(0, this.startTime)
         this.$refs.picker.setColumnValue(1, this.endTime)
-        // 如果选择的日期是今天，则重新设置时间选择器的默认时间段
-        if (startDateSelect === today) {
-          this.columnsToday[0].values = this.columns[0].values.filter(item => {
-            let startTimeValue = this.$refs.picker
-              .getColumnValue(0)
-              .split(':')[0]
 
-            if (item.split(':')[0] >= startTimeValue) {
-              return true
-            }
-            return false
-          })
-        } else {
-          this.columnsToday = this.columns
-        }
         // console.log('columns:', this.columns)
         // console.log('columsToday:', this.columnsToday)
         this.setStartDate(startDateSelect)
         this.isDisabled = true
-        console.log('取车日期', val[0])
+        // console.log('取车日期', val[0])
         if (val[1]) {
-          console.log('还车日期', val[1])
+          // console.log('还车日期', val[1])
           let endDateSelect = moment(val[1]).format('YYYY-MM-DD')
+          // 如果选择的日期是今天，则重新设置时间选择器的默认时间段
+          this.setTodayTime(endDateSelect, 1)
           this.setEndDate(endDateSelect)
           this.isDisabled = false
         }
+        // 如果选择的日期是今天，则重新设置时间选择器的默认时间段
+        this.setTodayTime(startDateSelect, 0)
       }
     },
-    pickerFilter(type, options) {
-      if (type === 'minute') {
-        return options.filter(option => option % 5 === 0)
+    setTodayTime(time, i) {
+      // 如果选择的日期是今天，则重新设置时间选择器的默认时间段
+      const today = moment(new Date()).format('YYYY-MM-DD')
+      if (time === today) {
+        this.columnsToday[i].values = this.columns[i].values.filter(item => {
+          let startTimeValue = this.$refs.picker.getColumnValue(0).split(':')[0]
+
+          if (item.split(':')[0] >= startTimeValue) {
+            return true
+          }
+          return false
+        })
+      } else {
+        this.columnsToday[i].values = this.columns[i].values
       }
-      return options
     },
     useCarTimeChange(el, val) {
       this.setStartTime(val[0])
@@ -393,6 +396,9 @@ export default {
 
     .text {
       line-height: 20px;
+    }
+    .van-button {
+      margin-bottom: 0.5rem;
     }
   }
 
