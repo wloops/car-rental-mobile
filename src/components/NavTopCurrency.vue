@@ -2,7 +2,7 @@
   <div class="NavTopCurrency">
     <div class="navTop">
       <!-- <van-cell-group> -->
-      <van-nav-bar title="惠租车  jenkins-3 " @click-right="toLogin">
+      <van-nav-bar title="惠租车" @click-right="toLogin">
         <template #left>
           <span>德保县</span>
         </template>
