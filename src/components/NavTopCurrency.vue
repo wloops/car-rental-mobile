@@ -2,9 +2,12 @@
   <div class="NavTopCurrency">
     <div class="navTop">
       <!-- <van-cell-group> -->
-      <van-nav-bar title="惠租车" @click-right="toLogin">
+      <van-nav-bar @click-right="toLogin">
         <template #left>
           <span>德保县</span>
+        </template>
+        <template #title>
+          <span class="title">惠租车</span>
         </template>
         <template #right>
           <a>登录</a>
@@ -50,6 +53,10 @@ export default {
   }
   [class*='van-hairline']::after {
     border: none;
+  }
+  .title {
+    font-size: 1.4rem;
+    font-weight: bold;
   }
 }
 </style>

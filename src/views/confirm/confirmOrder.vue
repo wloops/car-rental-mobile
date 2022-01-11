@@ -137,6 +137,28 @@
       </van-cell-group>
     </div>
 
+    <div class="costDescription">
+      <van-cell-group inset>
+        <van-cell title-class="payTitle">
+          <template #title>
+            <div>
+              <span>费用说明</span>
+            </div>
+          </template>
+        </van-cell>
+        <van-cell>
+          <template #title>
+            <div>
+              <span
+                ><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i>
+                订单显示费用为预估基础费用，实际产生费用以还车时显示为准；详细费用规则请参考规则说明，或可通过联系电话联系我们，谢谢您的理解与支持！</span
+              >
+            </div>
+          </template>
+        </van-cell>
+      </van-cell-group>
+    </div>
+
     <div class="payMethod">
       <van-cell-group inset>
         <van-cell title-class="payTitle">
@@ -164,7 +186,12 @@
 
     <div style="height: 6rem"></div>
     <div class="confirmOrderBox">
-      <van-submit-bar :price="32000" button-text="提交订单" @submit="onSubmit">
+      <van-submit-bar
+        :price="32000"
+        button-text="提交订单"
+        @submit="onSubmit"
+        label="预计："
+      >
         <!-- <template #tip>
           你的收货地址不支持同城送,
           <span @click="onClickEditAddress">修改地址</span>
@@ -362,11 +389,12 @@ export default {
 }
 
 .payMethod {
+  padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  .payTitle {
-    font-weight: 600;
-    color: #565656;
-  }
+}
+.payTitle {
+  font-weight: 600;
+  color: #565656;
 }
 
 .orderSuccessContainer {

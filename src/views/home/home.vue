@@ -8,21 +8,37 @@
 
       <div class="switchingRentalMode">
         <van-cell-group inset>
-          <van-tabs v-model="tabsActiveName" animated @click="tabsChange">
-            <van-tab title="单位租" name="单位租">
+          <van-tabs
+            v-model="tabsActiveName"
+            animated
+            @click="tabsChange"
+            :before-change="beforeChange"
+          >
+            <van-tab name="单位租">
+              <template #title>
+                <span class="tabTitle">单位租</span>
+              </template>
               <date-time-section
                 :value="date"
                 @click.native="showPicker"
               ></date-time-section>
             </van-tab>
-            <van-tab title="个人租" name="个人租">
+            <van-tab name="个人租">
+              <template #title>
+                <span class="tabTitle">个人租</span>
+              </template>
               <date-time-section
                 :value="date"
                 @click.native="showPicker"
               ></date-time-section>
             </van-tab>
           </van-tabs>
-          <van-button color="#ffc65f" block size="small" to="model"
+          <van-button
+            class="selectionCar"
+            color="#ffc65f"
+            block
+            size="normal"
+            to="model"
             >去选车</van-button
           >
           <tint-datetime-picker ref="tintPicker"></tint-datetime-picker>
@@ -32,6 +48,12 @@
 
     <div class="swipeAD">
       <swipe-ad></swipe-ad>
+    </div>
+    <div class="AD2">
+      <van-grid clickable :column-num="2" :gutter="10">
+        <van-grid-item icon="fire" text="广告位" to="/" />
+        <van-grid-item icon="fire" text="招租" url="#" />
+      </van-grid>
     </div>
 
     <div class="otherModule">
@@ -151,6 +173,7 @@ import {
   Grid,
   GridItem,
   Image as VanImage,
+  Toast,
 } from 'vant'
 
 export default {
@@ -175,6 +198,7 @@ export default {
     [Grid.name]: Grid,
     [GridItem.name]: GridItem,
     [VanImage.name]: VanImage,
+    [Toast.name]: Toast,
   },
   data() {
     return {
@@ -232,8 +256,18 @@ export default {
       this.date = `${this.formatDate(start)} - ${this.formatDate(end)}`
       console.log(this.date)
     },
-    tabsChange(title, name) {
+    tabsChange(name, title) {
       // this.setTabName(name)
+      // console.log(name, title)
+      if (name === '个人租') {
+        Toast.fail('个人租 暂未开放')
+      }
+    },
+    beforeChange(index) {
+      // 返回 false 表示阻止此次切换
+      if (index === 1) {
+        return false
+      }
     },
     showItem() {
       this.selectCarItem()
@@ -255,14 +289,24 @@ export default {
 .switchingRentalMode {
   .van-button--block {
     display: block;
-    width: 80%;
-    margin: 0 10% 3%;
-    font-size: 0.9rem;
+    width: 90%;
+    margin: 0 5% 3%;
+    // font-size: 0.9rem;
+    font-weight: 550;
+  }
+  /deep/ .van-tab {
+    font-size: 1.1rem;
     font-weight: 600;
+    color: #aeaac5;
+    // margin: 1rem 0 0.5rem 1rem;
+  }
+  /deep/ .van-tab--active {
+    color: #423d5e;
   }
 }
 
 .otherModule {
+  margin-top: 0.5rem;
   color: #a7a9a8;
   /deep/ .van-grid-item__icon {
     font-size: 28px;
@@ -306,5 +350,10 @@ export default {
   /deep/ .van-grid-item {
     border-radius: 50%;
   }
+}
+.selectionCar {
+  color: #111 !important;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 </style>
