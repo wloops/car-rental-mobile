@@ -9,7 +9,9 @@
     "dev": "vue-cli-service build && rm -rf ~/tomcat7/webapps/carRentalMobile/* && cp -rf ./dist/* ~/tomcat7/webapps/carRentalMobile/ && echo '--部署完成-- [http://paytunnel.cn/carRentalMobile]'"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "core-js": "^3.6.5",
+    "json-bigint": "^1.0.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "vant": "^2.12.37",

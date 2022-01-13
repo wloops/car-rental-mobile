@@ -71,6 +71,8 @@
 import { NavBar, Button, Image as VanImage, Form, Field, Icon } from 'vant'
 
 import { mapGetters, mapMutations } from 'vuex'
+// 加载user接口模块
+// import { login } from '@/api/user'
 
 export default {
   name: 'login',

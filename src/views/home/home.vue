@@ -176,6 +176,9 @@ import {
   Toast,
 } from 'vant'
 
+// 加载user接口模块
+import { silenceLogin, getComProblem } from '@/api/user'
+
 export default {
   name: 'Home',
   components: {
@@ -216,8 +219,16 @@ export default {
       immediate: true, // 初始化时立即触发
     },
   },
-
+  created() {
+    silenceLogin()
+    this.loadComProblem()
+  },
   methods: {
+    loadComProblem() {
+      getComProblem().then(res => {
+        console.log(res)
+      })
+    },
     ...mapMutations({
       // 将改变store中值的方法映射到当前组件的methods中
       setTabName: 'setTabName',

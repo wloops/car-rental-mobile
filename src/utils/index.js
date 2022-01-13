@@ -1,3 +1,4 @@
 import nextTimeOf from './nextTimeOf'
+import request from './request'
 
-export { nextTimeOf }
+export { nextTimeOf, request }
