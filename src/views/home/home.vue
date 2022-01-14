@@ -59,7 +59,12 @@
     <div class="otherModule">
       <van-cell-group inset>
         <van-grid clickable :column-num="4">
-          <van-grid-item icon="question" text="常见问题" to="/problems" />
+          <van-grid-item
+            icon="question"
+            text="常见问题"
+            to="/problems"
+            @click="toProblems"
+          />
           <van-grid-item
             icon="smile-comment"
             text="客户反馈"
@@ -176,8 +181,8 @@ import {
   Toast,
 } from 'vant'
 
-// 加载user接口模块
-import { silenceLogin, getComProblem } from '@/api/user'
+// 加载home接口模块
+import { silenceLogin, getAdImages } from '@/api/home'
 
 export default {
   name: 'Home',
@@ -220,14 +225,29 @@ export default {
     },
   },
   created() {
-    silenceLogin()
-    this.loadComProblem()
+    this.loadSilenceLogin()
   },
+  mounted() {},
   methods: {
-    loadComProblem() {
-      getComProblem().then(res => {
-        console.log(res)
-      })
+    toProblems() {
+      // this.loadComProblem()
+    },
+    loadSilenceLogin() {
+      let that = this
+      silenceLogin()
+        .then(res => {
+          // 将接口返回的用户相关数据放到本地存储，方便应用数据共享
+          // window.localStorage.setItem('user', res.data.data)
+          // 但是本地存储只能存储字符串
+          // 想要存储对象、数组类型的数据，则把他们转为 JSON 格式字符串进行存储
+          // window.localStorage.setItem('user', JSON.stringify(res.data.data))
+          // console.log(window.localStorage.getItem('user'))
+
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     ...mapMutations({
       // 将改变store中值的方法映射到当前组件的methods中

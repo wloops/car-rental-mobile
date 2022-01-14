@@ -1,12 +1,9 @@
 <template>
   <div class="SwipeAd">
     <van-cell-group inset>
-      <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-        <van-swipe-item>1</van-swipe-item>
-        <van-swipe-item>2</van-swipe-item>
-        <van-swipe-item>3</van-swipe-item>
-        <van-swipe-item>4</van-swipe-item>
-      </van-swipe>
+      <van-swipe-item v-for="(image, index) in adImagesLink" :key="index">
+        <img v-lazy="image" />
+      </van-swipe-item>
     </van-cell-group>
   </div>
 </template>
@@ -14,6 +11,8 @@
 <script>
 import { Swipe, SwipeItem, Cell, CellGroup } from 'vant'
 
+// 加载home接口模块
+import { silenceLogin, getAdImages } from '@/api/home'
 export default {
   name: 'SwipeAd',
   components: {
@@ -29,13 +28,33 @@ export default {
         'https://img01.yzcdn.cn/vant/apple-1.jpg',
         'https://img01.yzcdn.cn/vant/apple-2.jpg',
       ],
+      adImagesLink: [],
     }
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    this.loadAdImages()
+  },
   mounted() {},
-  methods: {},
+  methods: {
+    loadAdImages() {
+      // 获取轮播图图片
+      getAdImages()
+        .then(res => {
+          console.log(res.data.queryCarRentalADImg)
+          let adImages = res.data.queryCarRentalADImg
+          console.log(adImages)
+          this.adImagesLink = adImages.map(item => {
+            return `http://paytunnel.cn/socketServer/images/cardMall/imgsrc/${item.picFile}`
+          })
+          console.log(this.adImagesLink)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+  },
 }
 </script>
 

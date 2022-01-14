@@ -6,6 +6,8 @@
 
 <script>
 import { NavBar } from 'vant'
+
+import { getContactUs } from '@/api/home'
 export default {
   name: 'ContactUs',
   components: {
@@ -17,11 +19,24 @@ export default {
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    // 发送请求
+    this.loadContactUs()
+  },
   mounted() {},
   methods: {
     onClickLeft() {
       this.$router.go(-1)
+    },
+    // 获取联系我们
+    loadContactUs() {
+      getContactUs()
+        .then(res => {
+          console.log(res.data.queryCarRentalContactUs)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
   },
 }

@@ -6,6 +6,9 @@
 
 <script>
 import { NavBar } from 'vant'
+
+// 加载home接口模块
+import { getComProblem } from '@/api/home'
 export default {
   name: 'Problems',
   components: {
@@ -17,11 +20,24 @@ export default {
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    // 发送请求
+    this.loadComProblem()
+  },
   mounted() {},
   methods: {
     onClickLeft() {
       this.$router.go(-1)
+    },
+    // 获取常见问题
+    loadComProblem() {
+      getComProblem()
+        .then(res => {
+          console.log(res.data.queryCarRentalComProblem)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
   },
 }

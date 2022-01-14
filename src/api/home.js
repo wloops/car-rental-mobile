@@ -1,4 +1,4 @@
-// 《用户相关请求模块》
+// 《首页请求模块》
 // 加载 request 模块
 import { request } from '@/utils'
 
@@ -8,8 +8,8 @@ import { request } from '@/utils'
 //     url: '/hello/hello'
 //   })
 // }
-// 用户登录
-export const silenceLogin = data => {
+// 静默登录
+export const silenceLogin = () => {
   return request({
     method: 'GET',
     url: '/currencyLogin/login?REALUSERNAME=广州睿颢软件技术有限公司',
@@ -39,7 +39,22 @@ export const getComProblem = () => {
     // }
   })
 }
-// 修改用户信息
+
+// 获取轮播图广告图片
+export const getAdImages = () => {
+  return request({
+    method: 'GET',
+    url: '/search/queryCarRentalADImg',
+  })
+}
+
+// 获取联系我们的信息
+export const getContactUs = () => {
+  return request({
+    method: 'GET',
+    url: '/search/queryCarRentalContactUs',
+  })
+}
 // export const updateUser = () => {
 
 // }
