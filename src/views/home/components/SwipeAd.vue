@@ -1,15 +1,24 @@
 <template>
   <div class="SwipeAd">
     <van-cell-group inset>
-      <van-swipe-item v-for="(image, index) in adImagesLink" :key="index">
-        <img v-lazy="image" />
-      </van-swipe-item>
+      <van-swipe :autoplay="3000">
+        <van-swipe-item v-for="(image, index) in adImagesLink" :key="index">
+          <van-image fit="scale-down" :src="image" />
+        </van-swipe-item>
+      </van-swipe>
     </van-cell-group>
   </div>
 </template>
 
 <script>
-import { Swipe, SwipeItem, Cell, CellGroup } from 'vant'
+import {
+  Swipe,
+  SwipeItem,
+  Cell,
+  CellGroup,
+  Lazyload,
+  Image as VanImage,
+} from 'vant'
 
 // 加载home接口模块
 import { silenceLogin, getAdImages } from '@/api/home'
@@ -20,14 +29,12 @@ export default {
     [SwipeItem.name]: SwipeItem,
     [Cell.name]: Cell,
     [CellGroup.name]: CellGroup,
+    [Lazyload.name]: Lazyload,
+    [VanImage.name]: VanImage,
   },
   props: {},
   data() {
     return {
-      images: [
-        'https://img01.yzcdn.cn/vant/apple-1.jpg',
-        'https://img01.yzcdn.cn/vant/apple-2.jpg',
-      ],
       adImagesLink: [],
     }
   },
@@ -62,14 +69,14 @@ export default {
 .SwipeAd {
   padding: 0.7rem 0;
 }
-.my-swipe {
-  // margin-top: 0.7rem;
-  .van-swipe-item {
-    color: #fff;
-    font-size: 20px;
-    line-height: 150px;
-    text-align: center;
-    background-color: #39a9ed;
-  }
-}
+// .my-swipe {
+//   // margin-top: 0.7rem;
+//   .van-swipe-item {
+//     color: #fff;
+//     font-size: 20px;
+//     line-height: 150px;
+//     text-align: center;
+//     background-color: #39a9ed;
+//   }
+// }
 </style>

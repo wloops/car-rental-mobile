@@ -50,9 +50,17 @@
       <swipe-ad></swipe-ad>
     </div>
     <div class="AD2">
-      <van-grid clickable :column-num="2" :gutter="10">
-        <van-grid-item icon="fire" text="广告位" to="/" />
-        <van-grid-item icon="fire" text="招租" url="#" />
+      <van-grid clickable :column-num="2" :gutter="10" :border="false">
+        <van-grid-item to="/"
+          ><van-image
+            fit="scale-down"
+            src="https://dfs.zuchecdn.com/visit/carmktplat/g/V3/e4a1f8376b2f4aea99bbfb1054041bfa.png"
+        /></van-grid-item>
+        <van-grid-item url="#"
+          ><van-image
+            fit="scale-down"
+            src="https://dfs.zuchecdn.com/visit/carmktplat/g/V3/9092eae356d34a59b6b04d95980c7709.png"
+        /></van-grid-item>
       </van-grid>
     </div>
 
@@ -233,7 +241,6 @@ export default {
       // this.loadComProblem()
     },
     loadSilenceLogin() {
-      let that = this
       silenceLogin()
         .then(res => {
           // 将接口返回的用户相关数据放到本地存储，方便应用数据共享
