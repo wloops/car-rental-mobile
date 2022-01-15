@@ -3,10 +3,12 @@
 import axios from 'axios'
 import JSONBig from 'json-bigint'
 
+import { BASE_URL_API } from '@/global/config'
+
 // 创建一个 axios 实例 , 说白了就是复制一个 axios
 // 我们通过这个实例去发请求,把需要的配置 配置给这个实例来处理
 const request = axios.create({
-  baseURL: 'http://www.paytunnel.cn/orderFoodServerRH', // 请求的基础路径
+  baseURL: BASE_URL_API, // 请求的基础路径
   withCredentials: true, // 跨域请求时是否需要使用凭证
   // 定义后端返回的原始数据的处理
   // 参数 data 就是后端返回的原始数据(未经处理的 JSON格式字符串)
@@ -41,7 +43,7 @@ request.interceptors.request.use(
   // config 是当前请求相关的配置信息对象
   // config 是可以修改的
   function (config) {
-    console.log('来了个请求', config)
+    // console.log('来了个请求', config)
 
     // 然后我们就可以在允许请求出去之前定制统一业务功能处理
     // 例如：统一的设置 token

@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "commit": "cz",
-    "dev": "vue-cli-service build && rm -rf ~/tomcat7/webapps/carRentalMobile/* && cp -rf ./dist/* ~/tomcat7/webapps/carRentalMobile/ && echo '--部署完成-- [http://paytunnel.cn/carRentalMobile]'"
+    "dev": "vue-cli-service build && rm -rf ~/tomcat7/webapps/carRentalMobile/* && cp -rf ./dist/* ~/tomcat7/webapps/carRentalMobile/ && echo '--部署完成-- [http://www.paytunnel.cn/carRentalMobile]'"
   },
   "dependencies": {
     "axios": "^0.24.0",
