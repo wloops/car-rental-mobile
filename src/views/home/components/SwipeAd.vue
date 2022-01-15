@@ -20,8 +20,6 @@ import {
   Image as VanImage,
 } from 'vant'
 
-// 加载home接口模块
-import { silenceLogin, getAdImages } from '@/api/home'
 export default {
   name: 'SwipeAd',
   components: {
@@ -32,36 +30,20 @@ export default {
     [Lazyload.name]: Lazyload,
     [VanImage.name]: VanImage,
   },
-  props: {},
+  props: {
+    adImagesLink: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
   data() {
-    return {
-      adImagesLink: [],
-    }
+    return {}
   },
   computed: {},
   watch: {},
-  created() {
-    this.loadAdImages()
-  },
+  created() {},
   mounted() {},
-  methods: {
-    loadAdImages() {
-      // 获取轮播图图片
-      getAdImages()
-        .then(res => {
-          console.log(res.data.queryCarRentalADImg)
-          let adImages = res.data.queryCarRentalADImg
-          console.log(adImages)
-          this.adImagesLink = adImages.map(item => {
-            return `http://paytunnel.cn/socketServer/images/cardMall/imgsrc/${item.picFile}`
-          })
-          console.log(this.adImagesLink)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-  },
+  methods: {},
 }
 </script>
 
@@ -69,14 +51,4 @@ export default {
 .SwipeAd {
   padding: 0.7rem 0;
 }
-// .my-swipe {
-//   // margin-top: 0.7rem;
-//   .van-swipe-item {
-//     color: #fff;
-//     font-size: 20px;
-//     line-height: 150px;
-//     text-align: center;
-//     background-color: #39a9ed;
-//   }
-// }
 </style>

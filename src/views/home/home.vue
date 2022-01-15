@@ -47,7 +47,7 @@
     </div>
 
     <div class="swipeAD">
-      <swipe-ad></swipe-ad>
+      <swipe-ad :ad-images-link="adImagesLink"></swipe-ad>
     </div>
     <div class="AD2">
       <van-grid clickable :column-num="2" :gutter="10" :border="false">
@@ -171,6 +171,7 @@ import SwipeAd from '@/views/home/components/SwipeAd.vue'
 import CarDetails from '@/components/CarDetails.vue'
 
 import { mapGetters, mapMutations } from 'vuex'
+import { BASE_URL } from '@/global/config'
 
 import {
   NavBar,
@@ -221,8 +222,11 @@ export default {
       tabsActiveName: '单位租',
       date: '',
       show: false,
+      adImagesLink: [],
     }
   },
+
+  computed: {},
   watch: {
     // 监听tabsActiveName，并提交到vuex的state中
     tabsActiveName: {
@@ -233,6 +237,8 @@ export default {
     },
   },
   created() {
+    console.log('BASE_URL', BASE_URL)
+    // 静默登录
     this.loadSilenceLogin()
   },
   mounted() {},
@@ -249,8 +255,24 @@ export default {
           // 想要存储对象、数组类型的数据，则把他们转为 JSON 格式字符串进行存储
           // window.localStorage.setItem('user', JSON.stringify(res.data.data))
           // console.log(window.localStorage.getItem('user'))
-
-          console.log(res)
+          if (res.status === 200) {
+            this.loadAdImages()
+            // console.log(res.status)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    loadAdImages() {
+      // 获取轮播图图片
+      getAdImages()
+        .then(res => {
+          let adImages = res.data.queryCarRentalADImg
+          // console.log(adImages)
+          this.adImagesLink = adImages.map(item => {
+            return `${BASE_URL}/socketServer/images/cardMall/imgsrc/${item.picFile}`
+          })
         })
         .catch(err => {
           console.log(err)
