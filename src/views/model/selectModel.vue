@@ -9,7 +9,7 @@
     </div>
     <div class="treeSelect">
       <van-tree-select
-        height="710vh"
+        height="100%"
         :items="itemsTree"
         :main-active-index.sync="active"
       >
