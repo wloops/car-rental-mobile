@@ -1,6 +1,11 @@
 <template>
   <div class="Problems">
     <van-nav-bar title="常见问题" left-arrow @click-left="onClickLeft" />
+
+    <div v-for="(item, index) in comProblemList" :key="index">
+      <h4>{{ item.title }}</h4>
+      <span>{{ item.content }}</span>
+    </div>
   </div>
 </template>
 
@@ -16,7 +21,9 @@ export default {
   },
   props: {},
   data() {
-    return {}
+    return {
+      comProblemList: [],
+    }
   },
   computed: {},
   watch: {},
@@ -34,6 +41,7 @@ export default {
       getComProblem()
         .then(res => {
           console.log(res.data.queryCarRentalComProblem)
+          this.comProblemList = res.data.queryCarRentalComProblem
         })
         .catch(err => {
           console.log(err)

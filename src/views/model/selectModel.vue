@@ -82,6 +82,8 @@ import ModelNavtop from './components/ModelNavtop.vue'
 import SwipeAd from './components/SwipeAd.vue'
 import CarDetails from '@/components/CarDetails.vue'
 
+import { getVehicleType } from '@/api/carInfo'
+
 import {
   TreeSelect,
   Grid,
@@ -121,34 +123,7 @@ export default {
       result: [],
       active: 0,
       activeIds: [1, 2, 3, 4, 5, 6],
-      itemsTree: [
-        {
-          // 导航名称
-          text: '经济型',
-          // 导航名称右上角徽标，2.5.6 版本开始支持
-          // badge: 3,
-          // 是否在导航名称右上角显示小红点
-          // dot: true,
-          // 导航节点额外类名
-          className: 'my-class',
-          // 该导航下所有的可选项
-        },
-        {
-          text: '商务型',
-        },
-        {
-          text: 'SUV',
-        },
-        {
-          text: '5至15座商务型',
-        },
-        {
-          text: '豪华型',
-        },
-        {
-          text: '个性车',
-        },
-      ],
+      itemsTree: [],
       checked: false,
       carInfo: [
         {
@@ -168,7 +143,9 @@ export default {
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    this.loadVehicleType()
+  },
   mounted() {},
   methods: {
     selectCarItem() {
@@ -180,6 +157,18 @@ export default {
     },
     toConfirmOrder() {
       this.$router.push('/confirm')
+    },
+    loadVehicleType() {
+      getVehicleType().then(res => {
+        console.log(res.data.queryVehicleType)
+        this.itemsTree = res.data.queryVehicleType.map(item => {
+          return {
+            // id: item.id,
+            text: item.displayName,
+          }
+        })
+        console.log(this.itemsTree)
+      })
     },
   },
 }

@@ -71,6 +71,11 @@ const routes = [
     name: 'confirm',
     component: () => import('@/views/confirm/confirmOrder.vue'),
   },
+  {
+    path: '/rules',
+    name: 'rules',
+    component: () => import('@/views/confirm/page/orderRules.vue'),
+  },
 ]
 
 const router = new VueRouter({

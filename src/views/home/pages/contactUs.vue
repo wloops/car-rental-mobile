@@ -1,6 +1,9 @@
 <template>
   <div class="ContactUs">
     <van-nav-bar title="联系我们" left-arrow @click-left="onClickLeft" />
+    <div v-for="(item, index) in contactUsList" :key="index">
+      <span>{{ item.content }}</span>
+    </div>
   </div>
 </template>
 
@@ -15,7 +18,9 @@ export default {
   },
   props: {},
   data() {
-    return {}
+    return {
+      contactUsList: [],
+    }
   },
   computed: {},
   watch: {},
@@ -33,6 +38,7 @@ export default {
       getContactUs()
         .then(res => {
           console.log(res.data.queryCarRentalContactUs)
+          this.contactUsList = res.data.queryCarRentalContactUs
         })
         .catch(err => {
           console.log(err)

@@ -237,7 +237,6 @@ export default {
     },
   },
   created() {
-    console.log('BASE_URL', BASE_URL)
     // 静默登录
     this.loadSilenceLogin()
   },
@@ -256,6 +255,7 @@ export default {
           // window.localStorage.setItem('user', JSON.stringify(res.data.data))
           // console.log(window.localStorage.getItem('user'))
           if (res.status === 200) {
+            // 加载 获取广告图片
             this.loadAdImages()
             // console.log(res.status)
           }

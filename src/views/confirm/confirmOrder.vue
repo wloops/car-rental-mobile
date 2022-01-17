@@ -311,7 +311,7 @@ export default {
   methods: {
     // 跳转到规则页面
     toRules() {
-      // this.$router.push('/rules')
+      this.$router.push('/rules')
     },
     backPage() {
       this.$router.back()
