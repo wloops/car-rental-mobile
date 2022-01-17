@@ -225,7 +225,6 @@ export default {
       adImagesLink: [],
     }
   },
-
   computed: {},
   watch: {
     // 监听tabsActiveName，并提交到vuex的state中
@@ -273,6 +272,8 @@ export default {
           this.adImagesLink = adImages.map(item => {
             return `${BASE_URL}/socketServer/images/cardMall/imgsrc/${item.picFile}`
           })
+          // 广告图片链接 存入vuex
+          this.setAdImagesLink(this.adImagesLink)
         })
         .catch(err => {
           console.log(err)
@@ -281,6 +282,7 @@ export default {
     ...mapMutations({
       // 将改变store中值的方法映射到当前组件的methods中
       setTabName: 'setTabName',
+      setAdImagesLink: 'setAdImagesLink',
     }),
     showPicker() {
       this.$refs.tintPicker.showView()

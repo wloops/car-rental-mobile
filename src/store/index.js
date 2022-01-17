@@ -21,6 +21,7 @@ export default new Vuex.Store({
       endWeek: '', // 结束日期的星期
 
       tabName: '单位租', // 当前选中的tab
+      adImagesLink: [], // 广告图片链接
     }
   },
   getters: {
@@ -134,6 +135,10 @@ export default new Vuex.Store({
       // 实时监听state值里的当前选中的tab的最新状态的变化
       return state.tabName
     },
+    getAdImagesLink(state) {
+      // 实时监听state值里的广告图片链接的最新状态的变化
+      return state.adImagesLink
+    },
   },
   mutations: {
     // mutations 只能执行同步代码
@@ -156,6 +161,10 @@ export default new Vuex.Store({
     setTabName(state, payload) {
       // 通过mutations方式修改state里的值，更改当前选中的tab
       state.tabName = payload
+    },
+    setAdImagesLink(state, payload) {
+      // 通过mutations方式修改state里的值，更改当前选中的tab
+      state.adImagesLink = payload
     },
   },
   modules: {},

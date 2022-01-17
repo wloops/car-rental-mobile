@@ -5,13 +5,12 @@
       <model-navtop></model-navtop>
     </div>
     <div class="imgLinkAD">
-      <swipe-ad></swipe-ad>
+      <swipe-ad :ad-images-link="adImagesLink"></swipe-ad>
     </div>
     <div class="treeSelect">
       <van-tree-select
-        height="70vh"
+        height="710vh"
         :items="itemsTree"
-        :active-id.sync="activeIds"
         :main-active-index.sync="active"
       >
         <template #content>
@@ -79,7 +78,7 @@
 
 <script>
 import ModelNavtop from './components/ModelNavtop.vue'
-import SwipeAd from './components/SwipeAd.vue'
+import SwipeAd from '@/views/home/components/SwipeAd.vue'
 import CarDetails from '@/components/CarDetails.vue'
 
 import { getVehicleType } from '@/api/carInfo'
@@ -122,7 +121,6 @@ export default {
     return {
       result: [],
       active: 0,
-      activeIds: [1, 2, 3, 4, 5, 6],
       itemsTree: [],
       checked: false,
       carInfo: [
@@ -141,9 +139,15 @@ export default {
       ],
     }
   },
-  computed: {},
+  computed: {
+    adImagesLink() {
+      // 广告图片链接 vuex
+      return this.$store.getters.getAdImagesLink
+    },
+  },
   watch: {},
   created() {
+    // console.log('车型分类轮播图', this.adImagesLink)
     this.loadVehicleType()
   },
   mounted() {},
@@ -180,6 +184,9 @@ export default {
 
 //   position: relative;
 // }
+.SelectModel {
+  height: 100%;
+}
 
 .checkbox {
   position: absolute;
