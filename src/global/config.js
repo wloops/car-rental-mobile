@@ -17,6 +17,8 @@ let BASE_URL = ''
 let BASE_URL_API = ''
 const TIME_OUT = 10000
 
+console.log('process.env.NODE_ENV', process.env.NODE_ENV)
+
 if (process.env.NODE_ENV === 'development') {
   BASE_URL = 'http://www.paytunnel.cn'
   BASE_URL_API = 'http://www.paytunnel.cn/orderFoodServerRH'

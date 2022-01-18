@@ -47,16 +47,9 @@
     </div>
 
     <div class="swipeAD">
-      <!-- <van-overlay
-        :show="isLoading"
-        @click="isLoading = false"
-        z-index="1000"
-        lock-scroll
-      > -->
       <div class="wrapper" v-if="isLoading === true">
         <van-loading size="24px" vertical>加载中...</van-loading>
       </div>
-      <!-- </van-overlay> -->
       <swipe-ad :ad-images-link="adImagesLink" v-else></swipe-ad>
     </div>
     <div class="AD2">
