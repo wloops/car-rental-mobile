@@ -50,16 +50,9 @@
 </template>
 
 <script>
-import { Image as VanImage, NavBar, Cell, CellGroup, Button } from 'vant'
 export default {
   name: 'myPage',
-  components: {
-    [VanImage.name]: VanImage,
-    [NavBar.name]: NavBar,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
-    [Button.name]: Button,
-  },
+  components: {},
   props: {},
   data() {
     return {

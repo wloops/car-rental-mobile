@@ -19,14 +19,9 @@
 </template>
 
 <script>
-import { NavBar, Cell, CellGroup } from 'vant'
 export default {
   name: 'NavTopCurrency',
-  components: {
-    [NavBar.name]: NavBar,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
-  },
+  components: {},
   props: {},
   data() {
     return {}

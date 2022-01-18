@@ -38,32 +38,9 @@
 </template>
 
 <script>
-import {
-  NavBar,
-  Tab,
-  Tabs,
-  Cell,
-  CellGroup,
-  List,
-  Grid,
-  GridItem,
-  Tag,
-  PullRefresh,
-} from 'vant'
 export default {
   name: 'OrdersList',
-  components: {
-    [NavBar.name]: NavBar,
-    [Tab.name]: Tab,
-    [Tabs.name]: Tabs,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
-    [List.name]: List,
-    [Grid.name]: Grid,
-    [GridItem.name]: GridItem,
-    [Tag.name]: Tag,
-    [PullRefresh.name]: PullRefresh,
-  },
+  components: {},
   props: ['thisTab'],
   data() {
     return {

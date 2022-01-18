@@ -22,34 +22,11 @@
 
 <script>
 import OrdersList from './components/OrdersList.vue'
-import {
-  NavBar,
-  Tab,
-  Tabs,
-  Cell,
-  CellGroup,
-  List,
-  Grid,
-  GridItem,
-  Tag,
-  PullRefresh,
-} from 'vant'
 
 export default {
   name: 'orders',
   components: {
     OrdersList,
-
-    [NavBar.name]: NavBar,
-    [Tab.name]: Tab,
-    [Tabs.name]: Tabs,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
-    [List.name]: List,
-    [Grid.name]: Grid,
-    [GridItem.name]: GridItem,
-    [Tag.name]: Tag,
-    [PullRefresh.name]: PullRefresh,
   },
   props: {},
   data() {

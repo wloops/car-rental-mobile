@@ -86,27 +86,10 @@
 </template>
 
 <script>
-import {
-  ContactCard,
-  Toast,
-  Cell,
-  Popup,
-  NavBar,
-  NoticeBar,
-  ContactList,
-  ContactEdit,
-} from 'vant'
+
 export default {
   name: 'ContactCard',
   components: {
-    [ContactCard.name]: ContactCard,
-    [Toast.name]: Toast,
-    [Cell.name]: Cell,
-    [Popup.name]: Popup,
-    [NavBar.name]: NavBar,
-    [NoticeBar.name]: NoticeBar,
-    [ContactList.name]: ContactList,
-    [ContactEdit.name]: ContactEdit,
   },
   props: {},
   data() {

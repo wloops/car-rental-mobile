@@ -11,25 +11,9 @@
 </template>
 
 <script>
-import {
-  Swipe,
-  SwipeItem,
-  Cell,
-  CellGroup,
-  Lazyload,
-  Image as VanImage,
-} from 'vant'
-
 export default {
   name: 'SwipeAd',
-  components: {
-    [Swipe.name]: Swipe,
-    [SwipeItem.name]: SwipeItem,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
-    [Lazyload.name]: Lazyload,
-    [VanImage.name]: VanImage,
-  },
+  components: {},
   props: {
     adImagesLink: {
       type: Object,

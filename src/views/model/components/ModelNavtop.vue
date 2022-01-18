@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import { NavBar, Icon, Popup, Cell, CellGroup, Button } from 'vant'
 import { mapGetters, mapMutations } from 'vuex'
 import DateTimeSection from '@/components/DateTimeSection.vue'
 import TintDatetimePicker from '@/components/TintDatetimePicker.vue'
@@ -52,13 +51,6 @@ export default {
   components: {
     DateTimeSection,
     TintDatetimePicker,
-
-    [NavBar.name]: NavBar,
-    [Icon.name]: Icon,
-    [Popup.name]: Popup,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
-    [Button.name]: Button,
   },
   props: {},
   data() {

@@ -83,38 +83,12 @@ import CarDetails from '@/components/CarDetails.vue'
 
 import { getVehicleType } from '@/api/carInfo'
 
-import {
-  TreeSelect,
-  Grid,
-  GridItem,
-  Checkbox,
-  CheckboxGroup,
-  Cell,
-  CellGroup,
-  Image as VanImage,
-  GoodsAction,
-  GoodsActionIcon,
-  GoodsActionButton,
-} from 'vant'
-
 export default {
   name: 'SelectModel',
   components: {
     ModelNavtop,
     SwipeAd,
     CarDetails,
-
-    [TreeSelect.name]: TreeSelect,
-    [Grid.name]: Grid,
-    [GridItem.name]: GridItem,
-    [Checkbox.name]: Checkbox,
-    [CheckboxGroup.name]: CheckboxGroup,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
-    [VanImage.name]: VanImage,
-    [GoodsAction.name]: GoodsAction,
-    [GoodsActionIcon.name]: GoodsActionIcon,
-    [GoodsActionButton.name]: GoodsActionButton,
   },
   props: {},
   data() {

@@ -47,7 +47,17 @@
     </div>
 
     <div class="swipeAD">
-      <swipe-ad :ad-images-link="adImagesLink"></swipe-ad>
+      <!-- <van-overlay
+        :show="isLoading"
+        @click="isLoading = false"
+        z-index="1000"
+        lock-scroll
+      > -->
+      <div class="wrapper" v-if="isLoading === true">
+        <van-loading size="24px" vertical>加载中...</van-loading>
+      </div>
+      <!-- </van-overlay> -->
+      <swipe-ad :ad-images-link="adImagesLink" v-else></swipe-ad>
     </div>
     <div class="AD2">
       <van-grid clickable :column-num="2" :gutter="10" :border="false">
@@ -173,23 +183,6 @@ import CarDetails from '@/components/CarDetails.vue'
 import { mapGetters, mapMutations } from 'vuex'
 import { BASE_URL } from '@/global/config'
 
-import {
-  NavBar,
-  Tab,
-  Tabs,
-  Cell,
-  CellGroup,
-  Calendar,
-  Button,
-  Col,
-  Row,
-  Icon,
-  Grid,
-  GridItem,
-  Image as VanImage,
-  Toast,
-} from 'vant'
-
 // 加载home接口模块
 import { silenceLogin, getAdImages } from '@/api/home'
 
@@ -201,21 +194,6 @@ export default {
     DateTimeSection,
     SwipeAd,
     CarDetails,
-
-    [NavBar.name]: NavBar,
-    [Tab.name]: Tab,
-    [Tabs.name]: Tabs,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
-    [Calendar.name]: Calendar,
-    [Button.name]: Button,
-    [Col.name]: Col,
-    [Row.name]: Row,
-    [Icon.name]: Icon,
-    [Grid.name]: Grid,
-    [GridItem.name]: GridItem,
-    [VanImage.name]: VanImage,
-    [Toast.name]: Toast,
   },
   data() {
     return {
@@ -223,6 +201,7 @@ export default {
       date: '',
       show: false,
       adImagesLink: [],
+      isLoading: false,
     }
   },
   computed: {},
@@ -237,6 +216,7 @@ export default {
   },
   created() {
     // 静默登录
+
     this.loadSilenceLogin()
   },
   mounted() {},
@@ -245,6 +225,7 @@ export default {
       // this.loadComProblem()
     },
     loadSilenceLogin() {
+      this.isLoading = true
       silenceLogin()
         .then(res => {
           // 将接口返回的用户相关数据放到本地存储，方便应用数据共享
@@ -274,6 +255,7 @@ export default {
           })
           // 广告图片链接 存入vuex
           this.setAdImagesLink(this.adImagesLink)
+          this.isLoading = false
         })
         .catch(err => {
           console.log(err)
@@ -417,5 +399,11 @@ export default {
   color: #111 !important;
   font-size: 1.1rem;
   font-weight: 600;
+}
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
 }
 </style>

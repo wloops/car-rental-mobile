@@ -106,18 +106,9 @@
 </template>
 
 <script>
-import { NavBar, Tag, Col, Row, Field, Uploader, Button, Form } from 'vant'
 export default {
   name: 'Feedbacks',
   components: {
-    [NavBar.name]: NavBar,
-    [Tag.name]: Tag,
-    [Col.name]: Col,
-    [Row.name]: Row,
-    [Field.name]: Field,
-    [Uploader.name]: Uploader,
-    [Button.name]: Button,
-    [Form.name]: Form,
   },
   props: {},
   data() {

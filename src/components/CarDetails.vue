@@ -37,18 +37,12 @@
 <script>
 import DateTimeSection from '@/components/DateTimeSection.vue'
 import TintDatetimePicker from '@/components/TintDatetimePicker.vue'
-import { Popup, Cell, Image as VanImage, Button } from 'vant'
 
 export default {
   name: 'CarDetails',
   components: {
     DateTimeSection,
     TintDatetimePicker,
-
-    [Popup.name]: Popup,
-    [Cell.name]: Cell,
-    [VanImage.name]: VanImage,
-    [Button.name]: Button,
   },
   props: {},
   data() {

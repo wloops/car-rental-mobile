@@ -5,12 +5,9 @@
 </template>
 
 <script>
-import { NavBar } from 'vant'
 export default {
   name: 'Guide',
-  components: {
-    [NavBar.name]: NavBar,
-  },
+  components: {},
   props: {},
   data() {
     return {}

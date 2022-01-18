@@ -8,14 +8,10 @@
 </template>
 
 <script>
-import { NavBar } from 'vant'
-
 import { getContactUs } from '@/api/home'
 export default {
   name: 'ContactUs',
-  components: {
-    [NavBar.name]: NavBar,
-  },
+  components: {},
   props: {},
   data() {
     return {

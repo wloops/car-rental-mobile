@@ -58,15 +58,6 @@
 </template>
 
 <script>
-import {
-  Popup,
-  Picker,
-  Calendar,
-  Button,
-  Icon,
-  DatetimePicker,
-  Toast,
-} from 'vant'
 import DateTimeSection from '@/components/DateTimeSection.vue'
 import moment from 'moment'
 import { mapGetters, mapMutations } from 'vuex'
@@ -84,14 +75,6 @@ export default {
   name: 'TintDatetimePicker',
   components: {
     DateTimeSection,
-
-    [Popup.name]: Popup,
-    [Picker.name]: Picker,
-    [Calendar.name]: Calendar,
-    [Button.name]: Button,
-    [Icon.name]: Icon,
-    [DatetimePicker.name]: DatetimePicker,
-    [Toast.name]: Toast,
   },
   data() {
     return {

@@ -17,14 +17,9 @@
 </template>
 
 <script>
-import { Tabbar, TabbarItem } from 'vant'
-
 export default {
   name: 'FooterTabbar',
-  components: {
-    [Tabbar.name]: Tabbar,
-    [TabbarItem.name]: TabbarItem,
-  },
+  components: {},
   props: {},
   data() {
     return {

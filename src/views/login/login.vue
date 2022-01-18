@@ -68,22 +68,11 @@
 </template>
 
 <script>
-import { NavBar, Button, Image as VanImage, Form, Field, Icon } from 'vant'
-
 import { mapGetters, mapMutations } from 'vuex'
-// 加载user接口模块
-// import { login } from '@/api/user'
 
 export default {
   name: 'login',
-  components: {
-    [NavBar.name]: NavBar,
-    [Button.name]: Button,
-    [VanImage.name]: VanImage,
-    [Form.name]: Form,
-    [Field.name]: Field,
-    [Icon.name]: Icon,
-  },
+  components: {},
   props: {},
   data() {
     return {

@@ -24,27 +24,14 @@
 </template>
 
 <script>
-import { Divider } from 'vant'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'DateTimeSection',
-  components: {
-    [Divider.name]: Divider,
-  },
+  components: {},
   props: {},
   data() {
-    return {
-      // dayToDay: 2,
-      // startDateM: 1,
-      // startDateD: 15,
-      // startWeek: '二',
-      // startTime: '12:30',
-      // endDateM: 1,
-      // endDateD: 17,
-      // endTime: '12:30',
-      // endWeek: '三',
-    }
+    return {}
   },
   computed: {
     ...mapGetters({

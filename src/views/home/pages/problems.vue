@@ -10,15 +10,11 @@
 </template>
 
 <script>
-import { NavBar } from 'vant'
-
 // 加载home接口模块
 import { getComProblem } from '@/api/home'
 export default {
   name: 'Problems',
-  components: {
-    [NavBar.name]: NavBar,
-  },
+  components: {},
   props: {},
   data() {
     return {

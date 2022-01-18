@@ -89,16 +89,9 @@
 </template>
 
 <script>
-import { NavBar, Tab, Tabs, Grid, GridItem } from 'vant'
 export default {
   name: 'orderRules',
-  components: {
-    [NavBar.name]: NavBar,
-    [Tab.name]: Tab,
-    [Tabs.name]: Tabs,
-    [Grid.name]: Grid,
-    [GridItem.name]: GridItem,
-  },
+  components: {},
   props: {},
   data() {
     return {

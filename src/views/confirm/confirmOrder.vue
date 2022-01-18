@@ -243,41 +243,11 @@
 <script>
 import ContactCard from '@/components/ContactCard.vue'
 import { mapGetters } from 'vuex'
-import {
-  NavBar,
-  Cell,
-  CellGroup,
-  SubmitBar,
-  Checkbox,
-  CheckboxGroup,
-  Card,
-  Divider,
-  Tag,
-  RadioGroup,
-  Radio,
-  Popup,
-  Button,
-  Icon,
-} from 'vant'
+
 export default {
   name: 'confirmOrder',
   components: {
     ContactCard,
-
-    [NavBar.name]: NavBar,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
-    [SubmitBar.name]: SubmitBar,
-    [Checkbox.name]: Checkbox,
-    [CheckboxGroup.name]: CheckboxGroup,
-    [Card.name]: Card,
-    [Divider.name]: Divider,
-    [Tag.name]: Tag,
-    [RadioGroup.name]: RadioGroup,
-    [Radio.name]: Radio,
-    [Popup.name]: Popup,
-    [Button.name]: Button,
-    [Icon.name]: Icon,
   },
   props: {},
   data() {

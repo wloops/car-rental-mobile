@@ -86,26 +86,9 @@
 </template>
 
 <script>
-import {
-  NavBar,
-  Form,
-  Field,
-  Button,
-  Cell,
-  CellGroup,
-  NumberKeyboard,
-} from 'vant'
 export default {
   name: 'register',
-  components: {
-    [NavBar.name]: NavBar,
-    [Form.name]: Form,
-    [Field.name]: Field,
-    [Button.name]: Button,
-    [Cell.name]: Cell,
-    [CellGroup.name]: CellGroup,
-    [NumberKeyboard.name]: NumberKeyboard,
-  },
+  components: {},
   props: {},
   data() {
     return {
