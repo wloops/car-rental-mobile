@@ -97,8 +97,18 @@ const components = [
   DatetimePicker,
 ]
 
-export default function (app) {
-  for (const component of components) {
-    app.component(component.name, component)
-  }
+function install(Vue) {
+  components.forEach(component => {
+    Vue.use(component)
+  })
 }
+
+export default {
+  install,
+}
+
+// export default function (app) {
+//   for (const component of components) {
+//     app.component(component.name, component)
+//   }
+// }
