@@ -12,12 +12,13 @@
         height="100%"
         :items="itemsTree"
         :main-active-index.sync="active"
+        @click-nav="handleClickNav"
       >
         <template #content>
-          <van-grid :column-num="1" :gutter="10" clickable v-if="active === 0">
+          <van-grid :column-num="1" :gutter="10" clickable>
             <van-grid-item
-              v-for="value in 8"
-              :key="value"
+              v-for="(item, index) in carInfo"
+              :key="index"
               icon="photo-o"
               @click="selectCarItem"
             >
@@ -28,39 +29,13 @@
                       width="5rem"
                       height="5rem"
                       fit="contain"
-                      src="http://res.tintjs.com/img/宝沃BX7.png"
+                      :src="item.carImg"
                     />
                   </div>
                   <div class="carInfo">
-                    <div class="carName">宝沃BX7</div>
-                    <div class="carMsg">2.0T自动 | SUV5座</div>
-                    <div class="carPrice">￥280 <span>日均</span></div>
-                  </div>
-                </div>
-              </template>
-            </van-grid-item>
-          </van-grid>
-          <van-grid :column-num="1" :gutter="10" clickable v-if="active === 1">
-            <van-grid-item
-              v-for="value in 8"
-              :key="value"
-              icon="photo-o"
-              @click="selectCarItem"
-            >
-              <template>
-                <div class="carCard">
-                  <div class="carImg">
-                    <van-image
-                      width="5rem"
-                      height="5rem"
-                      fit="contain"
-                      src="http://res.tintjs.com/img/奥迪A6.png"
-                    />
-                  </div>
-                  <div class="carInfo">
-                    <div class="carName">奥迪A6</div>
-                    <div class="carMsg">2.0T自动 | SUV5座</div>
-                    <div class="carPrice">￥280 <span>日均</span></div>
+                    <div class="carName">{{ item.carModelShowName }}</div>
+                    <div class="carMsg">{{ item.carDescription }}</div>
+                    <!-- <div class="carPrice">￥280 <span>日均</span></div> -->
                   </div>
                 </div>
               </template>
@@ -81,7 +56,7 @@ import ModelNavtop from './components/ModelNavtop.vue'
 import SwipeAd from '@/views/home/components/SwipeAd.vue'
 import CarDetails from '@/components/CarDetails.vue'
 
-import { getVehicleType } from '@/api/carInfo'
+import { getVehicleType, getVehicleOfType } from '@/api/carInfo'
 
 export default {
   name: 'SelectModel',
@@ -96,21 +71,23 @@ export default {
       result: [],
       active: 0,
       itemsTree: [],
+      classifyName: '',
       checked: false,
-      carInfo: [
-        {
-          carName: '宝沃BX7',
-          carMsg: '2.0T自动 | SUV5座',
-          carPrice: '￥280 <span>日均</span>',
-          carImg: 'http://res.tintjs.com/img/宝沃BX7.png',
-        },
-        {
-          carName: '奥迪A6',
-          carMsg: '2.0T自动 | SUV5座',
-          carPrice: '￥280 <span>日均</span>',
-          carImg: 'http://res.tintjs.com/img/奥迪A6.png',
-        },
-      ],
+      carInfo: [],
+      // carInfo: [
+      //   {
+      //     carName: '宝沃BX7',
+      //     carMsg: '2.0T自动 | SUV5座',
+      //     carPrice: '￥280 <span>日均</span>',
+      //     carImg: 'http://res.tintjs.com/img/宝沃BX7.png',
+      //   },
+      //   {
+      //     carName: '奥迪A6',
+      //     carMsg: '2.0T自动 | SUV5座',
+      //     carPrice: '￥280 <span>日均</span>',
+      //     carImg: 'http://res.tintjs.com/img/奥迪A6.png',
+      //   },
+      // ],
     }
   },
   computed: {
@@ -119,7 +96,12 @@ export default {
       return this.$store.getters.getAdImagesLink
     },
   },
-  watch: {},
+  watch: {
+    // active() {
+    //   // 切换车型
+    //   this.loadVehicleOfType()
+    // },
+  },
   created() {
     // console.log('车型分类轮播图', this.adImagesLink)
     this.loadVehicleType()
@@ -136,17 +118,33 @@ export default {
     toConfirmOrder() {
       this.$router.push('/confirm')
     },
+    // 获取车型分类
     loadVehicleType() {
       getVehicleType().then(res => {
-        console.log(res.data.queryVehicleType)
+        console.log('res.data.queryVehicleType', res.data.queryVehicleType)
         this.itemsTree = res.data.queryVehicleType.map(item => {
           return {
             // id: item.id,
             text: item.displayName,
+            classifyName: item.classifyName,
           }
         })
-        console.log(this.itemsTree)
+        console.log('this.itemsTree', this.itemsTree)
+        this.loadVehicleOfType()
       })
+    },
+    // 获取车型
+    loadVehicleOfType() {
+      getVehicleOfType({
+        classifyName: this.itemsTree[this.active].classifyName,
+      }).then(res => {
+        console.log('车型', res.data.queryVehicleOfType)
+        this.carInfo = res.data.queryVehicleOfType
+      })
+    },
+    handleClickNav(index) {
+      this.active = index
+      this.loadVehicleOfType()
     },
   },
 }

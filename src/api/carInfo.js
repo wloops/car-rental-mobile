@@ -21,3 +21,14 @@ export const getVehicleType = () => {
     url: '/search/queryVehicleType',
   })
 }
+// 获取车型分类下的汽车
+export const getVehicleOfType = params => {
+  return request({
+    method: 'GET',
+    url: '/search/queryVehicleOfType',
+    // Headers 参数使用 Headers 设置
+    // Body 参数使用 data 设置
+    // Query 参数使用 params 设置
+    params,
+  })
+}
