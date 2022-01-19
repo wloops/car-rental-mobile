@@ -28,7 +28,7 @@
       </template>
     </van-nav-bar>
     <div class="topPopup">
-      <van-popup v-model="popupShow" position="top" :style="{ height: '23%' }">
+      <van-popup v-model="popupShow" position="top" :style="{ height: '20%' }">
         <van-cell-group inset>
           <date-time-section @click.native="showPicker"></date-time-section>
           <van-button block color="#ff7636" @click="closePopup"

@@ -48,7 +48,9 @@
                         <div class="carMsg van-ellipsis">
                           {{ item.carDescription }}
                         </div>
-                        <!-- <div class="carPrice">￥280 <span>日均</span></div> -->
+                        <div class="carPrice">
+                          ￥{{ item.carPrice }} <span>日均</span>
+                        </div>
                       </div>
                     </div>
                   </template>
@@ -71,6 +73,8 @@ import ModelNavtop from './components/ModelNavtop.vue'
 import SwipeAd from '@/views/home/components/SwipeAd.vue'
 import CarDetails from '@/components/CarDetails.vue'
 
+import { BASE_URL } from '@/global/config'
+
 import { getVehicleType, getVehicleOfType } from '@/api/carInfo'
 
 export default {
@@ -92,6 +96,7 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
+      carInfoList: [],
       total: 0, //总共的数据条数
     }
   },
@@ -119,12 +124,27 @@ export default {
   },
   mounted() {},
   methods: {
-    selectCarItem() {
-      // console.log('selectCarItem')
+    selectCarItem(e) {
+      // 当前选择车辆
+      let imgURL =
+        e.currentTarget.children[0].children[0].children[0].children[0].src
+      let carName =
+        e.currentTarget.children[0].children[1].children[0].innerText
+      let carMsg = e.currentTarget.children[0].children[1].children[1].innerText
+      let carPrice =
+        e.currentTarget.children[0].children[1].children[2].innerText
+      let carPriceNum = carPrice.slice(1, carPrice.length - 3)
+      // console.log('imgURL', imgURL)
+      // console.log('carName', carName)
+      // console.log('carMsg', carMsg)
+      // console.log('carPrice', carPriceNum)
+      this.$store.commit('setCurrentCarInfo', {
+        carImg: imgURL,
+        carModelShowName: carName,
+        carDescription: carMsg,
+        carPrice: carPriceNum,
+      })
       this.$refs.showCarDetails.showPopup()
-    },
-    toggle(index) {
-      this.$refs.checkboxes[index].toggle()
     },
     toConfirmOrder() {
       this.$router.push('/confirm')
@@ -134,12 +154,17 @@ export default {
       getVehicleOfType({
         classifyName: this.itemsTree[this.active].classifyName,
       }).then(res => {
-        // console.log('车辆信息', res.data.queryVehicleOfType)
-        // console.log('total:', res.data.queryVehicleOfType_totalRecNum)
-        // this.carInfo = res.data.queryVehicleOfType
-        this.$store.commit('setCarInfo', res.data.queryVehicleOfType)
-        console.log('carInfo:', this.carInfo)
+        let carInfos = res.data.queryVehicleOfType
+        // 拼接车辆图片信息
+        this.carInfoList = carInfos.map(item => {
+          if (item.carImg) {
+            item.carImg = `${BASE_URL}/socketServer/images/cardMall/imgsrc/${item.carImg}`
+          }
+          return item
+        })
+        this.$store.commit('setCarInfo', this.carInfoList)
         this.total = res.data.queryVehicleOfType_totalRecNum
+        console.log('carInfo:', this.carInfo)
       })
     },
     handleClickNav(index) {
@@ -149,8 +174,6 @@ export default {
     //加载时触发
     onLoad() {
       console.log('onLoad')
-      console.log('this.loading', this.loading)
-      console.log('this.refreshing', this.refreshing)
       if (this.refreshing) {
         this.refreshing = false
       }
@@ -165,7 +188,6 @@ export default {
               classifyName: item.classifyName,
             }
           })
-          console.log('this.itemsTree', this.itemsTree)
           this.loadVehicleOfType()
         })
       } else {

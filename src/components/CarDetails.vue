@@ -8,18 +8,15 @@
     >
       <template>
         <div class="carImg">
-          <van-image
-            fit="contain"
-            src="http://res.tintjs.com/img/宝沃BX7.png"
-          />
+          <van-image width="10rem" height="10rem" fit="contain" :src="carImg" />
         </div>
         <div class="carInfo">
-          <div class="carName">宝沃BX7</div>
-          <div class="carMsg">2.0T自动 | SUV5座</div>
+          <div class="carName">{{ carName }}</div>
+          <div class="carMsg">{{ carMsg }}</div>
         </div>
         <date-time-section @click.native="showPicker"></date-time-section>
         <div class="footerBtn">
-          <div class="carPrice">￥280 <span>日均</span></div>
+          <div class="carPrice">￥{{ carPrice }} <span>日均</span></div>
           <van-button
             block
             color="#fec760"
@@ -48,14 +45,22 @@ export default {
   data() {
     return {
       show: false,
-      carInfo: {
-        carName: '宝沃BX7',
-        carMsg: '2.0T自动 | SUV5座',
-        carPrice: '￥280',
-      },
     }
   },
-  computed: {},
+  computed: {
+    carImg() {
+      return this.$store.getters.getCurrentCarInfo.carImg
+    },
+    carName() {
+      return this.$store.getters.getCurrentCarInfo.carModelShowName
+    },
+    carMsg() {
+      return this.$store.getters.getCurrentCarInfo.carDescription
+    },
+    carPrice() {
+      return this.$store.getters.getCurrentCarInfo.carPrice
+    },
+  },
   watch: {},
   created() {},
   mounted() {},
@@ -75,8 +80,11 @@ export default {
 
 <style scoped lang="less">
 .carImg {
-  width: 13rem;
-  margin: 0 auto;
+  // width: 13rem;
+  // margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 2rem;
 }
 .carInfo {

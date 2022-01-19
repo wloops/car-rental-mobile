@@ -93,73 +93,8 @@
         </van-grid>
       </van-cell-group>
     </div>
-
-    <div class="carRecommend">
-      <div class="recommendTitle">好车推荐</div>
-      <span class="recommendText">超值特惠，出行首选</span>
-      <van-grid :column-num="2" :gutter="10" clickable>
-        <van-grid-item @click="showItem">
-          <van-image
-            fit="contain"
-            src="http://res.tintjs.com/img/宝沃BX7.png"
-          />
-          <div class="recommendPrice">
-            <span class="oneDay">短期优惠</span>
-            <van-button
-              color="linear-gradient(to right, #fff ,#f8c764)"
-              size="mini"
-            >
-              ￥100
-            </van-button>
-          </div>
-        </van-grid-item>
-        <van-grid-item @click="showItem">
-          <van-image
-            fit="contain"
-            src="http://res.tintjs.com/img/别克GL8.png"
-          />
-          <div class="recommendPrice">
-            <span class="oneDay">短期优惠</span>
-            <van-button
-              color="linear-gradient(to right, #fff ,#f8c764)"
-              size="mini"
-            >
-              ￥100
-            </van-button>
-          </div>
-        </van-grid-item>
-        <van-grid-item @click="showItem">
-          <van-image fit="contain" src="http://res.tintjs.com/img/奥迪A6.png" />
-          <div class="recommendPrice">
-            <span class="oneDay">短期优惠</span>
-            <van-button
-              color="linear-gradient(to right, #fff ,#f8c764)"
-              size="mini"
-            >
-              ￥100
-            </van-button>
-          </div>
-        </van-grid-item>
-        <van-grid-item @click="showItem">
-          <van-image
-            fit="contain"
-            src="http://res.tintjs.com/img/沃尔沃S90.png"
-          />
-          <div class="recommendPrice">
-            <span class="oneDay">短期优惠</span>
-            <van-button
-              color="linear-gradient(to right, #fff ,#f8c764)"
-              size="mini"
-            >
-              ￥100
-            </van-button>
-          </div>
-        </van-grid-item>
-      </van-grid>
-    </div>
-    <!-- 车辆详情 -->
-    <div class="carDetails">
-      <car-details ref="showCarDetails"></car-details>
+    <div class="CarRecommend">
+      <car-recommend :car-info-list="carInfoList"></car-recommend>
     </div>
     <div style="height: 5rem"></div>
   </div>
@@ -170,14 +105,15 @@
 import NavTopCurrency from '@/components/NavTopCurrency.vue'
 import TintDatetimePicker from '@/components/TintDatetimePicker.vue'
 import DateTimeSection from '@/components/DateTimeSection.vue'
-import SwipeAd from '@/views/home/components/SwipeAd.vue'
-import CarDetails from '@/components/CarDetails.vue'
+import SwipeAd from './components/SwipeAd.vue'
+import CarRecommend from './components/CarRecommend.vue'
 
 import { mapGetters, mapMutations } from 'vuex'
 import { BASE_URL } from '@/global/config'
 
 // 加载home接口模块
 import { silenceLogin, getAdImages } from '@/api/home'
+import { getVehicleOfType } from '@/api/carInfo'
 
 export default {
   name: 'Home',
@@ -186,7 +122,7 @@ export default {
     TintDatetimePicker,
     DateTimeSection,
     SwipeAd,
-    CarDetails,
+    CarRecommend,
   },
   data() {
     return {
@@ -195,6 +131,8 @@ export default {
       show: false,
       adImagesLink: [],
       isLoading: false,
+      carInfoList: [],
+      // total: 0,
     }
   },
   computed: {},
@@ -230,6 +168,8 @@ export default {
           if (res.status === 200) {
             // 加载 获取广告图片
             this.loadAdImages()
+            // 加载 获取车辆信息
+            this.loadVehicleOfType()
             // console.log(res.status)
           }
         })
@@ -253,6 +193,24 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    // 获取车辆信息
+    loadVehicleOfType() {
+      getVehicleOfType({
+        classifyName: '经济型',
+      }).then(res => {
+        let carInfos = res.data.queryVehicleOfType
+        // 拼接车辆图片信息
+        this.carInfoList = carInfos.map(item => {
+          if (item.carImg) {
+            item.carImg = `${BASE_URL}/socketServer/images/cardMall/imgsrc/${item.carImg}`
+          }
+          return item
+        })
+        // this.$store.commit('setCarInfo', this.carInfoList)
+        // this.total = res.data.queryVehicleOfType_totalRecNum
+        // console.log('carInfo:', this.carInfo)
+      })
     },
     ...mapMutations({
       // 将改变store中值的方法映射到当前组件的methods中
