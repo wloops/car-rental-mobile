@@ -22,6 +22,7 @@ export default new Vuex.Store({
 
       tabName: '单位租', // 当前选中的tab
       adImagesLink: [], // 广告图片链接
+      carInfo: [], // 车辆信息
     }
   },
   getters: {
@@ -139,6 +140,10 @@ export default new Vuex.Store({
       // 实时监听state值里的广告图片链接的最新状态的变化
       return state.adImagesLink
     },
+    getCarInfo(state) {
+      // 实时监听state值里的车辆信息的最新状态的变化
+      return state.carInfo
+    },
   },
   mutations: {
     // mutations 只能执行同步代码
@@ -165,6 +170,10 @@ export default new Vuex.Store({
     setAdImagesLink(state, payload) {
       // 通过mutations方式修改state里的值，更改当前选中的tab
       state.adImagesLink = payload
+    },
+    setCarInfo(state, payload) {
+      // 通过mutations方式修改state里的值，更改当前选中的tab
+      state.carInfo = payload
     },
   },
   modules: {},

@@ -7,46 +7,61 @@
     <div class="imgLinkAD">
       <swipe-ad :ad-images-link="adImagesLink"></swipe-ad>
     </div>
-    <div class="treeSelect">
-      <van-tree-select
-        height="100%"
-        :items="itemsTree"
-        :main-active-index.sync="active"
-        @click-nav="handleClickNav"
+    <van-pull-refresh
+      success-text="刷新成功"
+      v-model="refreshing"
+      @refresh="onRefresh"
+    >
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
       >
-        <template #content>
-          <van-grid :column-num="1" :gutter="10" clickable>
-            <van-grid-item
-              v-for="(item, index) in carInfo"
-              :key="index"
-              icon="photo-o"
-              @click="selectCarItem"
-            >
-              <template>
-                <div class="carCard">
-                  <div class="carImg">
-                    <van-image
-                      width="5rem"
-                      height="5rem"
-                      fit="contain"
-                      :src="item.carImg"
-                    />
-                  </div>
-                  <div class="carInfo">
-                    <div class="carName">{{ item.carModelShowName }}</div>
-                    <div class="carMsg">{{ item.carDescription }}</div>
-                    <!-- <div class="carPrice">￥280 <span>日均</span></div> -->
-                  </div>
-                </div>
-              </template>
-            </van-grid-item>
-          </van-grid>
-          <!-- 车辆详情 -->
-          <div class="carDetails">
-            <car-details ref="showCarDetails"></car-details>
-          </div>
-        </template>
-      </van-tree-select>
+        <div class="treeSelect">
+          <van-tree-select
+            height="100%"
+            :items="itemsTree"
+            :main-active-index.sync="active"
+            @click-nav="handleClickNav"
+          >
+            <template #content>
+              <van-grid :column-num="1" :gutter="10" clickable>
+                <van-grid-item
+                  v-for="(item, index) in carInfo"
+                  :key="index"
+                  icon="photo-o"
+                  @click="selectCarItem"
+                >
+                  <template>
+                    <div class="carCard">
+                      <div class="carImg">
+                        <van-image
+                          width="5rem"
+                          height="5rem"
+                          fit="contain"
+                          :src="item.carImg"
+                        />
+                      </div>
+                      <div class="carInfo">
+                        <div class="carName">{{ item.carModelShowName }}</div>
+                        <div class="carMsg van-ellipsis">
+                          {{ item.carDescription }}
+                        </div>
+                        <!-- <div class="carPrice">￥280 <span>日均</span></div> -->
+                      </div>
+                    </div>
+                  </template>
+                </van-grid-item>
+              </van-grid>
+            </template>
+          </van-tree-select>
+        </div>
+      </van-list>
+    </van-pull-refresh>
+    <!-- 车辆详情 -->
+    <div class="carDetails">
+      <car-details ref="showCarDetails"></car-details>
     </div>
   </div>
 </template>
@@ -68,32 +83,26 @@ export default {
   props: {},
   data() {
     return {
-      result: [],
+      // result: [],
       active: 0,
       itemsTree: [],
       classifyName: '',
       checked: false,
-      carInfo: [],
-      // carInfo: [
-      //   {
-      //     carName: '宝沃BX7',
-      //     carMsg: '2.0T自动 | SUV5座',
-      //     carPrice: '￥280 <span>日均</span>',
-      //     carImg: 'http://res.tintjs.com/img/宝沃BX7.png',
-      //   },
-      //   {
-      //     carName: '奥迪A6',
-      //     carMsg: '2.0T自动 | SUV5座',
-      //     carPrice: '￥280 <span>日均</span>',
-      //     carImg: 'http://res.tintjs.com/img/奥迪A6.png',
-      //   },
-      // ],
+      // carInfo: [],
+      loading: false,
+      finished: false,
+      refreshing: false,
+      total: 0, //总共的数据条数
     }
   },
   computed: {
     adImagesLink() {
       // 广告图片链接 vuex
       return this.$store.getters.getAdImagesLink
+    },
+    carInfo() {
+      // 车辆信息 vuex
+      return this.$store.getters.getCarInfo
     },
   },
   watch: {
@@ -104,7 +113,9 @@ export default {
   },
   created() {
     // console.log('车型分类轮播图', this.adImagesLink)
-    this.loadVehicleType()
+    // this.loadVehicleType()
+    // this.loading = true
+    // this.onLoad()
   },
   mounted() {},
   methods: {
@@ -118,33 +129,64 @@ export default {
     toConfirmOrder() {
       this.$router.push('/confirm')
     },
-    // 获取车型分类
-    loadVehicleType() {
-      getVehicleType().then(res => {
-        console.log('res.data.queryVehicleType', res.data.queryVehicleType)
-        this.itemsTree = res.data.queryVehicleType.map(item => {
-          return {
-            // id: item.id,
-            text: item.displayName,
-            classifyName: item.classifyName,
-          }
-        })
-        console.log('this.itemsTree', this.itemsTree)
-        this.loadVehicleOfType()
-      })
-    },
-    // 获取车型
+    // 获取车辆信息
     loadVehicleOfType() {
       getVehicleOfType({
         classifyName: this.itemsTree[this.active].classifyName,
       }).then(res => {
-        console.log('车型', res.data.queryVehicleOfType)
-        this.carInfo = res.data.queryVehicleOfType
+        // console.log('车辆信息', res.data.queryVehicleOfType)
+        // console.log('total:', res.data.queryVehicleOfType_totalRecNum)
+        // this.carInfo = res.data.queryVehicleOfType
+        this.$store.commit('setCarInfo', res.data.queryVehicleOfType)
+        console.log('carInfo:', this.carInfo)
+        this.total = res.data.queryVehicleOfType_totalRecNum
       })
     },
     handleClickNav(index) {
       this.active = index
-      this.loadVehicleOfType()
+      this.onLoad()
+    },
+    //加载时触发
+    onLoad() {
+      console.log('onLoad')
+      console.log('this.loading', this.loading)
+      console.log('this.refreshing', this.refreshing)
+      if (this.refreshing) {
+        this.refreshing = false
+      }
+      if (this.itemsTree.length === 0) {
+        // 获取车型分类
+        getVehicleType().then(res => {
+          console.log('res.data.queryVehicleType', res.data.queryVehicleType)
+          this.itemsTree = res.data.queryVehicleType.map(item => {
+            return {
+              // id: item.id,
+              text: item.displayName,
+              classifyName: item.classifyName,
+            }
+          })
+          console.log('this.itemsTree', this.itemsTree)
+          this.loadVehicleOfType()
+        })
+      } else {
+        this.loadVehicleOfType()
+      }
+
+      this.loading = false
+
+      if (this.carInfo.length >= this.total) {
+        this.finished = true
+      }
+    },
+    onRefresh() {
+      // 清空列表数据
+      // this.carInfo = []
+      this.finished = false
+
+      // 重新加载数据
+      // 将 loading 设置为 true，表示处于加载状态
+      this.loading = true
+      this.onLoad()
     },
   },
 }
@@ -160,19 +202,20 @@ export default {
   height: 100%;
 }
 
-.checkbox {
-  position: absolute;
-  right: 5px;
-  top: 5px;
-  z-index: 100;
-}
+// .checkbox {
+//   position: absolute;
+//   right: 5px;
+//   top: 5px;
+//   z-index: 100;
+// }
 .text {
   line-height: 0.2rem;
 }
 .carCard {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
+  width: 100%;
 
   .carName {
     font-size: 1rem;
@@ -182,6 +225,7 @@ export default {
   }
   .carMsg {
     margin: 0.5rem;
+    width: 8rem;
     font-size: smaller;
   }
   .carPrice {
