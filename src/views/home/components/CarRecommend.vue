@@ -67,7 +67,7 @@ export default {
   methods: {
     selectCarItem(e) {
       // 当前选择车辆
-      console.log('e.currentTarget', e.currentTarget)
+      // console.log('e.currentTarget', e.currentTarget)
       let imgURL = e.currentTarget.children[0].children[0].src
       // console.log('imgURL', imgURL)
       this.carInfoList.forEach((item, index) => {

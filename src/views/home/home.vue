@@ -149,6 +149,8 @@ export default {
     // 静默登录
 
     this.loadSilenceLogin()
+
+    this.login()
   },
   mounted() {},
   methods: {
