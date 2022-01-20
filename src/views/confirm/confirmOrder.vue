@@ -76,9 +76,10 @@
                   direction="horizontal"
                   checked-color="#fcc55e"
                   icon-size="1rem"
+                  @change="changePickupCarRadio"
                 >
                   <van-radio name="1" shape="square">送车上门</van-radio>
-                  <van-radio name="2" shape="square">自行取车</van-radio>
+                  <van-radio name="0" shape="square">自行取车</van-radio>
                 </van-radio-group>
               </div>
               <div class="tagChecks">
@@ -89,9 +90,10 @@
                   direction="horizontal"
                   checked-color="#fcc55e"
                   icon-size="1rem"
+                  @change="changeReturnCarRadio"
                 >
                   <van-radio name="1" shape="square">上门服务</van-radio>
-                  <van-radio name="2" shape="square">自行还车</van-radio>
+                  <van-radio name="0" shape="square">自行还车</van-radio>
                 </van-radio-group>
               </div>
             </template>
@@ -248,6 +250,8 @@
 import ContactCard from '@/components/ContactCard.vue'
 import { mapGetters } from 'vuex'
 
+import { priceFormat } from '@/utils'
+
 export default {
   name: 'confirmOrder',
   components: {
@@ -262,8 +266,10 @@ export default {
       radio3: '1',
       payChecked: true,
       orderSuccessShow: false,
-      driverFee: 40,
-      isDrier: true,
+      driverFee: 39.8,
+      isDrier: true, // 是否需要司机
+      isPickupCar: true, // 是否自助取车
+      isReturnCar: true, // 是否自助还车
     }
   },
   computed: {
@@ -282,27 +288,25 @@ export default {
     }),
     driverFeeTotal() {
       // 计算司机费用
-      return this.driverFee * this.dayToDay
+      return priceFormat(this.driverFee * this.dayToDay)
     },
     totalFee() {
       // 计算总费用
       if (this.isDrier === true) {
-        return (
-          (Number(this.currentCarInfo.carPrice) + Number(this.driverFeeTotal)) *
-          Number(this.dayToDay) *
-          100
+        return priceFormat(
+          (Number(this.currentCarInfo.carPrice) * Number(this.dayToDay) +
+            Number(this.driverFeeTotal)) *
+            100
         )
       } else {
-        return (
+        return priceFormat(
           Number(this.currentCarInfo.carPrice) * Number(this.dayToDay) * 100
         )
       }
     },
   },
   watch: {},
-  created() {
-    console.log(this.radio1)
-  },
+  created() {},
   mounted() {},
   methods: {
     // 跳转到规则页面
@@ -325,6 +329,26 @@ export default {
         this.isDrier = true
       } else {
         this.isDrier = false
+      }
+    },
+    changePickupCarRadio(name) {
+      // 是否自助取车
+      if (name === '1') {
+        this.isPickupCar = true
+        console.log('自助取车')
+      } else {
+        this.isPickupCar = false
+        console.log('上门取车')
+      }
+    },
+    changeReturnCarRadio(name) {
+      // 是否自助还车
+      if (name === '1') {
+        this.isReturnCar = true
+        console.log('自助还车')
+      } else {
+        this.isReturnCar = false
+        console.log('上门还车')
       }
     },
   },
@@ -402,6 +426,9 @@ export default {
   .costTitle {
     font-weight: 600;
     color: #565656;
+  }
+  .van-cell__value {
+    color: #fec760;
   }
 }
 
