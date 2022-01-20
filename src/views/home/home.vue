@@ -255,7 +255,7 @@ export default {
       // this.setTabName(name)
       // console.log(name, title)
       if (name === '个人租') {
-        Toast.fail('个人租 暂未开放')
+        this.$toast.fail('个人租 暂未开放')
       }
     },
     beforeChange(index) {

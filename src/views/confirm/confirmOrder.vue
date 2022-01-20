@@ -15,13 +15,14 @@
     </div>
     <div class="orderInfo">
       <van-cell-group inset>
-        <van-cell is-link center>
-          <van-card
-            centered
-            desc="1.5自动 | 三厢5座"
-            title="雪佛兰新科鲁兹"
-            thumb="https://img01.yzcdn.cn/vant/ipad.jpeg"
-          >
+        <van-cell center>
+          <van-card centered :thumb="currentCarInfo.carImg">
+            <template #title>
+              <div class="carName">{{ currentCarInfo.carModelShowName }}</div>
+            </template>
+            <template #desc>
+              <div class="carDesc">{{ currentCarInfo.carDescription }}</div>
+            </template>
           </van-card>
         </van-cell>
         <van-cell>
@@ -61,9 +62,10 @@
                   direction="horizontal"
                   checked-color="#fcc55e"
                   icon-size="1rem"
+                  @change="changeDriverRadio"
                 >
                   <van-radio name="1" shape="square">是</van-radio>
-                  <van-radio name="2" shape="square">否</van-radio>
+                  <van-radio name="0" shape="square">否</van-radio>
                 </van-radio-group>
               </div>
               <div class="tagChecks">
@@ -123,14 +125,16 @@
         <van-cell title="车辆租赁及服务费">
           <template #default>
             <div>
-              <span>￥280</span>
+              <span>￥{{ currentCarInfo.carPrice }} * {{ dayToDay }}</span>
             </div>
           </template>
         </van-cell>
-        <van-cell title="司机服务费">
+        <van-cell title="司机服务费" v-if="isDrier">
           <template #default>
             <div>
-              <span>￥40*{{ dayToDay }} ￥40</span>
+              <span
+                >￥{{ driverFee }}*{{ dayToDay }} ￥{{ driverFeeTotal }}</span
+              >
             </div>
           </template>
         </van-cell>
@@ -187,7 +191,7 @@
     <div style="height: 6rem"></div>
     <div class="confirmOrderBox">
       <van-submit-bar
-        :price="32000"
+        :price="totalFee"
         button-text="提交订单"
         @submit="onSubmit"
         label="预计："
@@ -253,12 +257,13 @@ export default {
   data() {
     return {
       consentRules: false,
-      result: [],
       radio1: '1',
       radio2: '1',
       radio3: '1',
       payChecked: true,
       orderSuccessShow: false,
+      driverFee: 40,
+      isDrier: true,
     }
   },
   computed: {
@@ -273,10 +278,31 @@ export default {
       endDateD: 'getEndDateD',
       dayToDay: 'getDayToDay',
       tabName: 'getTabName',
+      currentCarInfo: 'getCurrentCarInfo',
     }),
+    driverFeeTotal() {
+      // 计算司机费用
+      return this.driverFee * this.dayToDay
+    },
+    totalFee() {
+      // 计算总费用
+      if (this.isDrier === true) {
+        return (
+          (Number(this.currentCarInfo.carPrice) + Number(this.driverFeeTotal)) *
+          Number(this.dayToDay) *
+          100
+        )
+      } else {
+        return (
+          Number(this.currentCarInfo.carPrice) * Number(this.dayToDay) * 100
+        )
+      }
+    },
   },
   watch: {},
-  created() {},
+  created() {
+    console.log(this.radio1)
+  },
   mounted() {},
   methods: {
     // 跳转到规则页面
@@ -292,6 +318,14 @@ export default {
     },
     toOrders() {
       this.$router.push('/orders')
+    },
+    changeDriverRadio(name) {
+      // 是否佩带司机
+      if (name === '1') {
+        this.isDrier = true
+      } else {
+        this.isDrier = false
+      }
     },
   },
 }
@@ -342,6 +376,19 @@ export default {
 }
 .orderInfo {
   padding-bottom: 0.5rem;
+  .carName {
+    font-size: 1.1rem;
+    color: #333131;
+    padding: 0.5rem 0;
+    margin-left: 1rem;
+    font-weight: 600;
+  }
+  .carDesc {
+    font-size: 1rem;
+    color: #565656;
+    padding: 0.5rem 0;
+    margin-left: 1rem;
+  }
 }
 .lesseeInfo {
   padding-bottom: 0.5rem;

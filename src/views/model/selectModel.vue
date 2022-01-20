@@ -87,12 +87,10 @@ export default {
   props: {},
   data() {
     return {
-      // result: [],
       active: 0,
       itemsTree: [],
       classifyName: '',
       checked: false,
-      // carInfo: [],
       loading: false,
       finished: false,
       refreshing: false,
@@ -110,39 +108,18 @@ export default {
       return this.$store.getters.getCarInfo
     },
   },
-  watch: {
-    // active() {
-    //   // 切换车型
-    //   this.loadVehicleOfType()
-    // },
-  },
-  created() {
-    // console.log('车型分类轮播图', this.adImagesLink)
-    // this.loadVehicleType()
-    // this.loading = true
-    // this.onLoad()
-  },
+  watch: {},
+  created() {},
   mounted() {},
   methods: {
     selectCarItem(e) {
       // 当前选择车辆
       let imgURL =
         e.currentTarget.children[0].children[0].children[0].children[0].src
-      let carName =
-        e.currentTarget.children[0].children[1].children[0].innerText
-      let carMsg = e.currentTarget.children[0].children[1].children[1].innerText
-      let carPrice =
-        e.currentTarget.children[0].children[1].children[2].innerText
-      let carPriceNum = carPrice.slice(1, carPrice.length - 3)
-      // console.log('imgURL', imgURL)
-      // console.log('carName', carName)
-      // console.log('carMsg', carMsg)
-      // console.log('carPrice', carPriceNum)
-      this.$store.commit('setCurrentCarInfo', {
-        carImg: imgURL,
-        carModelShowName: carName,
-        carDescription: carMsg,
-        carPrice: carPriceNum,
+      this.carInfoList.forEach((item, index) => {
+        if (item.carImg === imgURL) {
+          this.$store.commit('setCurrentCarInfo', item)
+        }
       })
       this.$refs.showCarDetails.showPopup()
     },

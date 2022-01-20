@@ -1,11 +1,6 @@
 <template>
   <div class="CarDetails">
-    <van-popup
-      v-model="show"
-      closeable
-      position="bottom"
-      :style="{ width: '100%', height: '60%' }"
-    >
+    <van-popup v-model="show" closeable position="bottom">
       <template>
         <div class="carImg">
           <van-image width="10rem" height="10rem" fit="contain" :src="carImg" />
@@ -15,13 +10,10 @@
           <div class="carMsg">{{ carMsg }}</div>
         </div>
         <date-time-section @click.native="showPicker"></date-time-section>
+        <div style="height: 4rem"></div>
         <div class="footerBtn">
           <div class="carPrice">￥{{ carPrice }} <span>日均</span></div>
-          <van-button
-            block
-            color="#fec760"
-            size="normal"
-            @click="toConfirmOrder"
+          <van-button block color="#fec760" size="large" @click="toConfirmOrder"
             >立即预定</van-button
           >
         </div>
@@ -85,10 +77,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 .carInfo {
-  margin-top: 2rem;
+  margin-top: 1rem;
   text-align: center;
   .carName {
     font-size: 1.2rem;
@@ -121,11 +113,13 @@ export default {
       color: #999;
     }
   }
-  .van-button {
+  .van-button--default {
     width: 8rem;
-    height: 2rem;
+    height: 2.5rem;
+    color: #111 !important;
     border-radius: 0.2rem;
     font-size: 1rem;
+    font-weight: 600;
   }
 }
 </style>

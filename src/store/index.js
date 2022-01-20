@@ -25,13 +25,7 @@ export default new Vuex.Store({
       adImagesLink: [], // 广告图片链接
 
       carInfo: [], // 车辆信息
-      currentCarInfo: {
-        // 当前选中的车辆信息
-        carImg: '',
-        carModelShowName: '',
-        carDescription: '',
-        carPrice: '',
-      },
+      currentCarInfo: [], // 当前选中的车辆信息
     }
   },
   getters: {

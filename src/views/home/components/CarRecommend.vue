@@ -69,7 +69,7 @@ export default {
       // 当前选择车辆
       console.log('e.currentTarget', e.currentTarget)
       let imgURL = e.currentTarget.children[0].children[0].src
-      console.log('imgURL', imgURL)
+      // console.log('imgURL', imgURL)
       this.carInfoList.forEach((item, index) => {
         if (item.carImg === imgURL) {
           this.$store.commit('setCurrentCarInfo', item)
