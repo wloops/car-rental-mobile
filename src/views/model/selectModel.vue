@@ -74,6 +74,7 @@ import SwipeAd from '@/views/home/components/SwipeAd.vue'
 import CarDetails from '@/components/CarDetails.vue'
 
 import { BASE_URL } from '@/global/config'
+import { priceFormat } from '@/utils'
 
 import { getVehicleType, getVehicleOfType } from '@/api/carInfo'
 
@@ -136,6 +137,9 @@ export default {
         this.carInfoList = carInfos.map(item => {
           if (item.carImg) {
             item.carImg = `${BASE_URL}/socketServer/images/cardMall/imgsrc/${item.carImg}`
+          }
+          if (item.carPrice) {
+            item.carPrice = priceFormat(item.carPrice)
           }
           return item
         })
@@ -209,6 +213,10 @@ export default {
 // }
 .text {
   line-height: 0.2rem;
+}
+.imgLinkAD {
+  position: fixed;
+  top: 4rem;
 }
 .carCard {
   display: flex;

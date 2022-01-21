@@ -55,7 +55,7 @@
           <van-cell>
             <template #default>
               <div class="tagChecks">
-                <van-tag color="#edaa01" size="medium">佩带司机</van-tag>
+                <van-tag color="#edaa01" size="medium">配带司机</van-tag>
                 <van-radio-group
                   class="radioGroup"
                   v-model="radio1"
@@ -64,8 +64,8 @@
                   icon-size="1rem"
                   @change="changeDriverRadio"
                 >
-                  <van-radio name="1" shape="square">是</van-radio>
-                  <van-radio name="0" shape="square">否</van-radio>
+                  <van-radio name="1" shape="square">聘用司机</van-radio>
+                  <van-radio name="0" shape="square">自行驾驶</van-radio>
                 </van-radio-group>
               </div>
               <div class="tagChecks">
@@ -127,15 +127,19 @@
         <van-cell title="车辆租赁及服务费">
           <template #default>
             <div>
-              <span>￥{{ currentCarInfo.carPrice }} * {{ dayToDay }}</span>
+              <span>￥{{ currentCarInfo.carPrice }} * {{ dayToDay }}</span
+              >&nbsp;&nbsp;&nbsp;&nbsp;<span class="totalPrice"
+                >￥{{ carPriceTotal }}</span
+              >
             </div>
           </template>
         </van-cell>
         <van-cell title="司机服务费" v-if="isDrier">
           <template #default>
             <div>
-              <span
-                >￥{{ driverFee }}*{{ dayToDay }} ￥{{ driverFeeTotal }}</span
+              <span>￥{{ driverFeeShow }}*{{ dayToDay }} </span
+              >&nbsp;&nbsp;&nbsp;&nbsp;<span class="totalPrice"
+                >￥{{ driverFeeTotal }}</span
               >
             </div>
           </template>
@@ -195,18 +199,18 @@
       <van-submit-bar
         :price="totalFee"
         button-text="提交订单"
-        @submit="onSubmit"
+        @submit="orderSubmit"
         label="预计："
       >
         <!-- <template #tip>
           你的收货地址不支持同城送,
           <span @click="onClickEditAddress">修改地址</span>
         </template> -->
-        <template #tip>
+        <!-- <template #tip>
           <van-checkbox v-model="consentRules"
             >我已同意《租车服务合同》</van-checkbox
           >
-        </template>
+        </template> -->
       </van-submit-bar>
     </div>
 
@@ -266,7 +270,7 @@ export default {
       radio3: '1',
       payChecked: true,
       orderSuccessShow: false,
-      driverFee: 39.8,
+      driverFee: 39.98234,
       isDrier: true, // 是否需要司机
       isPickupCar: true, // 是否自助取车
       isReturnCar: true, // 是否自助还车
@@ -286,23 +290,23 @@ export default {
       tabName: 'getTabName',
       currentCarInfo: 'getCurrentCarInfo',
     }),
+    driverFeeShow() {
+      // 根据是否需要司机，显示司机费用.不需要则赋值为0,方便计算
+      return priceFormat(this.isDrier ? this.driverFee : 0)
+    },
     driverFeeTotal() {
       // 计算司机费用
-      return priceFormat(this.driverFee * this.dayToDay)
+      return priceFormat(this.driverFeeShow * this.dayToDay)
+    },
+    carPriceTotal() {
+      // 计算车辆总租金
+      return priceFormat(this.currentCarInfo.carPrice * this.dayToDay)
     },
     totalFee() {
       // 计算总费用
-      if (this.isDrier === true) {
-        return priceFormat(
-          (Number(this.currentCarInfo.carPrice) * Number(this.dayToDay) +
-            Number(this.driverFeeTotal)) *
-            100
-        )
-      } else {
-        return priceFormat(
-          Number(this.currentCarInfo.carPrice) * Number(this.dayToDay) * 100
-        )
-      }
+      return priceFormat(
+        (Number(this.carPriceTotal) + Number(this.driverFeeTotal)) * 100
+      )
     },
   },
   watch: {},
@@ -316,8 +320,29 @@ export default {
     backPage() {
       this.$router.back()
     },
-    onSubmit() {
+    orderSubmit() {
       // this.$router.push('/pay')
+
+      let orderInfo = {
+        startTime: this.startTime, // 出发时间
+        endTime: this.endTime, // 结束时间
+        startDate: this.startDate, // 开始日期
+        endDate: this.endDate, // 开始日期
+        startDateM: this.startDateM, // 开始日期月份
+        startDateD: this.startDateD, // 开始日期
+        endDateM: this.endDateM, // 开始日期月份
+        endDateD: this.endDateD, // 日期
+        dayToDay: this.dayToDay, // 天数
+        tabName: this.tabName, // 当前页面的tab
+        currentCarInfo: this.currentCarInfo, // 当前车辆信息
+        isDrier: this.isDrier, // 是否需要司机
+        isPickupCar: this.isPickupCar, // 是否自助取车
+        isReturnCar: this.isReturnCar, // 是否自助还车
+        driverFeeShow: this.driverFeeShow, // 司机费用
+        driverFeeTotal: this.driverFeeTotal, // 司机总费用
+        totalFee: this.totalFee, // 总费用
+      }
+      console.log(orderInfo)
       this.orderSuccessShow = true
     },
     toOrders() {
@@ -428,7 +453,10 @@ export default {
     color: #565656;
   }
   .van-cell__value {
-    color: #fec760;
+    .totalPrice {
+      color: #fec760;
+      font-size: 1rem;
+    }
   }
 }
 
