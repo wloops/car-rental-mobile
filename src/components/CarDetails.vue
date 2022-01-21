@@ -1,6 +1,13 @@
 <template>
   <div class="CarDetails">
-    <van-popup v-model="show" closeable position="bottom">
+    <van-popup
+      v-model="show"
+      closeable
+      position="bottom"
+      round
+      close-on-popstate
+      safe-area-inset-bottom
+    >
       <template>
         <div class="carImg">
           <van-image width="10rem" height="10rem" fit="contain" :src="carImg" />

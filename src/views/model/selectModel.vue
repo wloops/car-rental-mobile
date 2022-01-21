@@ -7,26 +7,26 @@
     <div class="imgLinkAD">
       <swipe-ad :ad-images-link="adImagesLink"></swipe-ad>
     </div>
-    <van-pull-refresh
-      success-text="刷新成功"
-      v-model="refreshing"
-      @refresh="onRefresh"
-    >
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
+    <div class="treeSelect">
+      <van-tree-select
+        height="75vh"
+        :items="itemsTree"
+        :main-active-index.sync="active"
+        @click-nav="handleClickNav"
       >
-        <div class="treeSelect">
-          <van-tree-select
-            height="100%"
-            :items="itemsTree"
-            :main-active-index.sync="active"
-            @click-nav="handleClickNav"
+        <template #content>
+          <van-pull-refresh
+            success-text="刷新成功"
+            v-model="refreshing"
+            @refresh="onRefresh"
           >
-            <template #content>
-              <van-grid :column-num="1" :gutter="10" clickable>
+            <van-list
+              v-model="loading"
+              :finished="finished"
+              finished-text="没有更多了"
+              @load="onLoad"
+            >
+              <van-grid :column-num="1" :gutter="15" clickable :border="false">
                 <van-grid-item
                   v-for="(item, index) in carInfo"
                   :key="index"
@@ -56,11 +56,11 @@
                   </template>
                 </van-grid-item>
               </van-grid>
-            </template>
-          </van-tree-select>
-        </div>
-      </van-list>
-    </van-pull-refresh>
+            </van-list>
+          </van-pull-refresh>
+        </template>
+      </van-tree-select>
+    </div>
     <!-- 车辆详情 -->
     <div class="carDetails">
       <car-details ref="showCarDetails"></car-details>
@@ -204,7 +204,15 @@ export default {
 .SelectModel {
   height: 100%;
 }
-
+.treeSelect {
+  .van-list {
+    margin-top: 0.5rem;
+  }
+  /deep/ .van-grid-item__content {
+    border-radius: 5px;
+    box-shadow: 1px 1px 8px #ccc;
+  }
+}
 // .checkbox {
 //   position: absolute;
 //   right: 5px;
@@ -214,15 +222,13 @@ export default {
 .text {
   line-height: 0.2rem;
 }
-.imgLinkAD {
-  position: fixed;
-  top: 4rem;
-}
+
 .carCard {
   display: flex;
   justify-content: space-around;
   align-items: center;
   width: 100%;
+  padding-left: 1rem;
 
   .carName {
     font-size: 1rem;

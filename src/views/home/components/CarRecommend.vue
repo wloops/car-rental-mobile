@@ -120,5 +120,9 @@ export default {
   /deep/ .van-grid-item {
     border-radius: 50%;
   }
+  /deep/ .van-grid-item__content {
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px #ccc;
+  }
 }
 </style>
