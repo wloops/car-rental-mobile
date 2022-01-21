@@ -48,16 +48,16 @@ export default {
   },
   computed: {
     carImg() {
-      return this.$store.getters.getCurrentCarInfo.carImg
+      return this.$store.getters['car/getCurrentCarInfo'].carImg
     },
     carName() {
-      return this.$store.getters.getCurrentCarInfo.carModelShowName
+      return this.$store.getters['car/getCurrentCarInfo'].carModelShowName
     },
     carMsg() {
-      return this.$store.getters.getCurrentCarInfo.carDescription
+      return this.$store.getters['car/getCurrentCarInfo'].carDescription
     },
     carPrice() {
-      return this.$store.getters.getCurrentCarInfo.carPrice
+      return this.$store.getters['car/getCurrentCarInfo'].carPrice
     },
   },
   watch: {},

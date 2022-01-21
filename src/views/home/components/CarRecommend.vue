@@ -47,20 +47,7 @@ export default {
   data() {
     return {}
   },
-  computed: {
-    carImg() {
-      return this.$store.getters.getCurrentCarInfo.carImg
-    },
-    carName() {
-      return this.$store.getters.getCurrentCarInfo.carModelShowName
-    },
-    carMsg() {
-      return this.$store.getters.getCurrentCarInfo.carDescription
-    },
-    carPrice() {
-      return this.$store.getters.getCurrentCarInfo.carPrice
-    },
-  },
+  computed: {},
   watch: {},
   created() {},
   mounted() {},
@@ -72,7 +59,7 @@ export default {
       // console.log('imgURL', imgURL)
       this.carInfoList.forEach((item, index) => {
         if (item.carImg === imgURL) {
-          this.$store.commit('setCurrentCarInfo', item)
+          this.$store.commit('car/setCurrentCarInfo', item)
         }
       })
       this.$refs.showCarDetails.showPopup()

@@ -34,7 +34,20 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters({
+    // ...mapGetters({
+    //   startTime: 'getStartTime',
+    //   endTime: 'getEndTime',
+    //   startDate: 'getStartDate',
+    //   endDate: 'getEndDate',
+    //   startDateM: 'getStartDateM',
+    //   startDateD: 'getStartDateD',
+    //   endDateM: 'getEndDateM',
+    //   endDateD: 'getEndDateD',
+    //   dayToDay: 'getDayToDay',
+    //   startWeek: 'getStartWeek',
+    //   endWeek: 'getEndWeek',
+    // }),
+    ...mapGetters('time', {
       startTime: 'getStartTime',
       endTime: 'getEndTime',
       startDate: 'getStartDate',
@@ -60,7 +73,7 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    ...mapMutations({
+    ...mapMutations('time', {
       setStartTime: 'setStartTime',
       setEndTime: 'setEndTime',
       setStartDate: 'setStartDate',

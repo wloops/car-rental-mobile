@@ -106,7 +106,7 @@ export default {
     },
     carInfo() {
       // 车辆信息 vuex
-      return this.$store.getters.getCarInfo
+      return this.$store.getters['car/getCarInfo']
     },
   },
   watch: {},
@@ -119,7 +119,7 @@ export default {
         e.currentTarget.children[0].children[0].children[0].children[0].src
       this.carInfoList.forEach((item, index) => {
         if (item.carImg === imgURL) {
-          this.$store.commit('setCurrentCarInfo', item)
+          this.$store.commit('car/setCurrentCarInfo', item)
         }
       })
       this.$refs.showCarDetails.showPopup()
@@ -133,6 +133,9 @@ export default {
         classifyName: this.itemsTree[this.active].classifyName,
       }).then(res => {
         let carInfos = res.data.queryVehicleOfType
+        if (carInfos === undefined) {
+          return false
+        }
         // 拼接车辆图片信息
         this.carInfoList = carInfos.map(item => {
           if (item.carImg) {
@@ -143,7 +146,7 @@ export default {
           }
           return item
         })
-        this.$store.commit('setCarInfo', this.carInfoList)
+        this.$store.commit('car/setCarInfo', this.carInfoList)
         this.total = res.data.queryVehicleOfType_totalRecNum
         console.log('carInfo:', this.carInfo)
       })
@@ -162,6 +165,9 @@ export default {
         // 获取车型分类
         getVehicleType().then(res => {
           console.log('res.data.queryVehicleType', res.data.queryVehicleType)
+          if (res.data.queryVehicleType === undefined) {
+            return false
+          }
           this.itemsTree = res.data.queryVehicleType.map(item => {
             return {
               // id: item.id,

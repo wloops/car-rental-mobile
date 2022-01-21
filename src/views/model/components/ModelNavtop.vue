@@ -59,7 +59,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
+    ...mapGetters('time', {
       startTime: 'getStartTime',
       endTime: 'getEndTime',
       startDate: 'getStartDate',

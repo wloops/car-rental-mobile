@@ -277,7 +277,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
+    tabName() {
+      return this.$store.getters['getTabName']
+    },
+    currentCarInfo() {
+      return this.$store.getters['car/getCurrentCarInfo']
+    },
+    ...mapGetters('time', {
       startTime: 'getStartTime',
       endTime: 'getEndTime',
       startDate: 'getStartDate',
@@ -287,8 +293,6 @@ export default {
       endDateM: 'getEndDateM',
       endDateD: 'getEndDateD',
       dayToDay: 'getDayToDay',
-      tabName: 'getTabName',
-      currentCarInfo: 'getCurrentCarInfo',
     }),
     driverFeeShow() {
       // 根据是否需要司机，显示司机费用.不需要则赋值为0,方便计算
