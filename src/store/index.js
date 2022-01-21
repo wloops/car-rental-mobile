@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import moment from 'moment'
 import { nextTimeOf } from '@/utils'
-
+import createPersistedState from 'vuex-persistedstate' // vuex-persistedstate默认持久化所有state，指定需要持久化的state
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -194,4 +194,16 @@ export default new Vuex.Store({
     },
   },
   modules: {},
+  plugins: [
+    createPersistedState({
+      storage: window.sessionStorage,
+      // vuex-persistedstate默认持久化所有state，指定需要持久化的state
+      // reducer(val) {
+      //   return {
+      //     // 只储存state中的user
+      //     user: val.user,
+      //   }
+      // },
+    }),
+  ],
 })
