@@ -31,7 +31,7 @@
             name="账号"
             label="账号"
             placeholder="请输入账号"
-            :rules="[{ required: true, message: '请输入账号' }]"
+            :rules="unameRules"
           />
           <van-field
             v-model="password"
@@ -39,7 +39,7 @@
             name="密码"
             label="密码"
             placeholder="请输入密码"
-            :rules="[{ required: true, message: '请输入密码' }]"
+            :rules="pwdRules"
           />
           <p class="unPassword"><a>忘记密码？</a></p>
           <div style="margin: 16px">
@@ -78,6 +78,36 @@ export default {
     return {
       username: '',
       password: '',
+      unameRules: [
+        {
+          required: true,
+          message: '请输入账号',
+        },
+        {
+          // 自定义校验规则
+          validator: value => {
+            return /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/.test(
+              value
+            )
+          },
+          message: '请输入正确格式的手机号码',
+          trigger: 'onBlur',
+        },
+      ],
+      pwdRules: [
+        {
+          required: true,
+          message: '请输入密码',
+        },
+        {
+          // 自定义校验规则
+          validator: value => {
+            return /^[a-zA-Z0-9_]{6,16}$/.test(value)
+          },
+          message: '请输入正确格式的密码',
+          trigger: 'onBlur',
+        },
+      ],
     }
   },
   computed: {
