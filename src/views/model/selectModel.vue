@@ -26,36 +26,43 @@
               finished-text="没有更多了"
               @load="onLoad"
             >
-              <van-grid :column-num="1" :gutter="15" clickable :border="false">
-                <van-grid-item
-                  v-for="(item, index) in carInfo"
-                  :key="index"
-                  icon="photo-o"
-                  @click="selectCarItem"
+              <van-skeleton :row="10" :loading="skeletonLoading">
+                <van-grid
+                  :column-num="1"
+                  :gutter="15"
+                  clickable
+                  :border="false"
                 >
-                  <template>
-                    <div class="carCard">
-                      <div class="carImg">
-                        <van-image
-                          width="5rem"
-                          height="5rem"
-                          fit="contain"
-                          :src="item.carImg"
-                        />
-                      </div>
-                      <div class="carInfo">
-                        <div class="carName">{{ item.carModelShowName }}</div>
-                        <div class="carMsg van-ellipsis">
-                          {{ item.carDescription }}
+                  <van-grid-item
+                    v-for="(item, index) in carInfo"
+                    :key="index"
+                    icon="photo-o"
+                    @click="selectCarItem"
+                  >
+                    <template>
+                      <div class="carCard">
+                        <div class="carImg">
+                          <van-image
+                            width="5rem"
+                            height="5rem"
+                            fit="contain"
+                            :src="item.carImg"
+                          />
                         </div>
-                        <div class="carPrice">
-                          ￥{{ item.carPrice }} <span>日均</span>
+                        <div class="carInfo">
+                          <div class="carName">{{ item.carModelShowName }}</div>
+                          <div class="carMsg van-ellipsis">
+                            {{ item.carDescription }}
+                          </div>
+                          <div class="carPrice">
+                            ￥{{ item.carPrice }} <span>日均</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </template>
-                </van-grid-item>
-              </van-grid>
+                    </template>
+                  </van-grid-item>
+                </van-grid>
+              </van-skeleton>
             </van-list>
           </van-pull-refresh>
         </template>
@@ -97,6 +104,7 @@ export default {
       refreshing: false,
       carInfoList: [],
       total: 0, //总共的数据条数
+      skeletonLoading: true,
     }
   },
   computed: {
@@ -134,6 +142,7 @@ export default {
       }).then(res => {
         let carInfos = res.data.queryVehicleOfType
         if (carInfos === undefined) {
+          console.log('获取车辆信息失败')
           return false
         }
         // 拼接车辆图片信息
@@ -149,6 +158,13 @@ export default {
         this.$store.commit('car/setCarInfo', this.carInfoList)
         this.total = res.data.queryVehicleOfType_totalRecNum
         console.log('carInfo:', this.carInfo)
+
+        this.skeletonLoading = false
+        console.log(
+          'skeletonLoading:',
+          this.skeletonLoading ? '加载中' : '加载完成'
+        )
+        this.loading = false
       })
     },
     handleClickNav(index) {
@@ -158,6 +174,10 @@ export default {
     //加载时触发
     onLoad() {
       console.log('onLoad')
+      console.log(
+        'skeletonLoading:',
+        this.skeletonLoading ? '加载中' : '加载完成'
+      )
       if (this.refreshing) {
         this.refreshing = false
       }
@@ -166,6 +186,7 @@ export default {
         getVehicleType().then(res => {
           console.log('res.data.queryVehicleType', res.data.queryVehicleType)
           if (res.data.queryVehicleType === undefined) {
+            console.log('获取车型分类失败')
             return false
           }
           this.itemsTree = res.data.queryVehicleType.map(item => {
@@ -181,8 +202,6 @@ export default {
         this.loadVehicleOfType()
       }
 
-      this.loading = false
-
       if (this.carInfo.length >= this.total) {
         this.finished = true
       }
@@ -195,6 +214,7 @@ export default {
       // 重新加载数据
       // 将 loading 设置为 true，表示处于加载状态
       this.loading = true
+      this.skeletonLoading = true
       this.onLoad()
     },
   },

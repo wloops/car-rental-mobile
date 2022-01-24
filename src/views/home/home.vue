@@ -184,6 +184,10 @@ export default {
       getAdImages()
         .then(res => {
           let adImages = res.data.queryCarRentalADImg
+          if (adImages === null && adImages === undefined) {
+            console.log('获取轮播图图片失败')
+            return false
+          }
           // console.log(adImages)
           this.adImagesLink = adImages.map(item => {
             return `${BASE_URL}/socketServer/images/cardMall/imgsrc/${item.picFile}`
@@ -203,6 +207,10 @@ export default {
       }).then(res => {
         let carInfos = res.data.queryVehicleOfType
         // 拼接车辆图片信息
+        if (carInfos === null || carInfos === undefined) {
+          console.log('连接车辆信息接口失败')
+          return false
+        }
         this.carInfoList = carInfos.map(item => {
           if (item.carImg) {
             item.carImg = `${BASE_URL}/socketServer/images/cardMall/imgsrc/${item.carImg}`

@@ -78,8 +78,31 @@ const routes = [
   },
 ]
 
+// 用户登录状态信息
+// const user = JSON.parse(window.localStorage.getItem('user'))
+
 const router = new VueRouter({
   routes,
 })
+
+// 路由导航守卫:也就是所有页面的导航都会经过这里
+// to: 要去的路由信息
+// from: 来自哪里的路由信息
+// next: 放行方法(符合通过条件可调用放行)
+// router.beforeEach((to, from, next) => {
+//   // 验证登录页面的登录状态
+//   if (to.path == '/confirm') {
+//     if (user) {
+//       // 已登录,允许通过
+//       next()
+//     } else {
+//       // 没有登录信息,跳转到登陆页面
+//       next('/login')
+//     }
+//   } else {
+//     // 如果是登录页面 就允许通过
+//     next()
+//   }
+// })
 
 export default router
