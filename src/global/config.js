@@ -21,13 +21,13 @@ console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 
 if (process.env.NODE_ENV === 'development') {
   BASE_URL = 'http://www.paytunnel.cn'
-  BASE_URL_API = 'http://www.paytunnel.cn/orderFoodServerRH'
+  BASE_URL_API = 'http://www.paytunnel.cn/carRentalServerRH'
 } else if (process.env.NODE_ENV === 'production') {
   BASE_URL = 'http://www.paytunnel.cn'
-  BASE_URL_API = 'http://www.paytunnel.cn/orderFoodServerRH'
+  BASE_URL_API = 'http://www.paytunnel.cn/carRentalServerRH'
 } else {
   BASE_URL = 'http://www.paytunnel.cn'
-  BASE_URL_API = 'http://www.paytunnel.cn/orderFoodServerRH'
+  BASE_URL_API = 'http://www.paytunnel.cn/carRentalServerRH'
 }
 
 export { BASE_URL, BASE_URL_API, TIME_OUT }
