@@ -147,7 +147,6 @@ export default {
   },
   created() {
     // 静默登录
-    this.login()
 
     this.loadSilenceLogin()
   },
@@ -167,11 +166,12 @@ export default {
           // window.localStorage.setItem('user', JSON.stringify(res.data.data))
           // console.log(window.localStorage.getItem('user'))
           if (res.status === 200) {
+            this.login()
             // 加载 获取广告图片
             this.loadAdImages()
             // 加载 获取车辆信息
             this.loadVehicleOfType()
-            // console.log(res.status)
+            console.log(res.status)
           }
         })
         .catch(err => {
@@ -189,8 +189,12 @@ export default {
           }
           // console.log(adImages)
           this.adImagesLink = adImages.map(item => {
-            return `${BASE_DOMAIN}/socketServer/images/cardMall/imgsrc/${item.picFile}`
+            if (item.picFile) {
+              item.picFile = `${BASE_DOMAIN}/socketServer/images/cardMall/imgsrc/${item.picFile}`
+            }
+            return item
           })
+          console.log('this.adImagesLink:', this.adImagesLink)
           // 广告图片链接 存入vuex
           this.setAdImagesLink(this.adImagesLink)
           this.isLoading = false

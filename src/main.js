@@ -69,9 +69,10 @@ Vue.prototype.login = function (callback) {
   var that = this
   console.log('url:::' + url)
   // this.$http
-  //   .get(`http://www.paytunnel.cn/orderFoodServerRH${url}`)
+  //   .get(`http://www.paytunnel.cn/carRentalServerRH${url}`)
   //   .then(function (response) {
-  //     console.log('response:::' + response.data)
+  //     console.log('response.status:::' + response.status)
+  //     console.log('response.data:::' + response.data)
   //     var rs = JSON.stringify(response.data)
   //     if (rs.indexOf('-11419') != -1) {
   //       // 则是没有注册
