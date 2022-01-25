@@ -33,7 +33,13 @@
           icon="umbrella-circle"
           is-link
         />
-        <van-cell title="常见问题" size="large" icon="warning" is-link />
+        <van-cell
+          title="常见问题"
+          size="large"
+          icon="warning"
+          is-link
+          to="problems"
+        />
       </van-cell-group>
     </div>
 
@@ -99,7 +105,7 @@ export default {
 
 .logout {
   position: fixed;
-  bottom: 4rem;
+  bottom: 4.5rem;
   width: 95%;
   padding: 0.5rem;
 }
