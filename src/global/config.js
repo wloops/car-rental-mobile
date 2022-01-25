@@ -14,20 +14,20 @@
 // 测试环境: test
 
 let BASE_URL = ''
-let BASE_URL_API = ''
+let BASE_DOMAIN = ''
 const TIME_OUT = 10000
 
 console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 
 if (process.env.NODE_ENV === 'development') {
-  BASE_URL = 'http://www.paytunnel.cn'
-  BASE_URL_API = 'http://www.paytunnel.cn/carRentalServerRH'
+  BASE_URL = 'http://www.paytunnel.cn/carRentalServerRH'
+  BASE_DOMAIN = 'http://www.paytunnel.cn'
 } else if (process.env.NODE_ENV === 'production') {
-  BASE_URL = 'http://www.paytunnel.cn'
-  BASE_URL_API = 'http://www.paytunnel.cn/carRentalServerRH'
+  BASE_URL = 'http://www.paytunnel.cn/carRentalServerRH'
+  BASE_DOMAIN = 'http://www.paytunnel.cn'
 } else {
-  BASE_URL = 'http://www.paytunnel.cn'
-  BASE_URL_API = 'http://www.paytunnel.cn/carRentalServerRH'
+  BASE_URL = 'http://www.paytunnel.cn/carRentalServerRH'
+  BASE_DOMAIN = 'http://www.paytunnel.cn'
 }
 
-export { BASE_URL, BASE_URL_API, TIME_OUT }
+export { BASE_URL, BASE_DOMAIN, TIME_OUT }

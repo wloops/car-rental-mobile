@@ -80,7 +80,7 @@ import ModelNavtop from './components/ModelNavtop.vue'
 import SwipeAd from '@/views/home/components/SwipeAd.vue'
 import CarDetails from '@/components/CarDetails.vue'
 
-import { BASE_URL } from '@/global/config'
+import { BASE_DOMAIN } from '@/global/config'
 import { priceFormat } from '@/utils'
 
 import { getVehicleType, getVehicleOfType } from '@/api/carInfo'
@@ -148,7 +148,7 @@ export default {
         // 拼接车辆图片信息
         this.carInfoList = carInfos.map(item => {
           if (item.carImg) {
-            item.carImg = `${BASE_URL}/socketServer/images/cardMall/imgsrc/${item.carImg}`
+            item.carImg = `${BASE_DOMAIN}/socketServer/images/cardMall/imgsrc/${item.carImg}`
           }
           if (item.carPrice) {
             item.carPrice = priceFormat(item.carPrice)
@@ -174,6 +174,7 @@ export default {
     //加载时触发
     onLoad() {
       console.log('onLoad')
+      this.skeletonLoading = true
       console.log(
         'skeletonLoading:',
         this.skeletonLoading ? '加载中' : '加载完成'

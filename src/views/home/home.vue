@@ -109,7 +109,7 @@ import SwipeAd from './components/SwipeAd.vue'
 import CarRecommend from './components/CarRecommend.vue'
 
 import { mapGetters, mapMutations } from 'vuex'
-import { BASE_URL } from '@/global/config'
+import { BASE_DOMAIN } from '@/global/config'
 
 // 加载home接口模块
 import { silenceLogin, getAdImages } from '@/api/home'
@@ -147,10 +147,9 @@ export default {
   },
   created() {
     // 静默登录
+    this.login()
 
     this.loadSilenceLogin()
-
-    this.login()
   },
   mounted() {},
   methods: {
@@ -190,7 +189,7 @@ export default {
           }
           // console.log(adImages)
           this.adImagesLink = adImages.map(item => {
-            return `${BASE_URL}/socketServer/images/cardMall/imgsrc/${item.picFile}`
+            return `${BASE_DOMAIN}/socketServer/images/cardMall/imgsrc/${item.picFile}`
           })
           // 广告图片链接 存入vuex
           this.setAdImagesLink(this.adImagesLink)
@@ -213,7 +212,7 @@ export default {
         }
         this.carInfoList = carInfos.map(item => {
           if (item.carImg) {
-            item.carImg = `${BASE_URL}/socketServer/images/cardMall/imgsrc/${item.carImg}`
+            item.carImg = `${BASE_DOMAIN}/socketServer/images/cardMall/imgsrc/${item.carImg}`
           }
           return item
         })
