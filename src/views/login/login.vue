@@ -196,6 +196,7 @@ export default {
         .then(function (response) {
           //请求成功
           var result = response.data.rs
+          console.log(result)
           if (result == '1') {
             let storage = window.localStorage
             var userName = response.data.memberID
@@ -214,7 +215,8 @@ export default {
               response.data.usernameLERCOMPANY
             )
             storage.setItem('nickName', nickName)
-            window.location.href = global_.clientUrl
+            that.$router.push('/')
+            // window.location.href = global_.clientUrl
           } else {
             Dialog.alert({
               message: result,

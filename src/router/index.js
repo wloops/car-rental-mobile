@@ -79,7 +79,8 @@ const routes = [
 ]
 
 // 用户登录状态信息
-// const user = JSON.parse(window.localStorage.getItem('user'))
+// const user = JSON.parse(window.localStorage.getItem('token'))
+const user = window.localStorage.getItem('token')
 
 const router = new VueRouter({
   routes,
