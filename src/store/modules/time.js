@@ -65,7 +65,7 @@ export default {
       let total = Math.floor(moment.duration(end.diff(start)).asDays()) // 807
       // let total = end.diff(start, 'y', true) // "5 天"
       if (total > 0) {
-        return total
+        return total + 1 // 无良商家
       }
       return 1
     },

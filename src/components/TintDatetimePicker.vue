@@ -218,7 +218,7 @@ export default {
     end() {
       return this.endDate + ' ' + this.endTime
     },
-    ...mapGetters('time',{
+    ...mapGetters('time', {
       // 将store中的数据映射到当前组件的data中
       startTime: 'getStartTime',
       endTime: 'getEndTime',
@@ -231,7 +231,7 @@ export default {
     this.columnsToday = _.cloneDeep(this.columns) // 结合lodash的cloneDeep方法，深拷贝数组
   },
   methods: {
-    ...mapMutations('time',{
+    ...mapMutations('time', {
       // 将改变store中的值的方法映射到当前组件的methods中
       setStartTime: 'setStartTime',
       setEndTime: 'setEndTime',
