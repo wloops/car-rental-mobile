@@ -127,9 +127,9 @@
         <van-cell title="车辆租赁及服务费">
           <template #default>
             <div>
-              <span>￥{{ currentCarInfo.carPrice }} * {{ dayToDay }}</span
+              <span>￥{{ actualPrice }} x {{ dayToDay }}</span
               >&nbsp;&nbsp;&nbsp;&nbsp;<span class="totalPrice"
-                >￥{{ carPriceTotal }}</span
+                >￥{{ totalPrice }}</span
               >
             </div>
           </template>
@@ -137,7 +137,7 @@
         <van-cell title="司机服务费" v-if="isDrier">
           <template #default>
             <div>
-              <span>￥{{ driverFeeShow }}*{{ dayToDay }} </span
+              <span>￥{{ driverFeeShow }} x {{ dayToDay }} </span
               >&nbsp;&nbsp;&nbsp;&nbsp;<span class="totalPrice"
                 >￥{{ driverFeeTotal }}</span
               >
@@ -255,6 +255,7 @@ import ContactCard from '@/components/ContactCard.vue'
 import { mapGetters } from 'vuex'
 
 import { priceFormat } from '@/utils'
+import { getPriceInfo } from '@/api/order'
 
 export default {
   name: 'confirmOrder',
@@ -274,6 +275,15 @@ export default {
       isDrier: true, // 是否需要司机
       isPickupCar: true, // 是否自助取车
       isReturnCar: true, // 是否自助还车
+
+      // 原价
+      originalPrice: '',
+      // 实际价格
+      actualPrice: '',
+      // 折扣金额
+      discountPrice: '',
+      // 总价
+      totalPrice: '',
     }
   },
   computed: {
@@ -308,13 +318,18 @@ export default {
     },
     totalFee() {
       // 计算总费用
-      return priceFormat(
-        (Number(this.carPriceTotal) + Number(this.driverFeeTotal)) * 100
+      // return priceFormat(
+      //   (Number(this.carPriceTotal) + Number(this.driverFeeTotal)) * 100
+      // )
+      return (
+        priceFormat(Number(this.totalPrice) + Number(this.driverFeeTotal)) * 100
       )
     },
   },
   watch: {},
-  created() {},
+  created() {
+    this.loadPriceInfo()
+  },
   mounted() {},
   methods: {
     // 跳转到规则页面
@@ -323,6 +338,24 @@ export default {
     },
     backPage() {
       this.$router.back()
+    },
+    loadPriceInfo() {
+      getPriceInfo({
+        prdList: `${this.currentCarInfo.prdNo}*${this.dayToDay}`,
+      }).then(res => {
+        console.log(res.data.cartList)
+        let cartList = res.data.cartList[0]
+        this.originalPrice = cartList.denomination
+        this.actualPrice = cartList.price
+        this.discountPrice = cartList.reduction
+        this.totalPrice = cartList.totalSum
+        console.log(
+          this.originalPrice,
+          this.actualPrice,
+          this.discountPrice,
+          this.totalPrice
+        )
+      })
     },
     orderSubmit() {
       // this.$router.push('/pay')

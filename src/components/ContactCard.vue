@@ -1,19 +1,21 @@
 <template>
   <div class="ContactCard">
-    <van-cell is-link @click="onListContact">
+    <van-cell center is-link size="large" @click="onListContact">
       <!-- 使用 title 插槽来自定义标题 -->
       <template #default>
         <div style="color: #fcc55e">更换</div>
       </template>
       <template #title>
         <div class="custom-title">
-          <span class="title-name">XX单位</span>&nbsp;&nbsp;
-          <span class="title-tel">18100000000</span>
+          <span class="title-username">{{ username }}:</span>&nbsp;&nbsp;
+          <span class="title-name">{{ currentContact.name }}</span
+          >&nbsp;&nbsp;
+          <span class="title-tel">{{ currentContact.tel }}</span>
         </div>
       </template>
       <template #label>
         <div class="custom-label">
-          <span class="label-address">惠保县XX路XX号</span>
+          <span class="label-address">{{ currentContact.address }}</span>
         </div>
       </template>
     </van-cell>
@@ -41,8 +43,8 @@
         </div>
         <main>
           <van-contact-list
-            v-model="chosenContactId"
-            :list="list"
+            v-model="contact.chosenContactId"
+            :list="contact.list"
             default-tag-text="默认"
             @add="onAdd"
             @edit="onEdit"
@@ -62,6 +64,7 @@
             fixed
             placeholder
             title="新建承租人"
+            set-default-label="设为默认联系人"
             left-arrow
             @click-left="backListPage"
           />
@@ -86,42 +89,51 @@
 </template>
 
 <script>
-
 export default {
   name: 'ContactCard',
-  components: {
-  },
+  components: {},
   props: {},
   data() {
     return {
       listPupopShow: false,
       editPupopShow: false,
+      username: 'XX单位',
       currentContact: {
-        name: 'XX单位 18100000000',
-        tel: '惠保县XX路XX号',
+        name: 'XX',
+        tel: '18100000000',
+        address: '惠保县XX路XX号',
       },
-
-      chosenContactId: '1',
-      list: [
-        {
-          id: '1',
-          name: '张三',
-          tel: '13000000000',
-          isDefault: true,
-        },
-        {
-          id: '2',
-          name: '李四',
-          tel: '1310000000',
-        },
-      ],
+      contact: {
+        chosenContactId: '1',
+        list: [
+          {
+            id: '1',
+            name: '张三',
+            tel: '13000000000',
+            address: '惠保县XX路102号',
+            isDefault: true,
+          },
+          {
+            id: '2',
+            name: '李四',
+            tel: '13000000003',
+            address: '惠保县XX路121号',
+          },
+        ],
+      },
 
       editingContact: {},
     }
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    this.contact.list.forEach(item => {
+      if (item.isDefault) {
+        this.currentContact = item
+      }
+    })
+  },
   mounted() {},
   methods: {
     onListContact() {
@@ -134,20 +146,36 @@ export default {
       this.editPupopShow = false
     },
     onAdd() {
-      Toast('新增')
+      this.$toast('新增')
+      this.editingContact = {}
       this.editPupopShow = true
     },
     onEdit(contact) {
-      Toast('编辑' + contact.id)
+      this.$toast('编辑' + contact.id)
+      this.editingContact = contact
+      this.editPupopShow = true
     },
     onSelect(contact) {
-      Toast('选择' + contact.id)
+      console.log('选择', contact)
+      this.$toast('选择' + contact.id)
+      // 赋值到currentContact
+      this.currentContact = contact
     },
     onSave(contactInfo) {
-      Toast('保存')
+      this.$toast('保存')
+      this.editPupopShow = false
+      // 新增id
+      contactInfo.id = this.contact.list.length + 1
+      // 更新contact.list
+      this.contact.list.push(contactInfo)
     },
     onDelete(contactInfo) {
-      Toast('删除')
+      this.$toast('删除')
+      this.editPupopShow = false
+      // 更新contact.list
+      this.contact.list = this.contact.list.filter(
+        item => item.id !== contactInfo.id
+      )
     },
   },
 }

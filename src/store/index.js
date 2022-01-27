@@ -48,7 +48,7 @@ export default new Vuex.Store({
       // reducer(val) {
       //   return {
       //     // 只储存state中的user
-      //     user: val.user,
+      //     adImagesLink: val.adImagesLink,
       //   }
       // },
     }),

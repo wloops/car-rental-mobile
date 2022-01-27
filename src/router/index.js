@@ -90,18 +90,35 @@ const router = new VueRouter({
 // from: 来自哪里的路由信息
 // next: 放行方法(符合通过条件可调用放行)
 // router.beforeEach((to, from, next) => {
-//   // 验证登录页面的登录状态
+//   // 验证下单页面的登录状态
 //   if (to.path == '/confirm') {
 //     if (user) {
 //       // 已登录,允许通过
-//       next()
+//       if (from.path == '/login') {
+//         // 如果来自登录页面,则跳转到首页
+//         // next({ path: '/' })
+//         next()
+//       } else if (from.path == '/model') {
+//         next()
+//       }
 //     } else {
 //       // 没有登录信息,跳转到登陆页面
 //       next('/login')
 //     }
-//   } else {
-//     // 如果是登录页面 就允许通过
-//     next()
+//   }
+//   // 验证登录页面的登录状态
+//   if (to.path == '/login') {
+//     if (user) {
+//       // 已登录,允许通过
+//       if (from.path == '/') {
+//         // 如果来自首页,则跳转到首页
+//         next({ path: '/' })
+//         // next()
+//       }
+//     } else {
+//       // 没有登录信息,跳转到登陆页面
+//       next()
+//     }
 //   }
 // })
 

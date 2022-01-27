@@ -13,7 +13,9 @@
         src="https://img01.yzcdn.cn/vant/cat.jpeg"
       />
       <div class="userInfo-info">
-        <div class="userInfo-info-name">{{ userInfo.nickName }}</div>
+        <div class="userInfo-info-name">
+          {{ userInfo.nickName === '' ? '访客' : userInfo.nickName }}
+        </div>
         <div class="userInfo-info-desc">ID : {{ userInfo.id }}</div>
       </div>
     </div>
@@ -63,14 +65,16 @@ export default {
   data() {
     return {
       userInfo: {
-        nickName: '惠保单位',
-        id: '14223526',
+        nickName: '',
+        id: '',
       },
     }
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    this.userInfo.id = window.localStorage.getItem('memberID')
+  },
   mounted() {},
   methods: {
     logout() {

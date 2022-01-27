@@ -23,8 +23,11 @@
             <van-list
               v-model="loading"
               :finished="finished"
+              :offset="350"
+              :immediate-check="false"
               finished-text="没有更多了"
               @load="onLoad"
+              ref="checkList"
             >
               <van-skeleton :row="10" :loading="skeletonLoading">
                 <van-grid
@@ -105,6 +108,9 @@ export default {
       carInfoList: [],
       total: 0, //总共的数据条数
       skeletonLoading: true,
+      currentCarInfo: [],
+      currentPage: 0,
+      numOfPerPage: 7,
     }
   },
   computed: {
@@ -116,10 +122,57 @@ export default {
       // 车辆信息 vuex
       return this.$store.getters['car/getCarInfo']
     },
+    startDate() {
+      // 开始时间 vuex
+      // 格式化时间为 yyyyMMdd
+      let startDate = this.$store.getters['time/getStartDate']
+      if (startDate != null) {
+        startDate = startDate.replace(/-/g, '')
+      }
+      return startDate
+    },
+    endDate() {
+      // 结束时间 vuex
+      // 格式化时间为 yyyyMMdd
+      let endDate = this.$store.getters['time/getEndDate']
+      if (endDate != null) {
+        endDate = endDate.replace(/-/g, '')
+      }
+      return endDate
+    },
+    rentalDays() {
+      return this.$store.getters['time/getDayToDay']
+    },
   },
-  watch: {},
-  created() {},
-  mounted() {},
+  watch: {
+    startDate: {
+      handler(newValue, oldValue) {
+        // this.setStartDate(newValue)
+        // 值改变触发loadVehicleOfType请求
+        if (oldValue != newValue) {
+          this.loadVehicleOfType()
+        }
+      },
+      // immediate: true, // 初始化时立即触发
+    },
+    endDate: {
+      handler(newValue, oldValue) {
+        // this.setEndDate(newValue)
+        // 值改变触发loadVehicleOfType请求
+        if (oldValue != newValue) {
+          this.loadVehicleOfType()
+        }
+      },
+      // immediate: true, // 初始化时立即触发
+    },
+  },
+  created() {
+    console.log('SelectModel created')
+    this.onLoad()
+  },
+  mounted() {
+    console.log(this.startDate, this.endDate, this.rentalDays)
+  },
   methods: {
     selectCarItem(e) {
       // 当前选择车辆
@@ -139,8 +192,15 @@ export default {
     loadVehicleOfType() {
       getVehicleOfType({
         classifyName: this.itemsTree[this.active].classifyName,
+        actNo: this.itemsTree[this.active].actNo,
+        startTime: this.startDate,
+        endTime: this.endDate,
+        rentalDays: this.rentalDays,
+        currentPage: this.currentPage,
+        numOfPerPage: this.numOfPerPage,
       }).then(res => {
         let carInfos = res.data.queryVehicleOfType
+        console.log(carInfos)
         if (carInfos === undefined) {
           console.log('获取车辆信息失败')
           return false
@@ -155,67 +215,81 @@ export default {
           }
           return item
         })
-        this.$store.commit('car/setCarInfo', this.carInfoList)
         this.total = res.data.queryVehicleOfType_totalRecNum
+
+        this.loading = true
+        // this.carInfoList.forEach((item, index) => {
+        //   this.currentCarInfo.push(item)
+        // })
+        this.currentCarInfo.push(...this.carInfoList)
+        this.$store.commit('car/setCarInfo', this.currentCarInfo)
         console.log('carInfo:', this.carInfo)
 
-        this.skeletonLoading = false
-        console.log(
-          'skeletonLoading:',
-          this.skeletonLoading ? '加载中' : '加载完成'
-        )
+        if (this.carInfo.length >= parseInt(this.total)) {
+          this.finished = true
+        }
+
         this.loading = false
+        this.skeletonLoading = false
       })
     },
     handleClickNav(index) {
       this.active = index
+      this.currentPage = 0
+      this.currentCarInfo = []
+      this.loading = true
+      this.finished = false
       this.onLoad()
     },
     //加载时触发
     onLoad() {
-      console.log('onLoad')
-      this.skeletonLoading = true
-      console.log(
-        'skeletonLoading:',
-        this.skeletonLoading ? '加载中' : '加载完成'
-      )
-      if (this.refreshing) {
-        this.refreshing = false
-      }
-      if (this.itemsTree.length === 0) {
-        // 获取车型分类
-        getVehicleType().then(res => {
-          console.log('res.data.queryVehicleType', res.data.queryVehicleType)
-          if (res.data.queryVehicleType === undefined) {
-            console.log('获取车型分类失败')
-            return false
-          }
-          this.itemsTree = res.data.queryVehicleType.map(item => {
-            return {
-              // id: item.id,
-              text: item.displayName,
-              classifyName: item.classifyName,
-            }
-          })
-          this.loadVehicleOfType()
-        })
-      } else {
-        this.loadVehicleOfType()
-      }
+      setTimeout(() => {
+        this.currentPage++
+        console.log('onLoad')
+        this.skeletonLoading = true
 
-      if (this.carInfo.length >= this.total) {
-        this.finished = true
-      }
+        if (this.refreshing) {
+          this.refreshing = false
+        }
+
+        if (this.itemsTree.length === 0) {
+          // 获取车型分类
+          getVehicleType().then(res => {
+            console.log('res.data.queryVehicleType', res.data.queryVehicleType)
+            if (res.data.queryVehicleType === undefined) {
+              console.log('获取车型分类失败')
+              return false
+            }
+            this.itemsTree = res.data.queryVehicleType.map(item => {
+              return {
+                // id: item.id,
+                text: item.displayName,
+                classifyName: item.classifyName,
+                actNo: item.actNo,
+              }
+            })
+            this.loadVehicleOfType()
+          })
+        } else {
+          this.loadVehicleOfType()
+        }
+
+        // this.loading = false
+        // if (this.carInfo.length >= this.total) {
+        //   this.finished = true
+        // }
+      }, 500)
     },
     onRefresh() {
+      console.log('onRefresh')
+      this.currentPage = 0
       // 清空列表数据
-      // this.carInfo = []
+      this.currentCarInfo = []
       this.finished = false
 
       // 重新加载数据
       // 将 loading 设置为 true，表示处于加载状态
       this.loading = true
-      this.skeletonLoading = true
       this.onLoad()
     },
   },
