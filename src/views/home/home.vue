@@ -110,10 +110,12 @@ import CarRecommend from './components/CarRecommend.vue'
 
 import { mapGetters, mapMutations } from 'vuex'
 import { BASE_DOMAIN } from '@/global/config'
+/* 引入config文件模块 */
+import global_ from '@/global/config_global'
 
 // 加载home接口模块
 import { silenceLogin, getAdImages } from '@/api/home'
-import { getVehicleOfType } from '@/api/carInfo'
+import { getVehicleType, getVehicleOfType } from '@/api/carInfo'
 
 export default {
   name: 'Home',
@@ -133,9 +135,32 @@ export default {
       isLoading: false,
       carInfoList: [],
       // total: 0,
+      actNo: '',
     }
   },
-  computed: {},
+  computed: {
+    startDate() {
+      // 开始时间 vuex
+      // 格式化时间为 yyyyMMdd
+      let startDate = this.$store.getters['time/getStartDate']
+      if (startDate != null) {
+        startDate = startDate.replace(/-/g, '')
+      }
+      return startDate
+    },
+    endDate() {
+      // 结束时间 vuex
+      // 格式化时间为 yyyyMMdd
+      let endDate = this.$store.getters['time/getEndDate']
+      if (endDate != null) {
+        endDate = endDate.replace(/-/g, '')
+      }
+      return endDate
+    },
+    rentalDays() {
+      return this.$store.getters['time/getDayToDay']
+    },
+  },
   watch: {
     // 监听tabsActiveName，并提交到vuex的state中
     tabsActiveName: {
@@ -144,10 +169,30 @@ export default {
       },
       immediate: true, // 初始化时立即触发
     },
+    startDate: {
+      handler(newValue, oldValue) {
+        // this.setStartDate(newValue)
+        // 值改变触发loadVehicleOfType请求
+        if (oldValue != newValue) {
+          this.loadVehicleOfType()
+        }
+      },
+      // immediate: true, // 初始化时立即触发
+    },
+    endDate: {
+      handler(newValue, oldValue) {
+        // this.setEndDate(newValue)
+        // 值改变触发loadVehicleOfType请求
+        if (oldValue != newValue) {
+          this.loadVehicleOfType()
+        }
+      },
+      // immediate: true, // 初始化时立即触发
+    },
   },
   created() {
     // 静默登录
-
+    // this.login()
     this.loadSilenceLogin()
   },
   mounted() {},
@@ -155,30 +200,112 @@ export default {
     toProblems() {
       // this.loadComProblem()
     },
-    loadSilenceLogin() {
-      this.isLoading = true
-      silenceLogin()
+   loadSilenceLogin() {
+      console.log('login:::')
+      this.dataLoading = true
+      let storage = window.localStorage
+      let param = decodeURI(location.search)
+      if (param == '') {
+        let redirect =
+          'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' +
+          storage.getItem('appid') +
+          '&redirect_uri=http%3A%2F%2F' +
+          global_.domain +
+          '%2f' +
+          global_.clientName +
+          '%3fappid%3d' +
+          storage.getItem('appid') +
+          '&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect'
+        window.location.href = redirect
+        console.log('redirect:::' + redirect)
+        return
+      } else {
+        storage.setItem('codeAppID', param)
+      }
+      var REALTERMTYPE = ''
+      let appid = ''
+      let url = '/currencyLogin/login'
+      console.log('param::' + param)
+      if (param.indexOf('appid') != -1) {
+        appid = param.substring(
+          param.indexOf('=') + 1,
+          param.indexOf('code') - 1
+        )
+        let code = param.substring(
+          param.indexOf('code') + 5,
+          param.indexOf('state') - 1
+        )
+        console.log('code::' + code)
+        REALTERMTYPE = '微信预约点餐公众号'
+        url =
+          url +
+          '?code=' +
+          code +
+          '&appid=' +
+          appid +
+          '&REALTERMTYPE=' +
+          REALTERMTYPE
+        storage.setItem('appid', appid)
+      }
+      if (appid.length < 18) {
+        // 解决分享过来时获取不到appid的问题,从分享登录时存入sessionStorage中重新获取
+        appid = storage.getItem('appid')
+      }
+      var that = this
+      console.log('url:::' + url)
+
+      this.$http
+        .get(`http://www.paytunnel.cn/carRentalServerRH${url}`)
         .then(res => {
+          // 加载 获取广告图片
+          this.loadAdImages()
+          // 加载 获取车辆类型
+          this.loadVehicleType()
           // 将接口返回的用户相关数据放到本地存储，方便应用数据共享
           // window.localStorage.setItem('user', res.data.data)
           // 但是本地存储只能存储字符串
           // 想要存储对象、数组类型的数据，则把他们转为 JSON 格式字符串进行存储
           // window.localStorage.setItem('user', JSON.stringify(res.data.data))
           // console.log(window.localStorage.getItem('user'))
-          if (res.status === 200) {
-            this.login()
-            // 加载 获取广告图片
-            this.loadAdImages()
-            // 加载 获取车辆信息
-            this.loadVehicleOfType()
-            console.log(res.status)
+          // if (res.status === 200) {
+          // await this.login()
+          console.log('res.status:::', res)
+          console.log('res.data:::', res.data)
+          var rs = JSON.stringify(res.data)
+          if (rs.indexOf('-11419') != -1) {
+            // 则是没有注册
+            that.regSchool('广西德保县惠保投资发展有限公司')
+          } else {
+            var userName = res.data.userName
+            global_.token = res.data.token.token
+            global_.userName = userName
+            global_.openid = res.data.openid
+            global_.TELLERCOMPANY = res.data.TELLERCOMPANY
+            appid = res.data.appid
+            /* --当刷新页面导致token不存在时,使用sessionStorage中的token-- */
+            storage.setItem('token', global_.token)
+            storage.setItem('openid', global_.openid)
+            storage.setItem('memberID', global_.userName)
+            storage.setItem('appid', appid)
+            storage.setItem('TELLERCOMPANY', res.data.TELLERCOMPANY)
+            that.schoolName = storage.getItem('TELLERCOMPANY')
+            that.dataLoading = false
+            that.getShopList()
+            that.getBannerImages()
+            that.getNotice()
+            that.wxConfig()
+            // callback(true)
           }
+
+          // console.log(res.status)
+          // }
         })
         .catch(err => {
           console.log(err)
         })
     },
     loadAdImages() {
+      this.isLoading = true
       // 获取轮播图图片
       getAdImages()
         .then(res => {
@@ -203,10 +330,27 @@ export default {
           console.log(err)
         })
     },
+    loadVehicleType() {
+      getVehicleType().then(res => {
+        // 获取经济型的actNo
+        res.data.queryVehicleType.forEach(item => {
+          if (item.classifyName === '经济型') {
+            this.actNo = item.actNo
+          }
+        })
+        // 加载 获取车辆信息
+        this.loadVehicleOfType()
+      })
+    },
     // 获取车辆信息
     loadVehicleOfType() {
+      console.log('loadVehicleOfType')
       getVehicleOfType({
         classifyName: '经济型',
+        actNo: this.actNo,
+        startTime: this.startDate,
+        endTime: this.endDate,
+        rentalDays: this.rentalDays,
       }).then(res => {
         let carInfos = res.data.queryVehicleOfType
         // 拼接车辆图片信息
@@ -222,7 +366,7 @@ export default {
         })
         // this.$store.commit('setCarInfo', this.carInfoList)
         // this.total = res.data.queryVehicleOfType_totalRecNum
-        // console.log('carInfo:', this.carInfo)
+        console.log('carInfoList:', this.carInfoList)
       })
     },
     ...mapMutations({

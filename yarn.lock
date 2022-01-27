@@ -5171,6 +5171,11 @@
   "resolved" "https://registry.nlark.com/jsbn/download/jsbn-0.1.1.tgz"
   "version" "0.1.1"
 
+"jsencrypt@^3.2.1":
+  "integrity" "sha512-k1sD5QV0KPn+D8uG9AdGzTQuamt82QZ3A3l6f7TRwMU6Oi2Vg0BsL+wZIQBONcraO1pc78ExMdvmBBJ8WhNYUA=="
+  "resolved" "https://registry.npmjs.org/jsencrypt/-/jsencrypt-3.2.1.tgz"
+  "version" "3.2.1"
+
 "jsesc@^2.5.1":
   "integrity" "sha1-gFZNLkg9rPbo7yCWUKZ98/DCg6Q="
   "resolved" "https://registry.nlark.com/jsesc/download/jsesc-2.5.2.tgz"

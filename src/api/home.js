@@ -9,12 +9,11 @@ import { request } from '@/utils'
 //   })
 // }
 // 静默登录
-export const silenceLogin = () => {
+export const silenceLogin = params => {
   return request({
     method: 'GET',
-    url: '/currencyLogin/login?REALUSERNAME=广州睿颢软件技术有限公司',
-    // data 用来设置 POST 请求体
-    // data, // data: data
+    url: '/currencyLogin/login',
+    params,
   })
 }
 // 获取常见问题
