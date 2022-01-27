@@ -9,11 +9,11 @@
         <van-tab title="全部">
           <orders-list this-tab="0"></orders-list>
         </van-tab>
-        <van-tab title="待付款">
+        <!-- <van-tab title="待付款">
           <orders-list this-tab="1"></orders-list>
-        </van-tab>
+        </van-tab> -->
         <van-tab title="未出行">
-          <orders-list this-tab="2"></orders-list>
+          <orders-list this-tab="1"></orders-list>
         </van-tab>
       </van-tabs>
     </div>
