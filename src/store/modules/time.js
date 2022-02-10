@@ -60,12 +60,17 @@ export default {
       // 计算相差几天
       let start = moment(state.startDate)
       let end = moment(state.endDate)
+      let startTime = moment(state.startTime, 'HH:mm')
+      let endTime = moment(state.endTime, 'HH:mm')
       // Math.floor(moment.duration(end.diff(start)).asYears()) // 2
       // console.log(Math.floor(moment.duration(b.diff(start)).asMonths())) // 26
       let total = Math.floor(moment.duration(end.diff(start)).asDays()) // 807
       // let total = end.diff(start, 'y', true) // "5 天"
       if (total > 0) {
-        return total + 1 // 无良商家
+        if (startTime < endTime) {
+          return total + 1
+        }
+        return total
       }
       return 1
     },

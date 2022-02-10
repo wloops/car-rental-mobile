@@ -68,6 +68,7 @@ function initData() {
   return {
     show: false,
     isDisabled: true,
+    openToday: false,
   }
 }
 
@@ -247,6 +248,7 @@ export default {
       })
     },
     handleCalendarOpened() {
+      this.openToday = true
       // 打开日历时，时间选择器设置默认时间段
       this.$refs.picker.setColumnValue(0, this.startTime)
       this.$refs.picker.setColumnValue(1, this.endTime)
@@ -283,6 +285,17 @@ export default {
 
       if (dayday === today) {
         day.topInfo = '今天'
+        // this.columnsToday[0].values = this.columns[0].values.filter(item => {
+        //   // let startTimeValue = this.$refs.picker.getColumnValue(0).split(':')[0]
+        //   let startTimeValue = moment()
+        //     .add(1, 'h')
+        //     .format('HH:mm')
+        //     .split(':')[0]
+        //   if (item.split(':')[0] >= startTimeValue) {
+        //     return true
+        //   }
+        //   return false
+        // })
       }
       return day
     },
@@ -295,6 +308,8 @@ export default {
       // const today = moment(new Date()).format('YYYY-MM-DD')
 
       if (val[0]) {
+        this.openToday = false
+
         let startDateSelect = moment(val[0]).format('YYYY-MM-DD')
         this.$refs.picker.setColumnValue(0, this.startTime)
         this.$refs.picker.setColumnValue(1, this.endTime)
@@ -321,7 +336,12 @@ export default {
       const today = moment(new Date()).format('YYYY-MM-DD')
       if (time === today) {
         this.columnsToday[i].values = this.columns[i].values.filter(item => {
-          let startTimeValue = this.$refs.picker.getColumnValue(0).split(':')[0]
+          // let startTimeValue = this.$refs.picker.getColumnValue(0).split(':')[0]
+
+          let startTimeValue = moment()
+            .add(1, 'h')
+            .format('HH:mm')
+            .split(':')[0]
 
           if (item.split(':')[0] >= startTimeValue) {
             return true
@@ -333,8 +353,20 @@ export default {
       }
     },
     useCarTimeChange(el, val) {
-      this.setStartTime(val[0])
-      this.setEndTime(val[1])
+      if (this.openToday === true) {
+        // 如果开始时间是今天,则不能设置小于当前时间
+        let startTimeValue = moment().add(1, 'h').format('HH:mm').split(':')[0]
+        if (val[0].split(':')[0] < startTimeValue) {
+          this.$refs.picker.setColumnValue(0, this.startTime)
+          this.$toast.fail('取车时间不能早于当前时间')
+        } else {
+          this.setStartTime(val[0])
+          this.setEndTime(val[1])
+        }
+      } else {
+        this.setStartTime(val[0])
+        this.setEndTime(val[1])
+      }
     },
   },
 }
