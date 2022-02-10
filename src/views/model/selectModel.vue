@@ -268,6 +268,10 @@ export default {
                 actNo: item.actNo,
               }
             })
+            this.$store.commit(
+              'car/setActNo',
+              this.itemsTree[this.active].actNo
+            )
             this.loadVehicleOfType()
           })
         } else {

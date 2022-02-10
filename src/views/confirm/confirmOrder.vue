@@ -58,7 +58,7 @@
                 <van-tag color="#edaa01" size="medium">配带司机</van-tag>
                 <van-radio-group
                   class="radioGroup"
-                  v-model="radio1"
+                  v-model="isDrier"
                   direction="horizontal"
                   checked-color="#fcc55e"
                   icon-size="1rem"
@@ -72,11 +72,12 @@
                 <van-tag color="#5e4618" size="medium">取车方式</van-tag>
                 <van-radio-group
                   class="radioGroup"
-                  v-model="radio2"
+                  v-model="isPickupCar"
                   direction="horizontal"
                   checked-color="#fcc55e"
                   icon-size="1rem"
                   @change="changePickupCarRadio"
+                  :disabled="isDrier === '1'"
                 >
                   <van-radio name="1" shape="square">送车上门</van-radio>
                   <van-radio name="0" shape="square">自行取车</van-radio>
@@ -86,11 +87,12 @@
                 <van-tag color="#edaa01" size="medium">还车方式</van-tag>
                 <van-radio-group
                   class="radioGroup"
-                  v-model="radio3"
+                  v-model="isReturnCar"
                   direction="horizontal"
                   checked-color="#fcc55e"
                   icon-size="1rem"
                   @change="changeReturnCarRadio"
+                  :disabled="isDrier === '1'"
                 >
                   <van-radio name="1" shape="square">上门服务</van-radio>
                   <van-radio name="0" shape="square">自行还车</van-radio>
@@ -127,20 +129,18 @@
         <van-cell title="车辆租赁及服务费">
           <template #default>
             <div>
-              <span>￥{{ actualPrice }} x {{ dayToDay }}</span
-              >&nbsp;&nbsp;&nbsp;&nbsp;<span class="totalPrice"
-                >￥{{ totalPrice }}</span
-              >
+              <!-- <span>￥{{ actualPrice }} x {{ dayToDay }}</span
+              >&nbsp;&nbsp;&nbsp;&nbsp; -->
+              <span class="totalPrice">￥{{ actualPrice }}</span>
             </div>
           </template>
         </van-cell>
-        <van-cell title="司机服务费" v-if="isDrier">
+        <van-cell title="司机服务费">
           <template #default>
             <div>
-              <span>￥{{ driverFeeShow }} x {{ dayToDay }} </span
-              >&nbsp;&nbsp;&nbsp;&nbsp;<span class="totalPrice"
-                >￥{{ driverFeeTotal }}</span
-              >
+              <!-- <span>￥{{ driverFeeShow }} x {{ dayToDay }} </span
+              >&nbsp;&nbsp;&nbsp;&nbsp; -->
+              <span class="totalPrice">￥{{ driverFeeTotal }}</span>
             </div>
           </template>
         </van-cell>
@@ -256,6 +256,7 @@ import { mapGetters } from 'vuex'
 
 import { priceFormat } from '@/utils'
 import { getPriceInfo } from '@/api/order'
+import axios from 'axios'
 
 export default {
   name: 'confirmOrder',
@@ -266,15 +267,12 @@ export default {
   data() {
     return {
       consentRules: false,
-      radio1: '1',
-      radio2: '1',
-      radio3: '1',
       payChecked: true,
       orderSuccessShow: false,
       driverFee: 39.98234,
-      isDrier: true, // 是否需要司机
-      isPickupCar: true, // 是否自助取车
-      isReturnCar: true, // 是否自助还车
+      isDrier: '1', // 是否需要司机
+      isPickupCar: '1', // 是否自助取车
+      isReturnCar: '1', // 是否自助还车
 
       // 原价
       originalPrice: '',
@@ -284,6 +282,13 @@ export default {
       discountPrice: '',
       // 总价
       totalPrice: '',
+
+      // 存入接口请求的司机费用,用于计算展示
+      thisDriverPrice: 0.00,
+      // 存入接口请求的取车费用,用于计算展示
+      thisDeliveryPrice: 0.00,
+      // 存入接口请求的还车费用,用于计算展示
+      thisReturnPrice: 0.00,
     }
   },
   computed: {
@@ -304,31 +309,82 @@ export default {
       endDateD: 'getEndDateD',
       dayToDay: 'getDayToDay',
     }),
+    ...mapGetters('order', {
+      driverPrice: 'getDriverPrice', // 接口请求的司机费用
+      deliveryPrice: 'getDeliveryPrice', // 接口请求的取车费用
+      returnPrice: 'getReturnPrice', // 接口请求的还车费用
+    }),
+    actNo() {
+      return this.$store.getters['car/getActNo']
+    },
+    carModel() {
+      return this.$store.getters['car/getCurrentCarInfo'].carModel
+    },
+    formatStartDate() {
+      // 格式化时间为 yyyyMMdd
+      let startDate = this.$store.getters['time/getStartDate']
+      if (startDate != null) {
+        startDate = startDate.replace(/-/g, '')
+      }
+      return startDate
+    },
+    formatEndDate() {
+      // 格式化时间为 yyyyMMdd
+      let endDate = this.$store.getters['time/getEndDate']
+      if (endDate != null) {
+        endDate = endDate.replace(/-/g, '')
+      }
+      return endDate
+    },
+    formatStartTime() {
+      // 格式化时间为 HHmmss
+      let startTime = this.$store.getters['time/getStartTime']
+      if (startTime != null) {
+        startTime = startTime.replace(/:/g, '') + '00'
+      }
+      return startTime
+    },
+    formatEndTime() {
+      // 格式化时间为 HHmmss
+      let endTime = this.$store.getters['time/getEndTime']
+      if (endTime != null) {
+        endTime = endTime.replace(/:/g, '') + '00'
+      }
+      return endTime
+    },
     driverFeeShow() {
       // 根据是否需要司机，显示司机费用.不需要则赋值为0,方便计算
-      return priceFormat(this.isDrier ? this.driverFee : 0)
+      return priceFormat(this.isDrier === '1' ? this.driverFee : 0)
     },
     driverFeeTotal() {
       // 计算司机费用
-      return priceFormat(this.driverFeeShow * this.dayToDay)
+      // return priceFormat(this.driverFeeShow * this.dayToDay)
+      return priceFormat(
+        Number(this.thisDriverPrice) +
+        Number(this.thisDeliveryPrice) +
+        Number(this.thisReturnPrice)
+      )
     },
     carPriceTotal() {
       // 计算车辆总租金
-      return priceFormat(this.currentCarInfo.carPrice * this.dayToDay)
+      // return priceFormat(this.currentCarInfo.carPrice * this.dayToDay)
     },
     totalFee() {
       // 计算总费用
       // return priceFormat(
       //   (Number(this.carPriceTotal) + Number(this.driverFeeTotal)) * 100
       // )
-      return (
-        priceFormat(Number(this.totalPrice) + Number(this.driverFeeTotal)) * 100
-      )
+      // return (
+      //   priceFormat(Number(this.totalPrice) + Number(this.driverFeeTotal)) * 100
+      // )
+      return (Number(this.driverFeeTotal) + Number(this.actualPrice)) * 100
     },
   },
   watch: {},
   created() {
+    // 通过接口获取司机以及服务费
     this.loadPriceInfo()
+    this.loadPriceInfo('0')
   },
   mounted() {},
   methods: {
@@ -339,22 +395,50 @@ export default {
     backPage() {
       this.$router.back()
     },
-    loadPriceInfo() {
-      getPriceInfo({
-        prdList: `${this.currentCarInfo.prdNo}*${this.dayToDay}`,
-      }).then(res => {
-        console.log(res.data.cartList)
-        let cartList = res.data.cartList[0]
-        this.originalPrice = cartList.denomination
-        this.actualPrice = cartList.price
-        this.discountPrice = cartList.reduction
-        this.totalPrice = cartList.totalSum
-        console.log(
-          this.originalPrice,
-          this.actualPrice,
-          this.discountPrice,
-          this.totalPrice
-        )
+    loadPriceInfo(key) {
+      let param = {
+        actNo: this.actNo,
+        priceAttrValueList: this.carModel,
+        saleCmpName: '广州睿颢软件技术有限公司',
+        startDate: this.formatStartDate,
+        startTime: this.formatStartTime,
+        finishDate: this.formatEndDate,
+        finishTime: this.formatEndTime,
+        buyDriverService: key ? key : this.isDrier,
+        buyDeliveryService: this.isPickupCar,
+        buyReturnService: this.isReturnCar,
+      }
+      getPriceInfo(param).then(res => {
+        console.log('rs', res.data.rs)
+        console.log('res.data.priceData', res.data.priceData)
+        let priceData = res.data.priceData
+
+        if (key) {
+          // 取车费用(折扣后)
+          this.$store.commit(
+            'order/setDeliveryPrice',
+            priceData.deliveryPriceAfterDiscount
+          )
+          // this.thisDeliveryPrice = Number(this.deliveryPrice)
+          // 还车费用(折扣后)
+          this.$store.commit(
+            'order/setReturnPrice',
+            priceData.returnPriceAfterDiscount
+          )
+          // this.thisReturnPrice = Number(this.returnPrice)
+        } else {
+          // 司机费用(折扣后)
+          this.$store.commit(
+            'order/setDriverPrice',
+            priceData.totalDriverPriceAfterDiscount
+          )
+          this.thisDriverPrice = Number(this.driverPrice)
+        }
+
+        this.originalPrice = priceData.totalCarRentPrice // 原价
+        this.actualPrice = priceData.totalCarRentPriceAfterDiscount // 实际价格
+        // this.discountPrice = priceData.reduction // 折扣金额
+        this.totalPrice = priceData.totalDiscountPrice // 总价
       })
     },
     orderSubmit() {
@@ -377,6 +461,9 @@ export default {
         isReturnCar: this.isReturnCar, // 是否自助还车
         driverFeeShow: this.driverFeeShow, // 司机费用
         driverFeeTotal: this.driverFeeTotal, // 司机总费用
+        driverPrice: this.driverPrice, // 司机费用
+        deliveryPrice: this.deliveryPrice, // 取车费用
+        returnPrice: this.returnPrice, // 还车费用
         totalFee: this.totalFee, // 总费用
       }
       console.log(orderInfo)
@@ -387,30 +474,33 @@ export default {
     },
     changeDriverRadio(name) {
       // 是否佩带司机
+      this.isDrier = name
       if (name === '1') {
-        this.isDrier = true
+        this.thisDriverPrice = this.driverPrice
+        this.thisDeliveryPrice = 0.00
+        this.thisReturnPrice = 0.00
       } else {
-        this.isDrier = false
+        this.thisDriverPrice = 0.00
+        this.thisDeliveryPrice = this.deliveryPrice
+        this.thisReturnPrice = this.returnPrice
       }
     },
     changePickupCarRadio(name) {
       // 是否自助取车
+      this.isPickupCar = name
       if (name === '1') {
-        this.isPickupCar = true
-        console.log('自助取车')
+        this.thisDeliveryPrice = this.deliveryPrice
       } else {
-        this.isPickupCar = false
-        console.log('上门取车')
+        this.thisDeliveryPrice = 0.00
       }
     },
     changeReturnCarRadio(name) {
       // 是否自助还车
+      this.isReturnCar = name
       if (name === '1') {
-        this.isReturnCar = true
-        console.log('自助还车')
+        this.thisReturnPrice = this.returnPrice
       } else {
-        this.isReturnCar = false
-        console.log('上门还车')
+        this.thisReturnPrice = 0.00
       }
     },
   },

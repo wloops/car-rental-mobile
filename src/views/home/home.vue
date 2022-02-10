@@ -135,7 +135,7 @@ export default {
       isLoading: false,
       carInfoList: [],
       // total: 0,
-      actNo: '',
+      // actNo: '',
     }
   },
   computed: {
@@ -159,6 +159,9 @@ export default {
     },
     rentalDays() {
       return this.$store.getters['time/getDayToDay']
+    },
+    actNo() {
+      return this.$store.getters['car/getActNo']
     },
   },
   watch: {
@@ -200,7 +203,7 @@ export default {
     toProblems() {
       // this.loadComProblem()
     },
-   loadSilenceLogin() {
+    loadSilenceLogin() {
       console.log('login:::')
       this.dataLoading = true
       let storage = window.localStorage
@@ -335,9 +338,11 @@ export default {
         // 获取经济型的actNo
         res.data.queryVehicleType.forEach(item => {
           if (item.classifyName === '经济型') {
-            this.actNo = item.actNo
+            // this.actNo = item.actNo
+            this.setActNo(item.actNo)
           }
         })
+
         // 加载 获取车辆信息
         this.loadVehicleOfType()
       })
@@ -373,6 +378,7 @@ export default {
       // 将改变store中值的方法映射到当前组件的methods中
       setTabName: 'setTabName',
       setAdImagesLink: 'setAdImagesLink',
+      setActNo: 'car/setActNo',
     }),
     showPicker() {
       this.$refs.tintPicker.showView()

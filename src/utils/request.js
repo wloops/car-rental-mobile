@@ -43,8 +43,19 @@ request.interceptors.request.use(
   // config 是当前请求相关的配置信息对象
   // config 是可以修改的
   function (config) {
-    // console.log('来了个请求', config)
-
+    // console.log('get请求', config)
+    // let url = config.url
+    // // get参数编码
+    // if (config.method === 'get' && config.params) {
+    //   url += '?'
+    //   let keys = Object.keys(config.params)
+    //   for (let key of keys) {
+    //     url += `${key}=${encodeURIComponent(config.params[key])}&`
+    //   }
+    //   url = url.substring(0, url.length - 1)
+    //   config.params = {}
+    // }
+    // config.url = url
     // 然后我们就可以在允许请求出去之前定制统一业务功能处理
     // 例如：统一的设置 token
 
@@ -63,6 +74,7 @@ request.interceptors.request.use(
     //   config.headers.Authorization = `Bearer ${user.token}`
     // }
     // 当这里 return config 之后，请求才会真正的发出去
+    // console.log('new请求', config)
     return config
   },
   // 请求失败，会经过这里

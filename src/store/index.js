@@ -45,12 +45,12 @@ export default new Vuex.Store({
     createPersistedState({
       storage: window.sessionStorage,
       // vuex-persistedstate默认持久化所有state，指定需要持久化的state
-      // reducer(val) {
-      //   return {
-      //     // 只储存state中的user
-      //     adImagesLink: val.adImagesLink,
-      //   }
-      // },
+      reducer(val) {
+        return {
+          // 只储存state中的user
+          adImagesLink: val.adImagesLink,
+        }
+      },
     }),
   ],
 })

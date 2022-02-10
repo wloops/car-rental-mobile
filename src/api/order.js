@@ -11,7 +11,7 @@ import { request } from '@/utils'
 export const getPriceInfo = params => {
   return request({
     method: 'GET',
-    url: '/shoppingCart/getGoodsInfo',
+    url: '/shoppingCart/getPriceInfo',
     params,
   })
 }
