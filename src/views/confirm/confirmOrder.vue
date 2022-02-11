@@ -140,7 +140,7 @@
             <div>
               <!-- <span>￥{{ driverFeeShow }} x {{ dayToDay }} </span
               >&nbsp;&nbsp;&nbsp;&nbsp; -->
-              <span class="totalPrice">￥{{ driverFeeTotal }}</span>
+              <span class="totalPrice">￥{{ driverFeeShow }}</span>
             </div>
           </template>
         </van-cell>
@@ -254,7 +254,6 @@
 import ContactCard from '@/components/ContactCard.vue'
 import { mapGetters } from 'vuex'
 
-import { priceFormat } from '@/utils'
 import { getPriceInfo, setCreatOrder } from '@/api/order'
 import { BASE_COMNAME } from '@/global/config'
 
@@ -269,7 +268,6 @@ export default {
       consentRules: false,
       payChecked: true,
       orderSuccessShow: false,
-      driverFee: 39.98234,
       isDrier: '1', // 是否需要司机
       isPickupCar: '1', // 是否自助取车
       isReturnCar: '1', // 是否自助还车
@@ -289,6 +287,8 @@ export default {
       thisDeliveryPrice: 0.0,
       // 存入接口请求的还车费用,用于计算展示
       thisReturnPrice: 0.0,
+
+      driverFeeShow: '', // 司机费用展示
     }
   },
   computed: {
@@ -353,35 +353,28 @@ export default {
       }
       return endTime
     },
-    driverFeeShow() {
-      // 根据是否需要司机，显示司机费用.不需要则赋值为0,方便计算
-      return priceFormat(this.isDrier === '1' ? this.driverFee : 0)
-    },
     driverFeeTotal() {
       // 计算司机费用
-      // return priceFormat(this.driverFeeShow * this.dayToDay)
-      return priceFormat(
+      return (
         Number(this.thisDriverPrice) +
-          Number(this.thisDeliveryPrice) +
-          Number(this.thisReturnPrice)
+        Number(this.thisDeliveryPrice) +
+        Number(this.thisReturnPrice)
       )
     },
-    carPriceTotal() {
-      // 计算车辆总租金
-      // return priceFormat(this.currentCarInfo.carPrice * this.dayToDay)
-    },
     totalFee() {
-      // 计算总费用
-      // return priceFormat(
-      //   (Number(this.carPriceTotal) + Number(this.driverFeeTotal)) * 100
-      // )
-      // return (
-      //   priceFormat(Number(this.totalPrice) + Number(this.driverFeeTotal)) * 100
-      // )
+      // 计算总费用,并化为分
       return (Number(this.driverFeeTotal) + Number(this.actualPrice)) * 100
     },
   },
-  watch: {},
+  watch: {
+    driverFeeTotal: {
+      handler(val) {
+        // 司机费用,用于展示,保留两位小数
+        this.driverFeeShow = val.toFixed(2)
+      },
+      immediate: true,
+    },
+  },
   created() {
     // 通过接口获取司机以及服务费
     this.loadPriceInfo()

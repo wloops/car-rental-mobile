@@ -14,7 +14,11 @@
       />
       <div class="userInfo-info">
         <div class="userInfo-info-name">
-          {{ userInfo.nickName === '' ? '访客' : userInfo.nickName }}
+          {{
+            userInfo.nickName === '' || userInfo.nickName === null
+              ? '访客'
+              : userInfo.nickName
+          }}
         </div>
         <div class="userInfo-info-desc">ID : {{ userInfo.id }}</div>
       </div>
@@ -74,11 +78,21 @@ export default {
   watch: {},
   created() {
     this.userInfo.id = window.localStorage.getItem('memberID')
+    this.userInfo.nickName = window.localStorage.getItem('nickName')
   },
-  mounted() {},
+  mounted() {
+    console.log('myPage mounted', this.userInfo)
+  },
   methods: {
     logout() {
-      this.$store.dispatch('logout')
+      // this.$store.dispatch('logout')
+      this.$store.commit('setUnitToken', '')
+      window.localStorage.removeItem('unitToken')
+      // window.localStorage.removeItem('personalToken')
+      window.localStorage.removeItem('memberID')
+      window.localStorage.removeItem('nickName')
+      window.localStorage.clear()
+      console.log('logout',window.localStorage.getItem('unitToken'))
       this.$router.push('/login')
     },
   },

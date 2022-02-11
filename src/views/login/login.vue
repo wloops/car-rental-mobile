@@ -152,12 +152,17 @@ export default {
     },
 
     checkInfo() {
+      if (this.$store.getters.getTabName !== '单位租') {
+        this.$toast('个人租暂未开放,敬请期待')
+        this.setTabName('单位租')
+        return false
+      }
       if (this.username == '') {
-        Toast.fail('请输入账号')
+        // Toast.fail('请输入账号')
         return false
       }
       if (this.password == '') {
-        Toast.fail('请输入密码')
+        // Toast.fail('请输入密码')
         return false
       } else {
         //密码前面添加4位长度
@@ -197,17 +202,20 @@ export default {
           //请求成功
           var result = response.data.rs
           console.log(result)
+          console.log('response.data', response.data)
           if (result == '1') {
             let storage = window.localStorage
             var userName = response.data.memberID
-            var nickName = response.data.usernameLERNAME
+            // var nickName = response.data.usernameLERNAME
+            var nickName = response.data.TELLERNAME
             global_.userName = userName
             global_.nickName = nickName
             global_.usernameLERCOMPANY = response.data.usernameLERCOMPANY
             global_.usernameLERROLE = response.data.usernameLERROLE
             global_.token = response.data.token.token
+
             /* --当刷新页面导致token不存在时,使用sessionStorage中的token--*/
-            storage.setItem('token', global_.token)
+            storage.setItem('unitToken', global_.token)
             storage.setItem('memberID', global_.userName)
             storage.setItem('usernameLERROLE', response.data.usernameLERROLE)
             storage.setItem(
@@ -215,6 +223,11 @@ export default {
               response.data.usernameLERCOMPANY
             )
             storage.setItem('nickName', nickName)
+            storage.setItem('memberID', userName)
+            // 单位token 存储到vuex(localStorage)
+            that.$store.commit('setUnitToken', response.data.token.token)
+
+            that.$toast.success('登录成功')
             that.$router.push('/')
             // window.location.href = global_.clientUrl
           } else {

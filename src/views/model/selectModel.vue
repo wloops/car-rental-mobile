@@ -84,7 +84,6 @@ import SwipeAd from '@/views/home/components/SwipeAd.vue'
 import CarDetails from '@/components/CarDetails.vue'
 
 import { BASE_DOMAIN } from '@/global/config'
-import { priceFormat } from '@/utils'
 
 import { getVehicleType, getVehicleOfType } from '@/api/carInfo'
 
@@ -211,7 +210,7 @@ export default {
             item.carImg = `${BASE_DOMAIN}/socketServer/images/cardMall/imgsrc/${item.carImg}`
           }
           if (item.carPrice) {
-            item.carPrice = priceFormat(item.carPrice)
+            item.carPrice = item.carPrice
           }
           return item
         })

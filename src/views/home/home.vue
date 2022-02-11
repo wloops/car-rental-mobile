@@ -308,6 +308,10 @@ export default {
         })
     },
     loadAdImages() {
+      if (this.$store.getters.getAdImagesLink.length > 0) {
+        this.adImagesLink = this.$store.getters.getAdImagesLink
+        return false
+      }
       this.isLoading = true
       // 获取轮播图图片
       getAdImages()

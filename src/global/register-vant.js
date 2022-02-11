@@ -49,6 +49,7 @@ import {
   Skeleton,
   AddressList,
   AddressEdit,
+  Dialog,
 } from 'vant'
 
 const components = [
@@ -101,6 +102,7 @@ const components = [
   Skeleton,
   AddressList,
   AddressEdit,
+  Dialog,
 ]
 
 function install(Vue) {

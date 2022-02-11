@@ -2,9 +2,9 @@ export default {
   namespaced: true,
   state() {
     return {
-      driverPrice: '0.00', // 司机费用
-      deliveryPrice: '0.00', // 取车费用
-      returnPrice: '0.00', // 还车费用
+      driverPrice: 0.0, // 司机费用
+      deliveryPrice: 0.0, // 取车费用
+      returnPrice: 0.0, // 还车费用
 
       // 联系人信息
       currentContactInfo: {},

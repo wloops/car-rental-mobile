@@ -13,6 +13,8 @@ export default new Vuex.Store({
     return {
       tabName: '单位租', // 当前选中的tab
       adImagesLink: [], // 广告图片链接
+      unitToken: '', // 单位token
+      personalToken: '', // 个人token
     }
   },
   getters: {
@@ -24,6 +26,12 @@ export default new Vuex.Store({
       // 实时监听state值里的广告图片链接的最新状态的变化
       return state.adImagesLink
     },
+    getUnitToken(state) {
+      return state.unitToken
+    },
+    getPersonalToken(state) {
+      return state.personalToken
+    },
   },
   mutations: {
     setTabName(state, payload) {
@@ -33,6 +41,12 @@ export default new Vuex.Store({
     setAdImagesLink(state, payload) {
       // 通过mutations方式修改state里的值，更改当前选中的tab
       state.adImagesLink = payload
+    },
+    setUnitToken(state, payload) {
+      state.unitToken = payload
+    },
+    setPersonalToken(state, payload) {
+      state.personalToken = payload
     },
   },
   modules: {
@@ -49,6 +63,8 @@ export default new Vuex.Store({
         return {
           // 只储存state中的user
           adImagesLink: val.adImagesLink,
+          unitToken: val.unitToken,
+          personalToken: val.personalToken,
         }
       },
     }),
