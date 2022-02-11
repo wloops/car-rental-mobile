@@ -1229,6 +1229,11 @@
     "anymatch" "^3.0.0"
     "source-map" "^0.6.0"
 
+"@vant/area-data@^1.2.2":
+  "integrity" "sha512-efv7Yl/OTHjyy0irhJJPtgZb5mJZmroEtVOa8vkGRNTLY93+NgEcVuIBaC35hYCMsTrPHDQRvQGnI9Hyhtto0Q=="
+  "resolved" "https://registry.npmjs.org/@vant/area-data/-/area-data-1.2.2.tgz"
+  "version" "1.2.2"
+
 "@vant/icons@^1.7.1":
   "integrity" "sha1-Sa5CAwK1WB5U5olIkeWgW8dun4c= sha512-66LPEq89w4kl258nALZcRNd14eUJC8VajvTJwvZKOaZawz6CUeVZ6ybhedTUhQhRjeA8SyWD7dFt4ALf33Sabw=="
   "resolved" "https://registry.npmmirror.com/@vant/icons/download/@vant/icons-1.7.1.tgz"

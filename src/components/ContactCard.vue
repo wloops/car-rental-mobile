@@ -7,7 +7,6 @@
       </template>
       <template #title>
         <div class="custom-title">
-          <span class="title-username">{{ username }}:</span>&nbsp;&nbsp;
           <span class="title-name">{{ currentContact.name }}</span
           >&nbsp;&nbsp;
           <span class="title-tel">{{ currentContact.tel }}</span>
@@ -42,10 +41,11 @@
           />
         </div>
         <main>
-          <van-contact-list
+          <van-address-list
             v-model="contact.chosenContactId"
             :list="contact.list"
             default-tag-text="默认"
+            add-button-text="新增联系人"
             @add="onAdd"
             @edit="onEdit"
             @select="onSelect"
@@ -76,9 +76,18 @@
           />
         </div>
         <main>
-          <van-contact-edit
+          <!-- <van-contact-edit
             is-edit
             :contact-info="editingContact"
+            @save="onSave"
+            @delete="onDelete"
+          /> -->
+          <van-address-edit
+            :area-list="areaList"
+            :address-info="editingContact"
+            show-delete
+            show-set-default
+            :area-columns-placeholder="['请选择', '请选择', '请选择']"
             @save="onSave"
             @delete="onDelete"
           />
@@ -89,35 +98,39 @@
 </template>
 
 <script>
+import { areaList } from '@vant/area-data'
+var _ = require('lodash')
 export default {
   name: 'ContactCard',
   components: {},
   props: {},
   data() {
     return {
+      areaList, // 地区列表
+      areaCode: '', // 地区编码
+
       listPupopShow: false,
       editPupopShow: false,
-      username: 'XX单位',
       currentContact: {
-        name: 'XX',
-        tel: '18100000000',
-        address: '惠保县XX路XX号',
+        name: '',
+        tel: '',
+        address: '',
       },
       contact: {
         chosenContactId: '1',
         list: [
           {
             id: '1',
-            name: '张三',
-            tel: '13000000000',
-            address: '惠保县XX路102号',
+            name: '王纯军',
+            tel: '15000011122',
+            address: '中国/广东省/广州市/天河区/龙口东路129号',
             isDefault: true,
           },
           {
             id: '2',
             name: '李四',
             tel: '13000000003',
-            address: '惠保县XX路121号',
+            address: '中国/广东省/广州市/天河区/龙口东路149号',
           },
         ],
       },
@@ -136,6 +149,26 @@ export default {
   },
   mounted() {},
   methods: {
+    async areaCodeInit(contact) {
+      // 这里是点击编辑拿到的地址，我是用‘/’拼接起来的，现在分割一下
+      let areaN = contact.address.split('/')
+      let city = areaN[2] //城市
+      let district = areaN[3] //区/县
+      _.forEach(this.areaList.city_list, (o, c) => {
+        if (o == city) {
+          let cityId = String(_.take(c, 2))
+          _.forEach(this.areaList.county_list, (i, a) => {
+            if (i == district) {
+              let districtId = String(_.take(a, 2))
+              if (cityId == districtId) {
+                this.areaCode = a
+              }
+            }
+          })
+        }
+      })
+    },
+
     onListContact() {
       this.listPupopShow = true
     },
@@ -152,7 +185,19 @@ export default {
     },
     onEdit(contact) {
       this.$toast('编辑' + contact.id)
-      this.editingContact = contact
+      // 格式化地址
+      let formatContact = contact.address.split('/')
+      // 获取areaCode
+      this.areaCodeInit(contact)
+      this.editingContact = {
+        name: contact.name,
+        tel: contact.tel,
+        province: formatContact[1],
+        city: formatContact[2],
+        county: formatContact[3],
+        addressDetail: formatContact[4],
+        areaCode: this.areaCode,
+      }
       this.editPupopShow = true
     },
     onSelect(contact) {
@@ -162,12 +207,18 @@ export default {
       this.currentContact = contact
     },
     onSave(contactInfo) {
+      console.log('保存', contactInfo)
       this.$toast('保存')
       this.editPupopShow = false
       // 新增id
       contactInfo.id = this.contact.list.length + 1
+      // 格式化地址
+      let contact = {
+        ...contactInfo,
+        address: `中国/${contactInfo.province}/${contactInfo.city}/${contactInfo.county}/${contactInfo.addressDetail}`,
+      }
       // 更新contact.list
-      this.contact.list.push(contactInfo)
+      this.contact.list.push(contact)
     },
     onDelete(contactInfo) {
       this.$toast('删除')

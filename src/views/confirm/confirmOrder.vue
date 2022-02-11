@@ -481,8 +481,18 @@ export default {
         this.thisReturnPrice = 0.00
       } else {
         this.thisDriverPrice = 0.00
-        this.thisDeliveryPrice = this.deliveryPrice
-        this.thisReturnPrice = this.returnPrice
+        if(this.isPickupCar === '1') {
+          this.thisDeliveryPrice = this.deliveryPrice
+        } else {
+          this.thisDeliveryPrice = 0.00
+        }
+        if(this.isReturnCar === '1') {
+          this.thisReturnPrice = this.returnPrice
+        } else {
+          this.thisReturnPrice = 0.00
+        }
+        // this.thisDeliveryPrice = this.deliveryPrice
+        // this.thisReturnPrice = this.returnPrice
       }
     },
     changePickupCarRadio(name) {

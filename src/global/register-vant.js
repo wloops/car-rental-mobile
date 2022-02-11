@@ -47,6 +47,8 @@ import {
   Picker,
   DatetimePicker,
   Skeleton,
+  AddressList,
+  AddressEdit,
 } from 'vant'
 
 const components = [
@@ -97,6 +99,8 @@ const components = [
   Picker,
   DatetimePicker,
   Skeleton,
+  AddressList,
+  AddressEdit,
 ]
 
 function install(Vue) {
