@@ -6,6 +6,8 @@ export default {
       deliveryPrice: '0.00', // 取车费用
       returnPrice: '0.00', // 还车费用
 
+      // 联系人信息
+      currentContactInfo: {},
     }
   },
   getters: {
@@ -18,6 +20,10 @@ export default {
     getReturnPrice(state) {
       return state.returnPrice
     },
+
+    getCurrentContactInfo(state) {
+      return state.currentContactInfo
+    },
   },
   mutations: {
     setDriverPrice(state, price) {
@@ -28,6 +34,10 @@ export default {
     },
     setReturnPrice(state, price) {
       state.returnPrice = price
+    },
+
+    setCurrentContactInfo(state, info) {
+      state.currentContactInfo = info
     },
   },
   actions: {},

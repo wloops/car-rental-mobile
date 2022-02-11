@@ -139,7 +139,15 @@ export default {
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    currentContact: {
+      handler(newVal, oldVal) {
+        this.$store.commit('order/setCurrentContactInfo', newVal)
+      },
+      deep: true,
+      immediate: true,
+    },
+  },
   created() {
     this.contact.list.forEach(item => {
       if (item.isDefault) {

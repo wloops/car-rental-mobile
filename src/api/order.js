@@ -32,3 +32,12 @@ export const getNotOutOrder = params => {
     params,
   })
 }
+
+// 创建订单
+export const setCreatOrder = params => {
+  return request({
+    method: 'GET',
+    url: '/shoppingCart/creatOrder',
+    params,
+  })
+}

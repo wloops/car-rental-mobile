@@ -255,8 +255,8 @@ import ContactCard from '@/components/ContactCard.vue'
 import { mapGetters } from 'vuex'
 
 import { priceFormat } from '@/utils'
-import { getPriceInfo } from '@/api/order'
-import axios from 'axios'
+import { getPriceInfo, setCreatOrder } from '@/api/order'
+import { BASE_COMNAME } from '@/global/config'
 
 export default {
   name: 'confirmOrder',
@@ -284,11 +284,11 @@ export default {
       totalPrice: '',
 
       // 存入接口请求的司机费用,用于计算展示
-      thisDriverPrice: 0.00,
+      thisDriverPrice: 0.0,
       // 存入接口请求的取车费用,用于计算展示
-      thisDeliveryPrice: 0.00,
+      thisDeliveryPrice: 0.0,
       // 存入接口请求的还车费用,用于计算展示
-      thisReturnPrice: 0.00,
+      thisReturnPrice: 0.0,
     }
   },
   computed: {
@@ -313,6 +313,7 @@ export default {
       driverPrice: 'getDriverPrice', // 接口请求的司机费用
       deliveryPrice: 'getDeliveryPrice', // 接口请求的取车费用
       returnPrice: 'getReturnPrice', // 接口请求的还车费用
+      currentContactInfo: 'getCurrentContactInfo', // 当前选中的联系人信息
     }),
     actNo() {
       return this.$store.getters['car/getActNo']
@@ -361,8 +362,8 @@ export default {
       // return priceFormat(this.driverFeeShow * this.dayToDay)
       return priceFormat(
         Number(this.thisDriverPrice) +
-        Number(this.thisDeliveryPrice) +
-        Number(this.thisReturnPrice)
+          Number(this.thisDeliveryPrice) +
+          Number(this.thisReturnPrice)
       )
     },
     carPriceTotal() {
@@ -399,7 +400,7 @@ export default {
       let param = {
         actNo: this.actNo,
         priceAttrValueList: this.carModel,
-        saleCmpName: '广州睿颢软件技术有限公司',
+        saleCmpName: BASE_COMNAME,
         startDate: this.formatStartDate,
         startTime: this.formatStartTime,
         finishDate: this.formatEndDate,
@@ -443,31 +444,28 @@ export default {
     },
     orderSubmit() {
       // this.$router.push('/pay')
-
-      let orderInfo = {
-        startTime: this.startTime, // 出发时间
-        endTime: this.endTime, // 结束时间
-        startDate: this.startDate, // 开始日期
-        endDate: this.endDate, // 开始日期
-        startDateM: this.startDateM, // 开始日期月份
-        startDateD: this.startDateD, // 开始日期
-        endDateM: this.endDateM, // 开始日期月份
-        endDateD: this.endDateD, // 日期
-        dayToDay: this.dayToDay, // 天数
-        tabName: this.tabName, // 当前页面的tab
-        currentCarInfo: this.currentCarInfo, // 当前车辆信息
-        isDrier: this.isDrier, // 是否需要司机
-        isPickupCar: this.isPickupCar, // 是否自助取车
-        isReturnCar: this.isReturnCar, // 是否自助还车
-        driverFeeShow: this.driverFeeShow, // 司机费用
-        driverFeeTotal: this.driverFeeTotal, // 司机总费用
-        driverPrice: this.driverPrice, // 司机费用
-        deliveryPrice: this.deliveryPrice, // 取车费用
-        returnPrice: this.returnPrice, // 还车费用
-        totalFee: this.totalFee, // 总费用
+      let params = {
+        actNo: this.actNo,
+        priceAttrValueList: this.carModel,
+        saleCmpName: BASE_COMNAME,
+        startDate: this.formatStartDate,
+        startTime: this.formatStartTime,
+        finishDate: this.formatEndDate,
+        finishTime: this.formatEndTime,
+        buyDriverService: this.isDrier,
+        buyDeliveryService: this.isPickupCar,
+        buyReturnService: this.isReturnCar,
+        receiver: this.currentContactInfo.name,
+        phone: this.currentContactInfo.tel,
+        address: this.currentContactInfo.address,
       }
-      console.log(orderInfo)
-      this.orderSuccessShow = true
+      setCreatOrder(params).then(res => {
+        console.log('rs', res.data.rs)
+        // console.log('res.data.orderData', res.data.orderData)
+        if (res.data.rs === '1') {
+          this.orderSuccessShow = true
+        }
+      })
     },
     toOrders() {
       this.$router.push('/orders')
@@ -477,19 +475,19 @@ export default {
       this.isDrier = name
       if (name === '1') {
         this.thisDriverPrice = this.driverPrice
-        this.thisDeliveryPrice = 0.00
-        this.thisReturnPrice = 0.00
+        this.thisDeliveryPrice = 0.0
+        this.thisReturnPrice = 0.0
       } else {
-        this.thisDriverPrice = 0.00
-        if(this.isPickupCar === '1') {
+        this.thisDriverPrice = 0.0
+        if (this.isPickupCar === '1') {
           this.thisDeliveryPrice = this.deliveryPrice
         } else {
-          this.thisDeliveryPrice = 0.00
+          this.thisDeliveryPrice = 0.0
         }
-        if(this.isReturnCar === '1') {
+        if (this.isReturnCar === '1') {
           this.thisReturnPrice = this.returnPrice
         } else {
-          this.thisReturnPrice = 0.00
+          this.thisReturnPrice = 0.0
         }
         // this.thisDeliveryPrice = this.deliveryPrice
         // this.thisReturnPrice = this.returnPrice
@@ -501,7 +499,7 @@ export default {
       if (name === '1') {
         this.thisDeliveryPrice = this.deliveryPrice
       } else {
-        this.thisDeliveryPrice = 0.00
+        this.thisDeliveryPrice = 0.0
       }
     },
     changeReturnCarRadio(name) {
@@ -510,7 +508,7 @@ export default {
       if (name === '1') {
         this.thisReturnPrice = this.returnPrice
       } else {
-        this.thisReturnPrice = 0.00
+        this.thisReturnPrice = 0.0
       }
     },
   },
