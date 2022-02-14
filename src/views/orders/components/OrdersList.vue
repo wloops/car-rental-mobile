@@ -18,11 +18,24 @@
                       >用车</van-tag
                     ></span
                   >
-                  <span class="" style="font-size: small; color: #adadad">{{
-                    item.orderStatusShow !== '未出行'
-                      ? '已完成'
-                      : item.orderStatusShow
-                  }}</span>
+                  <span
+                    class=""
+                    style="font-size: small; color: #adadad"
+                    v-if="item.orderStatusShow === '0'"
+                    >待提车</span
+                  >
+                  <span
+                    class=""
+                    style="font-size: small; color: #adadad"
+                    v-if="item.orderStatusShow === '1'"
+                    >已提车</span
+                  >
+                  <span
+                    class=""
+                    style="font-size: small; color: #adadad"
+                    v-if="item.orderStatusShow === '2'"
+                    >已还车</span
+                  >
                 </div>
                 <div class="orderInfo">
                   <p>订单编号 : {{ item.billNo }}</p>
@@ -70,13 +83,13 @@ export default {
           this.list = []
           this.refreshing = false
         }
-        console.log('this.thisTab', this.thisTab)
+        // console.log('this.thisTab', this.thisTab)
         if (this.thisTab === '0') {
           this.loadAllOrder()
         } else {
           this.loadNotOutOrder()
         }
-        console.log('this.list', this.list)
+        console.log('orders list', this.list)
         // for (let i = 0; i < 10; i++) {
         //   this.list.push(this.list.length + 1)
         // }

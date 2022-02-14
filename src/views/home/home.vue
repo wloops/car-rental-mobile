@@ -47,10 +47,12 @@
     </div>
 
     <div class="swipeAD">
-      <div class="wrapper" v-if="isLoading === true">
-        <van-loading size="24px" vertical>加载中...</van-loading>
-      </div>
-      <swipe-ad :ad-images-link="adImagesLink" v-else></swipe-ad>
+      <keep-alive>
+        <div class="wrapper" v-if="isLoading === true">
+          <van-loading size="24px" vertical>加载中...</van-loading>
+        </div>
+        <swipe-ad :ad-images-link="adImagesLink" v-else></swipe-ad>
+      </keep-alive>
     </div>
     <div class="AD2">
       <van-grid clickable :column-num="2" :gutter="10" :border="false">
@@ -94,7 +96,9 @@
       </van-cell-group>
     </div>
     <div class="CarRecommend">
-      <car-recommend :car-info-list="carInfoList"></car-recommend>
+      <keep-alive>
+        <car-recommend :car-info-list="carInfoList"></car-recommend>
+      </keep-alive>
     </div>
     <div style="height: 5rem"></div>
   </div>
@@ -272,7 +276,7 @@ export default {
           // console.log(window.localStorage.getItem('user'))
           // if (res.status === 200) {
           // await this.login()
-          console.log('res.status:::', res)
+          console.log('res:::', res)
           console.log('res.data:::', res.data)
           var rs = JSON.stringify(res.data)
           if (rs.indexOf('-11419') != -1) {
@@ -280,6 +284,7 @@ export default {
             that.regSchool('广西德保县惠保投资发展有限公司')
           } else {
             var userName = res.data.userName
+            // that.$toast('欢迎您，' + userName)
             global_.token = res.data.token.token
             global_.userName = userName
             global_.openid = res.data.openid
@@ -288,15 +293,15 @@ export default {
             /* --当刷新页面导致token不存在时,使用sessionStorage中的token-- */
             storage.setItem('token', global_.token)
             storage.setItem('openid', global_.openid)
-            storage.setItem('memberID', global_.userName)
+            storage.setItem('guestMemberID', global_.userName)
             storage.setItem('appid', appid)
             storage.setItem('TELLERCOMPANY', res.data.TELLERCOMPANY)
             that.schoolName = storage.getItem('TELLERCOMPANY')
             that.dataLoading = false
-            that.getShopList()
-            that.getBannerImages()
-            that.getNotice()
-            that.wxConfig()
+            // that.getShopList()
+            // that.getBannerImages()
+            // that.getNotice()
+            // that.wxConfig()
             // callback(true)
           }
 

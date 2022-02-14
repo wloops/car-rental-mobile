@@ -16,7 +16,8 @@
           <div class="carName">{{ carName }}</div>
           <div class="carMsg">{{ carMsg }}</div>
         </div>
-        <date-time-section @click.native="showPicker"></date-time-section>
+        <!-- <date-time-section @click.native="showPicker"></date-time-section> -->
+        <date-time-section></date-time-section>
         <div style="height: 4rem"></div>
         <div class="footerBtn">
           <div class="carPrice">￥{{ carPrice }} <span>日均</span></div>
@@ -70,9 +71,9 @@ export default {
     toConfirmOrder() {
       this.$router.push('/confirm')
     },
-    showPicker() {
-      this.$refs.tintPicker.showView()
-    },
+    // showPicker() {
+    //   this.$refs.tintPicker.showView()
+    // },
   },
 }
 </script>

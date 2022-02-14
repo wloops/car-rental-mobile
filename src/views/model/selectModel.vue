@@ -149,7 +149,8 @@ export default {
         // this.setStartDate(newValue)
         // 值改变触发loadVehicleOfType请求
         if (oldValue != newValue) {
-          this.loadVehicleOfType()
+          // this.loadVehicleOfType()
+          this.onRefresh()
         }
       },
       // immediate: true, // 初始化时立即触发
@@ -159,7 +160,8 @@ export default {
         // this.setEndDate(newValue)
         // 值改变触发loadVehicleOfType请求
         if (oldValue != newValue) {
-          this.loadVehicleOfType()
+          // this.loadVehicleOfType()
+          this.onRefresh()
         }
       },
       // immediate: true, // 初始化时立即触发

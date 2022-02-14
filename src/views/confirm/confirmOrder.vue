@@ -470,6 +470,8 @@ export default {
         this.thisDriverPrice = this.driverPrice
         this.thisDeliveryPrice = 0.0
         this.thisReturnPrice = 0.0
+          this.isPickupCar = '1'
+          this.isReturnCar = '1'
       } else {
         this.thisDriverPrice = 0.0
         if (this.isPickupCar === '1') {
@@ -489,7 +491,7 @@ export default {
     changePickupCarRadio(name) {
       // 是否自助取车
       this.isPickupCar = name
-      if (name === '1') {
+      if (name === '1' && this.isDrier === '0') {
         this.thisDeliveryPrice = this.deliveryPrice
       } else {
         this.thisDeliveryPrice = 0.0
@@ -498,7 +500,7 @@ export default {
     changeReturnCarRadio(name) {
       // 是否自助还车
       this.isReturnCar = name
-      if (name === '1') {
+      if (name === '1' && this.isDrier === '0') {
         this.thisReturnPrice = this.returnPrice
       } else {
         this.thisReturnPrice = 0.0

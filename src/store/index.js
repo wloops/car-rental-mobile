@@ -57,7 +57,7 @@ export default new Vuex.Store({
   },
   plugins: [
     createPersistedState({
-      storage: window.sessionStorage,
+      storage: window.localStorage,
       // vuex-persistedstate默认持久化所有state，指定需要持久化的state
       reducer(val) {
         return {

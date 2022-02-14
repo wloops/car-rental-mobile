@@ -53,7 +53,7 @@
     <!-- <van-popup v-model="showLogout"> -->
     <div class="logout">
       <van-button block color="#fec760" style="width: 100%" @click="logout">
-        退出登录
+        {{ isLogin ? '退出登录' : '登录' }}
       </van-button>
     </div>
 
@@ -72,12 +72,21 @@ export default {
         nickName: '',
         id: '',
       },
+      isLogin: false,
     }
   },
   computed: {},
   watch: {},
   created() {
-    this.userInfo.id = window.localStorage.getItem('memberID')
+    let user = window.localStorage.getItem('memberID')
+    let guest = window.localStorage.getItem('guestMemberID')
+    if (user) {
+      this.userInfo.id = user
+      this.isLogin = true
+    } else {
+      this.userInfo.id = guest
+      this.isLogin = false
+    }
     this.userInfo.nickName = window.localStorage.getItem('nickName')
   },
   mounted() {
@@ -85,14 +94,18 @@ export default {
   },
   methods: {
     logout() {
+      this.userInfo.id = ''
+      this.userInfo.nickName = ''
       // this.$store.dispatch('logout')
       this.$store.commit('setUnitToken', '')
       window.localStorage.removeItem('unitToken')
       // window.localStorage.removeItem('personalToken')
       window.localStorage.removeItem('memberID')
       window.localStorage.removeItem('nickName')
-      window.localStorage.clear()
-      console.log('logout',window.localStorage.getItem('unitToken'))
+
+      this.userInfo.id = window.localStorage.getItem('guestMemberID')
+      this.isLogin = false
+      console.log('logout', window.localStorage.getItem('unitToken'))
       this.$router.push('/login')
     },
   },

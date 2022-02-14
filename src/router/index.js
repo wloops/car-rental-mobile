@@ -29,16 +29,28 @@ const routes = [
         path: '', // path为空，会作为默认的子路由渲染
         name: 'home',
         component: () => import('@/views/home/home.vue'),
+        meta: {
+          keepAlive: true, // 此组件需要被缓存
+          deepth: 1,
+        },
       },
       {
         path: 'orders',
         name: 'orders',
         component: () => import('@/views/orders/orders.vue'),
+        meta: {
+          keepAlive: false, // 此组件需要被缓存
+          deepth: 2,
+        },
       },
       {
         path: 'my',
         name: 'my',
         component: () => import('@/views/my/my.vue'),
+        meta: {
+          keepAlive: false, // 此组件需要被缓存
+          deepth: 2,
+        },
       },
     ],
   },
@@ -46,21 +58,36 @@ const routes = [
     path: '/problems',
     name: 'problems',
     component: () => import('@/views/home/pages/problems.vue'),
+    meta: {
+      keepAlive: true, // 此组件需要被缓存
+    },
   },
   {
     path: '/feedbacks',
     name: 'feedbacks',
     component: () => import('@/views/home/pages/feedbacks.vue'),
+    meta: {
+      keepAlive: true, // 此组件需要被缓存
+      deepth: 2,
+    },
   },
   {
     path: '/guide',
     name: 'guide',
     component: () => import('@/views/home/pages/guide.vue'),
+    meta: {
+      keepAlive: true, // 此组件需要被缓存
+      deepth: 2,
+    },
   },
   {
     path: '/contactUs',
     name: 'contactUs',
     component: () => import('@/views/home/pages/contactUs.vue'),
+    meta: {
+      keepAlive: true, // 此组件需要被缓存
+      deepth: 2,
+    },
   },
   {
     path: '/model',
