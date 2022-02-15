@@ -61,6 +61,7 @@
 import DateTimeSection from '@/components/DateTimeSection.vue'
 import moment from 'moment'
 import { mapGetters, mapMutations } from 'vuex'
+import { nextTimeOf } from '@/utils'
 
 var _ = require('lodash')
 
@@ -325,6 +326,19 @@ export default {
           // 如果选择的日期是今天，则重新设置时间选择器的默认时间段
           this.setTodayTime(endDateSelect, 1)
           this.setEndDate(endDateSelect)
+
+          // 如果选择的开始结束日期相同，则设置时间选择器的默认时间段(并禁用不可选择的时间段)
+          if (startDateSelect === endDateSelect) {
+            console.log('选择的开始结束日期相同')
+            let time2330 = moment({ hour: 23, minute: 30 }).format('HH:mm')
+            let end = nextTimeOf(moment().add(4, 'h').format('HH:mm'))
+            // 时间不超过23点
+            if (end <= nextTimeOf(moment().add(1, 'h').format('HH:mm'))) {
+              end = time2330
+            }
+            console.log('end:', end)
+            this.$refs.picker.setColumnValue(1, end)
+          }
           this.isDisabled = false
         }
         // 如果选择的日期是今天，则重新设置时间选择器的默认时间段
