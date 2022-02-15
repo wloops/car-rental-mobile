@@ -29,7 +29,7 @@ export const getMyDefaultAddress = () => {
   })
 }
 // 新增我的地址
-export const setAddMyAddress = params => {
+export const addMyAddress = params => {
   return request({
     method: 'GET',
     url: '/insertReturn/ZCbtnAddMemberAddr',
@@ -37,4 +37,18 @@ export const setAddMyAddress = params => {
   })
 }
 // 修改我的地址
+export const updateMyAddress = params => {
+  return request({
+    method: 'GET',
+    url: '/insertReturn/ZCbtnModifyMemberAddr',
+    params,
+  })
+}
 // 删除我的地址
+export const deleteMyAddress = params => {
+  return request({
+    method: 'GET',
+    url: '/insertReturn/ZCbtnDeleteMemberAddr',
+    params,
+  })
+}

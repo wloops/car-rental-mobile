@@ -3,11 +3,15 @@
     <van-cell center is-link size="large" @click="onListContact">
       <!-- 使用 title 插槽来自定义标题 -->
       <template #default>
-        <div style="color: #fcc55e">更换</div>
+        <div style="color: #fcc55e">
+          {{ currentContact.name ? '更换' : '选择' }}
+        </div>
       </template>
       <template #title>
         <div class="custom-title">
-          <span class="title-name">{{ currentContact.name }}</span
+          <span class="title-name">{{
+            currentContact.name ? currentContact.name : '选择承租人'
+          }}</span
           >&nbsp;&nbsp;
           <span class="title-tel">{{ currentContact.tel }}</span>
         </div>
@@ -86,7 +90,7 @@
             :area-list="areaList"
             :address-info="editingContact"
             show-delete
-            show-set-default
+            :show-set-default="isShowSetDefault"
             :area-columns-placeholder="['请选择', '请选择', '请选择']"
             @save="onSave"
             @delete="onDelete"
@@ -99,6 +103,12 @@
 
 <script>
 import { areaList } from '@vant/area-data'
+import {
+  getMyAddress,
+  addMyAddress,
+  updateMyAddress,
+  deleteMyAddress,
+} from '@/api/user'
 var _ = require('lodash')
 export default {
   name: 'ContactCard',
@@ -108,31 +118,16 @@ export default {
     return {
       areaList, // 地区列表
       areaCode: '', // 地区编码
+      addOrEdit: '', // 新增或编辑
+      engine_NAME: '',
 
+      isShowSetDefault: false, // 是否显示设为默认联系人
       listPupopShow: false,
       editPupopShow: false,
-      currentContact: {
-        name: '',
-        tel: '',
-        address: '',
-      },
+      currentContact: {},
       contact: {
-        chosenContactId: '1',
-        list: [
-          {
-            id: '1',
-            name: '王纯军',
-            tel: '15000011122',
-            address: '中国/广东省/广州市/天河区/龙口东路129号',
-            isDefault: true,
-          },
-          {
-            id: '2',
-            name: '李四',
-            tel: '13000000003',
-            address: '中国/广东省/广州市/天河区/龙口东路149号',
-          },
-        ],
+        chosenContactId: '',
+        list: [],
       },
 
       editingContact: {},
@@ -142,6 +137,7 @@ export default {
   watch: {
     currentContact: {
       handler(newVal, oldVal) {
+        console.log('setCurrentContactInfo', newVal)
         this.$store.commit('order/setCurrentContactInfo', newVal)
       },
       deep: true,
@@ -149,19 +145,44 @@ export default {
     },
   },
   created() {
-    this.contact.list.forEach(item => {
-      if (item.isDefault) {
-        this.currentContact = item
-      }
-    })
+    // 初始化联系人列表
+    this.initContact()
   },
   mounted() {},
   methods: {
+    initContact() {
+      // 获取联系人,并设置默认联系人
+      getMyAddress().then(res => {
+        if (res.data.rs === '1') {
+          this.contact.list = res.data.queryMyAddr.map(item => {
+            return {
+              id: item.addrID,
+              name: item.receiverName,
+              tel: item.phone,
+              address: item.province + item.city + item.areaName + item.address,
+              isDefault: item.isDefault === '1' ? true : false,
+              province: item.province,
+              city: item.city,
+              county: item.areaName,
+              addressDetail: item.address,
+            }
+          })
+
+          this.contact.list.forEach(item => {
+            if (item.isDefault) {
+              this.currentContact = item
+              this.contact.chosenContactId = item.id
+            }
+          })
+
+          console.log('contact', this.contact.list)
+        }
+      })
+    },
     async areaCodeInit(contact) {
-      // 这里是点击编辑拿到的地址，我是用‘/’拼接起来的，现在分割一下
-      let areaN = contact.address.split('/')
-      let city = areaN[2] //城市
-      let district = areaN[3] //区/县
+      // 这里是点击编辑拿到的地址
+      let city = contact.city //城市
+      let district = contact.county //区/县
       _.forEach(this.areaList.city_list, (o, c) => {
         if (o == city) {
           let cityId = String(_.take(c, 2))
@@ -187,49 +208,112 @@ export default {
       this.editPupopShow = false
     },
     onAdd() {
-      this.$toast('新增')
+      // this.$toast('新增')
+      this.addOrEdit = 'add'
+      this.isShowSetDefault = false
       this.editingContact = {}
       this.editPupopShow = true
     },
     onEdit(contact) {
-      this.$toast('编辑' + contact.id)
-      // 格式化地址
-      let formatContact = contact.address.split('/')
+      // this.$toast('编辑' + contact.id)
+      this.addOrEdit = 'edit'
+      this.isShowSetDefault = true
       // 获取areaCode
       this.areaCodeInit(contact)
       this.editingContact = {
+        id: contact.id,
         name: contact.name,
         tel: contact.tel,
-        province: formatContact[1],
-        city: formatContact[2],
-        county: formatContact[3],
-        addressDetail: formatContact[4],
+        province: contact.province,
+        city: contact.city,
+        county: contact.county,
+        addressDetail: contact.addressDetail,
+        isDefault: contact.isDefault,
         areaCode: this.areaCode,
       }
       this.editPupopShow = true
     },
     onSelect(contact) {
-      console.log('选择', contact)
-      this.$toast('选择' + contact.id)
+      // console.log('选择', contact)
+      // this.$toast('选择' + contact.id)
       // 赋值到currentContact
       this.currentContact = contact
+      // 选择完后关闭弹窗
+      this.listPupopShow = false
     },
     onSave(contactInfo) {
       console.log('保存', contactInfo)
-      this.$toast('保存')
-      this.editPupopShow = false
-      // 新增id
-      contactInfo.id = this.contact.list.length + 1
-      // 格式化地址
-      let contact = {
-        ...contactInfo,
-        address: `中国/${contactInfo.province}/${contactInfo.city}/${contactInfo.county}/${contactInfo.addressDetail}`,
+      // this.$toast('保存')
+      // 先判断是新增还是修改
+      if (this.addOrEdit === 'edit') {
+        this.engine_NAME = '修改会员地址'
+        // this.$toast('修改')
+      } else {
+        this.engine_NAME = '新增会员地址'
+        // this.$toast('新增')
       }
-      // 更新contact.list
-      this.contact.list.push(contact)
+      let params = {
+        srlIDForEngine: 'Splenwise微信预约点餐系统',
+        busiNameForEngine: '汽车租赁业务',
+        busiFunNameForEngine: this.engine_NAME,
+        miniProcNameForEngine: this.engine_NAME,
+        addrID: contactInfo.id,
+        province: contactInfo.province,
+        city: contactInfo.city,
+        areaName: contactInfo.county,
+        address: contactInfo.addressDetail,
+        receiverName: contactInfo.name,
+        phone: contactInfo.tel,
+        isDefault: contactInfo.isDefault ? '1' : '0',
+      }
+      // 先判断是新增还是修改
+      if (this.addOrEdit === 'edit') {
+        // 修改后保存
+        updateMyAddress(params).then(res => {
+          console.log('修改后保存', res)
+          if (res.data.rs === '1') {
+            this.$toast('修改成功')
+            // 刷新联系人列表
+            this.initContact()
+          }
+        })
+      } else {
+        // 新增后保存
+        addMyAddress(params).then(res => {
+          if (res.data.rs === '1') {
+            this.$toast('新增成功')
+            // 刷新联系人列表
+            this.initContact()
+          }
+        })
+      }
+
+      this.editPupopShow = false
     },
     onDelete(contactInfo) {
-      this.$toast('删除')
+      console.log('删除', contactInfo)
+      // 判断是否是默认地址,如果是默认地址,则不能删除
+
+      // srlIDForEngine=Splenwise微信预约点餐系统
+      // busiNameForEngine=汽车租赁业务
+      // busiFunNameForEngine=删除会员地址
+      // miniProcNameForEngine=删除会员地址
+      // addrID=2202151004444261
+      let params = {
+        srlIDForEngine: 'Splenwise微信预约点餐系统',
+        busiNameForEngine: '汽车租赁业务',
+        busiFunNameForEngine: '删除会员地址',
+        miniProcNameForEngine: '删除会员地址',
+        addrID: contactInfo.id,
+      }
+      deleteMyAddress(params).then(res => {
+        console.log('删除', res)
+        if (res.data.rs === '1') {
+          this.$toast('删除成功')
+          // 刷新联系人列表
+          this.initContact()
+        }
+      })
       this.editPupopShow = false
       // 更新contact.list
       this.contact.list = this.contact.list.filter(

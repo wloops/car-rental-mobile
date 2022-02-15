@@ -437,6 +437,14 @@ export default {
     },
     orderSubmit() {
       // this.$router.push('/pay')
+      console.log(
+        'currentContactInfo',
+        Object.keys(this.currentContactInfo).length
+      )
+      if (Object.keys(this.currentContactInfo).length === 0) {
+        this.$toast.fail('请选择承租人!')
+        return false
+      }
       let params = {
         actNo: this.actNo,
         priceAttrValueList: this.carModel,
@@ -450,7 +458,7 @@ export default {
         buyReturnService: this.isReturnCar,
         receiver: this.currentContactInfo.name,
         phone: this.currentContactInfo.tel,
-        address: this.currentContactInfo.address,
+        address: this.currentContactInfo.addressDetail,
       }
       setCreatOrder(params).then(res => {
         console.log('rs', res.data.rs)
@@ -470,8 +478,8 @@ export default {
         this.thisDriverPrice = this.driverPrice
         this.thisDeliveryPrice = 0.0
         this.thisReturnPrice = 0.0
-          this.isPickupCar = '1'
-          this.isReturnCar = '1'
+        this.isPickupCar = '1'
+        this.isReturnCar = '1'
       } else {
         this.thisDriverPrice = 0.0
         if (this.isPickupCar === '1') {
