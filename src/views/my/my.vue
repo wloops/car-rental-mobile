@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import { setLogout } from '@/api/user'
 export default {
   name: 'myPage',
   components: {},
@@ -96,6 +97,7 @@ export default {
     logout() {
       this.userInfo.id = ''
       this.userInfo.nickName = ''
+
       // this.$store.dispatch('logout')
       this.$store.commit('setUnitToken', '')
       window.localStorage.removeItem('unitToken')
@@ -104,7 +106,11 @@ export default {
       window.localStorage.removeItem('nickName')
 
       this.userInfo.id = window.localStorage.getItem('guestMemberID')
-      this.isLogin = false
+      setLogout().then(res => {
+        if (res.data.rs === '1') {
+          this.isLogin = false
+        }
+      })
       console.log('logout', window.localStorage.getItem('unitToken'))
       this.$router.push('/login')
     },
