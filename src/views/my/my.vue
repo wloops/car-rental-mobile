@@ -77,23 +77,30 @@ export default {
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    $route(to, from) {
+      this.init()
+    },
+  },
   created() {
-    let user = window.localStorage.getItem('memberID')
-    let guest = window.localStorage.getItem('guestMemberID')
-    if (user) {
-      this.userInfo.id = user
-      this.isLogin = true
-    } else {
-      this.userInfo.id = guest
-      this.isLogin = false
-    }
-    this.userInfo.nickName = window.localStorage.getItem('nickName')
+    this.init()
   },
   mounted() {
     console.log('myPage mounted', this.userInfo)
   },
   methods: {
+    init() {
+      let user = window.localStorage.getItem('memberID')
+      let guest = window.localStorage.getItem('guestMemberID')
+      if (user) {
+        this.userInfo.id = user
+        this.isLogin = true
+        this.userInfo.nickName = window.localStorage.getItem('nickName')
+      } else {
+        this.userInfo.id = guest
+        this.isLogin = false
+      }
+    },
     logout() {
       this.userInfo.id = ''
       this.userInfo.nickName = ''

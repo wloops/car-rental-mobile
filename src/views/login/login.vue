@@ -228,7 +228,9 @@ export default {
             that.$store.commit('setUnitToken', response.data.token.token)
 
             that.$toast.success('登录成功')
-            that.$router.push('/')
+            // 登录成功返回上一级页面
+            that.$router.go(-1)
+            // that.$router.push('/')
             // window.location.href = global_.clientUrl
           } else {
             Dialog.alert({

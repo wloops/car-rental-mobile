@@ -465,6 +465,8 @@ export default {
         // console.log('res.data.orderData', res.data.orderData)
         if (res.data.rs === '1') {
           this.orderSuccessShow = true
+        } else {
+          this.$toast.fail(res.data.msg)
         }
       })
     },

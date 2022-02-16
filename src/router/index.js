@@ -124,10 +124,11 @@ router.beforeEach((to, from, next) => {
   // let user = JSON.parse(window.localStorage.getItem('token'))
   // 单位登录状态信息
   let unitUser = store.getters.getUnitToken
-  console.log('unitToken', unitUser)
+  let userID = window.localStorage.getItem('memberID')
+  // console.log('unitToken', unitUser)
   //   // 验证下单页面的登录状态
   if (to.path == '/confirm') {
-    if (unitUser) {
+    if (unitUser && userID) {
       next()
     } else {
       // 没有登录信息,跳转到登陆页面

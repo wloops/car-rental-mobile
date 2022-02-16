@@ -1,4 +1,4 @@
-// 《车辆信息请求模块》
+// 《用户请求模块》
 // 加载 request 模块
 import { request } from '@/utils'
 // export const hello = () => {
@@ -7,6 +7,13 @@ import { request } from '@/utils'
 //     url: '/hello/hello'
 //   })
 // }
+// 检查登录状态
+export const checkLogin = () => {
+  return request({
+    method: 'GET',
+    url: '/app/checkLogin',
+  })
+}
 // 退出登录
 export const setLogout = () => {
   return request({

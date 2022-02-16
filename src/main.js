@@ -9,6 +9,8 @@ import { globalRegister } from './global'
 
 /* 引入config文件模块 */
 import global_ from '@/global/config_global'
+
+import {checkLogin} from '@/api/user'
 // import { BASE_URL } from '@/global/config'
 
 Vue.use(globalRegister)
@@ -88,45 +90,49 @@ Vue.prototype.PARAMETER = function () {
   }
 }
 // 检测是否登陆。
-// Vue.prototype.checklogin = function (callback) {
-// 	 this.dataLoading=true;
-// 	 var that = this;
-// 	 let url = 'https://' + global_.domain + '/orderFoodServerRH/app/checkLogin';
-//      $.ajax({
-//          url: url,
-//          type: 'get', // GET
-//          async: false, // 或false,是否异步
-//          data: {},
-//          timeout: 5000, // 超时时间
-//          dataType: 'json', // 返回的数据格式：
-//          success: function (response, textStatus, jqXHR) {
-//         	 var userName = response.memberID+"";
-// 			 let storage = window.localStorage;
-// 			 that.dataLoading=false;
-//     		 if(userName!="null"){
-//     			 var nickName = response.TELLERNAME;
-//     			 global_.userName = userName;
-//     			 global_.nickName = nickName;
-//     			 global_.TELLERCOMPANY = response.TELLERCOMPANY;
-//     			 global_.TELLERROLE = response.TELLERROLE;
-//     			 global_.token = response.token.token;
-//     			 storage.setItem("token", global_.token);
-//     			 storage.setItem("memberID", global_.userName);
-//     			 storage.setItem("TELLERROLE", response.TELLERROLE);
-//     			 // window.location.href = global_.clientUrl;
-//     			 // that.$router.go(0);
-//     		 }else{
-//     			 storage.removeItem("TELLERROLE");
-//     			 //window.location.href = global_.clientUrl+"#/loginSorterNew";
-//     			 //that.login();
-//     		 }
-//          },
-//          error: function (xhr, textStatus) {
-//          },
-//          complete: function () {
-//          }
-//        })
-// }
+Vue.prototype.checklogin = function (callback) {
+  // this.dataLoading = true
+  var that = this
+  // let url = 'https://' + global_.domain + '/orderFoodServerRH/app/checkLogin'
+  // $.ajax({
+  //   url: url,
+  //   type: 'get', // GET
+  //   async: false, // 或false,是否异步
+  //   data: {},
+  //   timeout: 5000, // 超时时间
+  //   dataType: 'json', // 返回的数据格式：
+  //   success: function (response, textStatus, jqXHR) {
+  
+  checkLogin().then(function (response) {
+    //请求成功
+      var userName = response.memberID + ''
+      let storage = window.localStorage
+      // that.dataLoading = false
+      if (userName != 'null') {
+        var nickName = response.TELLERNAME
+        global_.userName = userName
+        global_.nickName = nickName
+        global_.TELLERCOMPANY = response.TELLERCOMPANY
+        global_.TELLERROLE = response.TELLERROLE
+        global_.token = response.token.token
+        storage.setItem('token', global_.token)
+        storage.setItem('memberID', global_.userName)
+        storage.setItem('TELLERROLE', response.TELLERROLE)
+        // window.location.href = global_.clientUrl;
+        // that.$router.go(0);
+      } else {
+        // storage.removeItem('TELLERROLE')
+        storage.removeItem('memberID')
+        // storage.removeItem('token')
+        // window.location.href = global_.clientUrl+"#/loginSorterNew";
+
+        // that.login();
+      }
+    // },
+    // error: function (xhr, textStatus) {},
+    // complete: function () {},
+  })
+}
 Vue.prototype.DialogAlert = function (title, message) {
   Dialog.alert({
     closeOnPopstate: true,
