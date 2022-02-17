@@ -297,9 +297,9 @@ export default {
             storage.setItem('appid', appid)
             storage.setItem('TELLERCOMPANY', res.data.TELLERCOMPANY)
             that.schoolName = storage.getItem('TELLERCOMPANY')
-            that.dataLoading = false
+            // that.dataLoading = false
 
-            that.checklogin()
+            // that.checklogin()
             // that.getShopList()
             // that.getBannerImages()
             // that.getNotice()

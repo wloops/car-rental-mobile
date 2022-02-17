@@ -8597,6 +8597,11 @@
   "resolved" "https://registry.npm.taobao.org/websocket-extensions/download/websocket-extensions-0.1.4.tgz"
   "version" "0.1.4"
 
+"weixin-js-sdk@^1.6.0":
+  "integrity" "sha512-3IYQH7aalJGFJrwdT3epvTdR1MboMiH7vIZ5BRL2eYOJ12BNah7csoMkmSZzkq1+l92sSq29XdTCVjCJoK2sBQ=="
+  "resolved" "https://registry.npmjs.org/weixin-js-sdk/-/weixin-js-sdk-1.6.0.tgz"
+  "version" "1.6.0"
+
 "which-boxed-primitive@^1.0.2":
   "integrity" "sha1-E3V7yJsgmwSf5dhkMOIc9AqJqOY="
   "resolved" "https://registry.nlark.com/which-boxed-primitive/download/which-boxed-primitive-1.0.2.tgz"

@@ -21,30 +21,38 @@
         <div style="height: 4rem"></div>
         <div class="footerBtn">
           <div class="carPrice">￥{{ carPrice }} <span>日均</span></div>
-          <van-button block color="#fec760" size="large" @click="toConfirmOrder"
-            >立即预定</van-button
+          <van-button
+            block
+            color="#fec760"
+            size="large"
+            loading-type="spinner"
+            :loading="isLoading"
+            @click="toConfirmOrder"
+          >
+            立即预定</van-button
           >
         </div>
       </template>
     </van-popup>
-    <tint-datetime-picker ref="tintPicker"></tint-datetime-picker>
+    <!-- <tint-datetime-picker ref="tintPicker"></tint-datetime-picker> -->
   </div>
 </template>
 
 <script>
 import DateTimeSection from '@/components/DateTimeSection.vue'
-import TintDatetimePicker from '@/components/TintDatetimePicker.vue'
+// import TintDatetimePicker from '@/components/TintDatetimePicker.vue'
 
 export default {
   name: 'CarDetails',
   components: {
     DateTimeSection,
-    TintDatetimePicker,
+    // TintDatetimePicker,
   },
   props: {},
   data() {
     return {
       show: false,
+      isLoading: true,
     }
   },
   computed: {
@@ -67,9 +75,29 @@ export default {
   methods: {
     showPopup() {
       this.show = true
+      // console.log('carDetail created')
+      this.checklogin()
     },
     toConfirmOrder() {
-      this.$router.push('/confirm')
+      let memberID = window.localStorage.getItem('memberID')
+      if (memberID) {
+        this.$router.push('/confirm')
+      } else {
+        this.$dialog
+          .confirm({
+            title: '提示',
+            message: '请先登录',
+          })
+          .then(() => {
+            // on confirm
+            this.$router.push('/login')
+          })
+          .catch(() => {
+            // this.$router.go(-1)
+            // on cancel
+            //  this.loading = false
+          })
+      }
     },
     // showPicker() {
     //   this.$refs.tintPicker.showView()

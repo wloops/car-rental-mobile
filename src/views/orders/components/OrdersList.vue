@@ -18,13 +18,10 @@
                       >用车</van-tag
                     ></span
                   >
-                  <span
-                    class=""
-                    style="font-size: small; color: #adadad"
-                    v-if="item.orderStatusShow === '0'"
-                    >待提车</span
-                  >
-                  <span
+                  <span class="" style="font-size: small; color: #adadad">{{
+                    item.orderStatusShow
+                  }}</span>
+                  <!-- <span
                     class=""
                     style="font-size: small; color: #adadad"
                     v-if="item.orderStatusShow === '1'"
@@ -35,7 +32,7 @@
                     style="font-size: small; color: #adadad"
                     v-if="item.orderStatusShow === '2'"
                     >已还车</span
-                  >
+                  > -->
                 </div>
                 <div class="orderInfo">
                   <p>订单编号 : {{ item.billNo }}</p>
@@ -71,8 +68,14 @@ export default {
     }
   },
   computed: {},
-  watch: {},
-  created() {},
+  watch: {
+    $router() {
+      this.onLoad()
+    },
+  },
+  created() {
+    this.checklogin()
+  },
   mounted() {},
   methods: {
     onLoad() {
@@ -84,12 +87,23 @@ export default {
           this.refreshing = false
         }
         // console.log('this.thisTab', this.thisTab)
-        if (this.thisTab === '0') {
-          this.loadAllOrder()
+        // 判断有没有登录过期
+        let memberID = window.localStorage.getItem('memberID')
+        if (memberID) {
+          if (this.thisTab === '0') {
+            this.loadAllOrder()
+          } else {
+            this.loadNotOutOrder()
+          }
         } else {
-          this.loadNotOutOrder()
+          // this.$router.push('/login')
+          // 提示登录过期,跳转到登录页面
+          this.$toast('登录过期,请重新登录')
+          // // 加载状态结束
+          this.loading = false
+          // 数据全部加载完成
+          this.finished = true
         }
-        console.log('orders list', this.list)
         // for (let i = 0; i < 10; i++) {
         //   this.list.push(this.list.length + 1)
         // }
@@ -114,6 +128,8 @@ export default {
     loadAllOrder() {
       getAllOrder().then(res => {
         this.list = this.list.concat(res.data.queryMyAllCarOrders)
+
+        console.log('orders(全部) list', this.list)
         this.loading = false
         this.finished =
           this.list.length >= res.data.queryMyAllCarOrders_totalRecNum
@@ -122,6 +138,8 @@ export default {
     loadNotOutOrder() {
       getNotOutOrder().then(res => {
         this.list = this.list.concat(res.data.queryMyCarOrdersOfNoTravel)
+
+        console.log('orders(未出行) list', this.list)
         this.loading = false
         this.finished =
           this.list.length >= res.data.queryMyCarOrdersOfNoTravel_totalRecNum

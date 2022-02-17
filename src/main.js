@@ -4,13 +4,14 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 import JSEncrypt from 'jsencrypt'
+import wx from 'weixin-js-sdk'
 // 全局引入
 import { globalRegister } from './global'
 
 /* 引入config文件模块 */
 import global_ from '@/global/config_global'
 
-import {checkLogin} from '@/api/user'
+import { checkLogin } from '@/api/user'
 // import { BASE_URL } from '@/global/config'
 
 Vue.use(globalRegister)
@@ -102,32 +103,40 @@ Vue.prototype.checklogin = function (callback) {
   //   timeout: 5000, // 超时时间
   //   dataType: 'json', // 返回的数据格式：
   //   success: function (response, textStatus, jqXHR) {
-  
+
   checkLogin().then(function (response) {
     //请求成功
-      var userName = response.memberID + ''
-      let storage = window.localStorage
-      // that.dataLoading = false
-      if (userName != 'null') {
-        var nickName = response.TELLERNAME
-        global_.userName = userName
-        global_.nickName = nickName
-        global_.TELLERCOMPANY = response.TELLERCOMPANY
-        global_.TELLERROLE = response.TELLERROLE
-        global_.token = response.token.token
-        storage.setItem('token', global_.token)
-        storage.setItem('memberID', global_.userName)
-        storage.setItem('TELLERROLE', response.TELLERROLE)
-        // window.location.href = global_.clientUrl;
-        // that.$router.go(0);
-      } else {
-        // storage.removeItem('TELLERROLE')
-        storage.removeItem('memberID')
-        // storage.removeItem('token')
-        // window.location.href = global_.clientUrl+"#/loginSorterNew";
+    console.log('checkLogin response:', response)
+    var userName = response.data.memberID
+    let storage = window.localStorage
+    // that.dataLoading = false
+    // if (userName != 'null') {
+    // console.log('userName', userName)
+    // var nickName = response.data.TELLERNAME
+    // global_.userName = userName
+    // global_.nickName = nickName
+    // global_.TELLERCOMPANY = response.data.TELLERCOMPANY
+    // global_.TELLERROLE = response.data.TELLERROLE
+    // global_.token = response.data.token.token
+    // storage.setItem('token', global_.token)
+    // storage.setItem('memberID', global_.userName)
+    // storage.setItem('TELLERROLE', response.data.TELLERROLE)
+    // window.location.href = global_.clientUrl;
+    // that.$router.go(0);
+    // } else {
+    // storage.removeItem('TELLERROLE')
+    if (userName === 'null') {
+      storage.removeItem('memberID')
+      storage.removeItem('nickName')
+      console.log('memberID', window.localStorage.getItem('memberID'))
+    }
 
-        // that.login();
-      }
+    that.isLoading = false
+    // storage.removeItem('token')
+    // window.location.href = global_.clientUrl+"#/loginSorterNew";
+
+    // that.login();
+    // }
     // },
     // error: function (xhr, textStatus) {},
     // complete: function () {},
@@ -170,20 +179,23 @@ Vue.prototype.wxConfig = function () {
   var url = encodeURIComponent(location.href.split('#')[0])
   var that = this
   this.$http
-    .get('/getJSSDKSignature?url=' + url)
+    .get(
+      'http://www.paytunnel.cn/carRentalServerRH/getJSSDKSignature?url=' + url
+    )
     .then(function (res) {
       var appId = res.data.appId
       var timestamp = res.data.timestamp
       var nonceStr = res.data.nonceStr
       var signature = res.data.signature
+      console.log('wx.config', res)
       that.appId = appId
       wx.config({
-        debug: false,
-        appId: appId,
-        timestamp: timestamp,
-        nonceStr: nonceStr,
-        signature: signature,
-        jsApiList: ['onMenuShareAppMessage', 'addCard', 'scanQRCode'],
+        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: appId, // 必填，公众号的唯一标识
+        timestamp: timestamp, // 必填，生成签名的时间戳
+        nonceStr: nonceStr, // 必填，生成签名的随机串
+        signature: signature, // 必填，签名
+        jsApiList: ['onMenuShareAppMessage', 'addCard', 'scanQRCode'], // 必填，需要使用的JS接口列表
       })
     })
     .catch(function (error) {

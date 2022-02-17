@@ -102,24 +102,31 @@ export default {
       }
     },
     logout() {
-      this.userInfo.id = ''
-      this.userInfo.nickName = ''
+      if (this.isLogin === true) {
+        this.userInfo.id = ''
+        this.userInfo.nickName = ''
 
-      // this.$store.dispatch('logout')
-      this.$store.commit('setUnitToken', '')
-      window.localStorage.removeItem('unitToken')
-      // window.localStorage.removeItem('personalToken')
-      window.localStorage.removeItem('memberID')
-      window.localStorage.removeItem('nickName')
+        // this.$store.dispatch('logout')
+        this.$store.commit('setUnitToken', '')
+        window.localStorage.removeItem('unitToken')
+        // window.localStorage.removeItem('personalToken')
+        window.localStorage.removeItem('memberID')
+        window.localStorage.removeItem('nickName')
 
-      this.userInfo.id = window.localStorage.getItem('guestMemberID')
-      setLogout().then(res => {
-        if (res.data.rs === '1') {
-          this.isLogin = false
-        }
-      })
-      console.log('logout', window.localStorage.getItem('unitToken'))
-      this.$router.push('/login')
+        this.userInfo.id = window.localStorage.getItem('guestMemberID')
+        setLogout().then(res => {
+          if (res.data.rs === '1') {
+            // this.isLogin = false
+            this.init()
+            this.$toast.success('退出成功')
+          }
+        })
+        console.log('logout', window.localStorage.getItem('unitToken'))
+      } else {
+        this.$router.push('/login')
+      }
+
+      // this.$router.push('/login')
     },
   },
 }

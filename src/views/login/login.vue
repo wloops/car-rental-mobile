@@ -227,9 +227,27 @@ export default {
             // 单位token 存储到vuex(localStorage)
             that.$store.commit('setUnitToken', response.data.token.token)
 
-            that.$toast.success('登录成功')
-            // 登录成功返回上一级页面
-            that.$router.go(-1)
+            // that.$toast.success('登录成功')
+            const toast = that.$toast.loading({
+              duration: 0, // 持续展示 toast
+              forbidClick: true,
+              message: '登录中...',
+            })
+
+            let second = 2
+            const timer = setInterval(() => {
+              second--
+              if (second) {
+                toast.message = `登录成功,${second}秒后跳转`
+              } else {
+                clearInterval(timer)
+                // 手动清除 Toast
+                that.$toast.clear()
+                // 登录成功返回上一级页面
+                that.$router.go(-1)
+              }
+            }, 1000)
+
             // that.$router.push('/')
             // window.location.href = global_.clientUrl
           } else {

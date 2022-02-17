@@ -2,6 +2,8 @@
 
 import axios from 'axios'
 import JSONBig from 'json-bigint'
+import { Toast, Dialog } from 'vant'
+import wx from 'weixin-js-sdk'
 
 import { BASE_URL } from '@/global/config'
 
@@ -84,6 +86,63 @@ request.interceptors.request.use(
 )
 
 // 响应拦截器
+request.interceptors.response.use(
+  res => {
+    console.log('响应结果', res.data.rs)
+    // 如果rs=-5 提示退回到菜单
+    if (res.data.rs === '-5') {
+      // this.$toast(res.data.msg)
+      // WeixinJSBridge.call('closeWindow')
+      // setTimeout(function () {
+      //   //这个可以关闭安卓系统的手机
+      //   document.addEventListener(
+      //     'WeixinJSBridgeReady',
+      //     function () {
+      //       WeixinJSBridge.call('closeWindow')
+      //     },
+      //     false
+      //   )
+      //   //这个可以关闭ios系统的手机
+      //   WeixinJSBridge.call('closeWindow')
+      // }, 300)
+      Dialog.confirm({
+        title: '提示',
+        message: '长时间未操作，请重新进入',
+      })
+        .then(() => {
+          // on confirm
+          // 关闭当前页面
+          wx.closeWindow()
+        })
+        .catch(() => {
+          // on cancel
+        })
+    }
+    // 如果rs=-6,提示跳转到登录
+    if (res.data.rs === '-6') {
+      // this.$toast(res.data.msg)
+      Dialog.confirm({
+        title: '提示',
+        message: '您还未登录，请先登录',
+      })
+        .then(() => {
+          // on confirm
+          // 跳转到登录页面
+          this.$router.push('/login')
+        })
+        .catch(() => {
+          // on cancel
+        })
+    }
+
+    // 如果rs=-1,提示msg
+    if (res.data.rs === '-1') {
+      Toast('msg', res.data.msg)
+    }
+    return res
+  },
+  err => Promise.reject(err)
+)
 
 // 导出请求方法
 export default request

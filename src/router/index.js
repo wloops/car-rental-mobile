@@ -131,27 +131,28 @@ router.beforeEach((to, from, next) => {
     if (unitUser && userID) {
       next()
     } else {
-      // 没有登录信息,跳转到登陆页面
+      // // 没有登录信息,跳转到登陆页面
       Toast.loading({
         message: '请先登录,正在跳转到登录页面...',
         forbidClick: true,
         duration: 1000,
       })
+      
 
       next('/login')
     }
   }
   // 验证登录页面的登录状态
-  if (to.path == '/login') {
-    if (unitUser) {
-      if (from.path == 'model') {
-        next({ path: '/confirm' })
-      }
-    } else {
-      // 没有登录信息,跳转到登陆页面
-      next()
-    }
-  }
+  // if (to.path == '/login') {
+  //   if (unitUser) {
+  //     if (from.path == 'model') {
+  //       next({ path: '/confirm' })
+  //     }
+  //   } else {
+  //     // 没有登录信息,跳转到登陆页面
+  //     next()
+  //   }
+  // }
 
   next()
 })

@@ -82,7 +82,7 @@ export default {
     return {
       // minDate: moment().subtract(90, 'day').toDate(),
       minDate: new Date(),
-      defaultDate: [new Date(), moment().add(2, 'day').toDate()],
+      defaultDate: [new Date(), moment().add(1, 'day').toDate()],
       // maxDate: new Date(),
       // maxDate: moment().add(90, 'day').toDate(),
       ...initData(),
