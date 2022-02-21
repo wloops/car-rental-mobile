@@ -47,6 +47,14 @@ export const getAdImages = () => {
   })
 }
 
+// 获取其它广告图片
+export const getOtherAdImages = () => {
+  return request({
+    method: 'GET',
+    url: '/search/queryCarRentalStaticADImg',
+  })
+}
+
 // 获取联系我们的信息
 export const getContactUs = () => {
   return request({

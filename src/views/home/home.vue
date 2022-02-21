@@ -56,16 +56,11 @@
     </div>
     <div class="AD2">
       <van-grid clickable :column-num="2" :gutter="10" :border="false">
-        <van-grid-item to="/"
-          ><van-image
-            fit="scale-down"
-            src="https://dfs.zuchecdn.com/visit/carmktplat/g/V3/e4a1f8376b2f4aea99bbfb1054041bfa.png"
-        /></van-grid-item>
-        <van-grid-item url="#"
-          ><van-image
-            fit="scale-down"
-            src="https://dfs.zuchecdn.com/visit/carmktplat/g/V3/9092eae356d34a59b6b04d95980c7709.png"
-        /></van-grid-item>
+        <van-grid-item v-for="(item, index) in otherADImages" :key="index">
+          <a :href="item.linkAddress ? image.linkAddress : '#'">
+            <van-image fit="scale-down" :src="item.picFile" />
+          </a>
+        </van-grid-item>
       </van-grid>
     </div>
 
@@ -118,7 +113,7 @@ import { BASE_DOMAIN } from '@/global/config'
 import global_ from '@/global/config_global'
 
 // 加载home接口模块
-import { silenceLogin, getAdImages } from '@/api/home'
+import { getOtherAdImages, getAdImages } from '@/api/home'
 import { getVehicleType, getVehicleOfType } from '@/api/carInfo'
 
 export default {
@@ -136,6 +131,7 @@ export default {
       date: '',
       show: false,
       adImagesLink: [],
+      otherADImages: [],
       isLoading: false,
       carInfoList: [],
       // total: 0,
@@ -266,6 +262,7 @@ export default {
         .then(res => {
           // 加载 获取广告图片
           this.loadAdImages()
+          this.loadOtherAdImages()
           // 加载 获取车辆类型
           this.loadVehicleType()
           // 将接口返回的用户相关数据放到本地存储，方便应用数据共享
@@ -343,6 +340,22 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    loadOtherAdImages() {
+      getOtherAdImages().then(res => {
+        if (res.data.rs === '1') {
+          this.otherADImages = res.data.queryCarRentalStaticADImg.map(item => {
+            if (item.picFile) {
+              item.picFile = `${BASE_DOMAIN}/socketServer/images/cardMall/imgsrc/${item.picFile}`
+            }
+            return item
+          })
+          console.log('this.otherADImages:', this.otherADImages)
+        } else {
+          console.log('获取其他广告图片失败')
+          return false
+        }
+      })
     },
     loadVehicleType() {
       getVehicleType().then(res => {
