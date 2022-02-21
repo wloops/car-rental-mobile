@@ -296,7 +296,7 @@ export default {
             that.schoolName = storage.getItem('TELLERCOMPANY')
             // that.dataLoading = false
 
-            // that.checklogin()
+            that.checklogin()
             // that.getShopList()
             // that.getBannerImages()
             // that.getNotice()

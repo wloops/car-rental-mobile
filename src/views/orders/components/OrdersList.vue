@@ -65,27 +65,36 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
+      page: 0, // 当前页码
+      pageSize: 10, // 每页条数
+      totalNum: 0, // 总条数
     }
   },
   computed: {},
   watch: {
     $router() {
-      this.onLoad()
+      this.onRefresh()
     },
   },
   created() {
-    this.checklogin()
+    // this.checklogin()
   },
-  mounted() {},
+  mounted() {
+    // console.log('首次 mounted', this.thisTab)
+    // this.onLoad()
+  },
   methods: {
     onLoad() {
+      console.log('onLoad')
       // 异步更新数据
       // setTimeout 仅做示例，真实场景中一般为 ajax 请求
+      this.loading = true
       setTimeout(() => {
         if (this.refreshing) {
           this.list = []
           this.refreshing = false
         }
+        this.page++
         // console.log('this.thisTab', this.thisTab)
         // 判断有没有登录过期
         let memberID = window.localStorage.getItem('memberID')
@@ -99,47 +108,56 @@ export default {
           // this.$router.push('/login')
           // 提示登录过期,跳转到登录页面
           this.$toast('登录过期,请重新登录')
-          // // 加载状态结束
+          // 加载状态结束
           this.loading = false
           // 数据全部加载完成
-          this.finished = true
+          if (this.totalNum.length) {
+            this.finished = true
+          }
         }
         // for (let i = 0; i < 10; i++) {
         //   this.list.push(this.list.length + 1)
         // }
-        // // 加载状态结束
+        // 加载状态结束
         // this.loading = false
         // // 数据全部加载完成
-        // if (this.list.length >= 10) {
+        // if (this.totalNum.length) {
         //   this.finished = true
         // }
-      }, 500)
+      }, 800)
     },
     onRefresh() {
       // 清空列表数据
       this.list = []
       this.finished = false
-
+      this.page = 0
       // 重新加载数据
       // 将 loading 设置为 true，表示处于加载状态
       this.loading = true
       this.onLoad()
     },
     loadAllOrder() {
-      getAllOrder().then(res => {
+      getAllOrder({
+        currentPage: this.page,
+        numOfPerPage: this.pageSize,
+      }).then(res => {
         this.list = this.list.concat(res.data.queryMyAllCarOrders)
+        this.totalNum = res.data.queryMyAllCarOrders_totalRecNum
 
-        console.log('orders(全部) list', this.list)
+        console.log('orders(全部) list', this.list, 'page:', this.page)
         this.loading = false
         this.finished =
           this.list.length >= res.data.queryMyAllCarOrders_totalRecNum
       })
     },
     loadNotOutOrder() {
-      getNotOutOrder().then(res => {
+      getNotOutOrder({
+        currentPage: this.page,
+        numOfPerPage: this.pageSize,
+      }).then(res => {
         this.list = this.list.concat(res.data.queryMyCarOrdersOfNoTravel)
-
-        console.log('orders(未出行) list', this.list)
+        this.totalNum = res.data.queryMyCarOrdersOfNoTravel_totalRecNum
+        console.log('orders(未出行) list', this.list, 'page:', this.page)
         this.loading = false
         this.finished =
           this.list.length >= res.data.queryMyCarOrdersOfNoTravel_totalRecNum

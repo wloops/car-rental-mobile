@@ -88,7 +88,7 @@ request.interceptors.request.use(
 // 响应拦截器
 request.interceptors.response.use(
   res => {
-    console.log('响应结果', res.data.rs)
+    // console.log('响应结果', res.data.rs)
     // 如果rs=-5 提示退回到菜单
     if (res.data.rs === '-5') {
       // this.$toast(res.data.msg)

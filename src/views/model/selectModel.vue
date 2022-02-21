@@ -24,7 +24,6 @@
               v-model="loading"
               :finished="finished"
               :offset="350"
-              :immediate-check="false"
               finished-text="没有更多了"
               @load="onLoad"
               ref="checkList"
@@ -168,11 +167,11 @@ export default {
     },
   },
   created() {
-    console.log('SelectModel created')
-    this.onLoad()
+    // console.log('SelectModel created')
+    // this.onLoad()
   },
   mounted() {
-    console.log(this.startDate, this.endDate, this.rentalDays)
+    // console.log(this.startDate, this.endDate, this.rentalDays)
   },
   methods: {
     selectCarItem(e) {
@@ -218,7 +217,7 @@ export default {
         })
         this.total = res.data.queryVehicleOfType_totalRecNum
 
-        this.loading = true
+        // this.loading = true
         // this.carInfoList.forEach((item, index) => {
         //   this.currentCarInfo.push(item)
         // })
