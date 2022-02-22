@@ -227,6 +227,7 @@ export default {
               'usernameLERCOMPANY1',
               response.data.usernameLERCOMPANY
             )
+            storage.setItem('user', JSON.stringify(response.data))
             storage.setItem('nickName', nickName)
             storage.setItem('memberID', userName)
             // 单位token 存储到vuex(localStorage)

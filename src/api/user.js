@@ -15,12 +15,12 @@ export const checkLogin = () => {
   })
 }
 // 退出登录
-export const setLogout = () => {
-  return request({
-    method: 'GET',
-    url: '/app/appLogout',
-  })
-}
+// export const setLogout = () => {
+//   return request({
+//     method: 'GET',
+//     url: '/app/appLogout',
+//   })
+// }
 // 获取我的地址
 export const getMyAddress = () => {
   return request({

@@ -45,25 +45,12 @@ request.interceptors.request.use(
   // config 是当前请求相关的配置信息对象
   // config 是可以修改的
   function (config) {
-    // console.log('get请求', config)
-    // let url = config.url
-    // // get参数编码
-    // if (config.method === 'get' && config.params) {
-    //   url += '?'
-    //   let keys = Object.keys(config.params)
-    //   for (let key of keys) {
-    //     url += `${key}=${encodeURIComponent(config.params[key])}&`
-    //   }
-    //   url = url.substring(0, url.length - 1)
-    //   config.params = {}
-    // }
-    // config.url = url
     // 然后我们就可以在允许请求出去之前定制统一业务功能处理
     // 例如：统一的设置 token
 
     // 取到本地存储中的用户信息 getItem
     // 再还原成 JSON格式，就可用点方法调用
-    // const user = JSON.parse(window.localStorage.getItem('user'))
+    const user = JSON.parse(window.localStorage.getItem('user'))
     // 如果有登录用户信息（不为空），则统一设置 token
 
     // 属性名和值一般看接口的要求
@@ -72,9 +59,10 @@ request.interceptors.request.use(
     // 属性值：'Bearer空格token数据'  （这里为测试，暂时写死）
     // `Bearer ${user.token}`  反引号里面${}  ES6里面的字符串拼接
 
-    // if (user) {
-    //   config.headers.Authorization = `Bearer ${user.token}`
-    // }
+    if (user) {
+      // config.headers.Authorization = `Bearer ${user.token}`
+      config.headers.token = `user.token.token`
+    }
     // 当这里 return config 之后，请求才会真正的发出去
     // console.log('new请求', config)
     return config

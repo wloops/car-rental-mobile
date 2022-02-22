@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import { Toast, Dialog } from 'vant'
-import store from '@/store'
+// import store from '@/store'
 Vue.use(VueRouter)
 
 const routes = [
@@ -121,14 +121,14 @@ const router = new VueRouter({
 // next: 放行方法(符合通过条件可调用放行)
 router.beforeEach((to, from, next) => {
   // 用户登录状态信息
-  // let user = JSON.parse(window.localStorage.getItem('token'))
+  let user = JSON.parse(window.localStorage.getItem('user'))
   // 单位登录状态信息
-  let unitUser = store.getters.getUnitToken
+  // let unitUser = store.getters.getUnitToken
   let userID = window.localStorage.getItem('memberID')
   // console.log('unitToken', unitUser)
   //   // 验证下单页面的登录状态
   if (to.path == '/confirm') {
-    if (unitUser && userID) {
+    if (user && userID) {
       next()
     } else {
       // // 没有登录信息,跳转到登陆页面
@@ -137,7 +137,6 @@ router.beforeEach((to, from, next) => {
         forbidClick: true,
         duration: 1000,
       })
-      
 
       next('/login')
     }
