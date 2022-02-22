@@ -404,9 +404,11 @@ export default {
       }
       getPriceInfo(param).then(res => {
         console.log('rs', res.data.rs)
+        if (res.data.rs !== '1') {
+          return false
+        }
         console.log('res.data.priceData', res.data.priceData)
         let priceData = res.data.priceData
-
         if (key) {
           // 取车费用(折扣后)
           this.$store.commit(

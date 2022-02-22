@@ -120,9 +120,10 @@ export default {
             this.userInfo.nickName = ''
 
             // this.$store.dispatch('logout')
-            this.$store.commit('setUnitToken', '')
-            window.localStorage.removeItem('unitToken')
+            // this.$store.commit('setUnitToken', '')
+            // window.localStorage.removeItem('unitToken')
             // window.localStorage.removeItem('personalToken')
+            window.localStorage.removeItem('user')
             window.localStorage.removeItem('memberID')
             window.localStorage.removeItem('nickName')
 

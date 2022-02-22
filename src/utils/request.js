@@ -1,8 +1,10 @@
 // 基于axios封装的请求模块
 
 import axios from 'axios'
+import router from '@/router' //引入router
 import JSONBig from 'json-bigint'
 import { Toast, Dialog } from 'vant'
+
 import wx from 'weixin-js-sdk'
 
 import { BASE_URL } from '@/global/config'
@@ -61,7 +63,7 @@ request.interceptors.request.use(
 
     if (user) {
       // config.headers.Authorization = `Bearer ${user.token}`
-      config.headers.token = `user.token.token`
+      config.headers.res_token = `${user.res_token}`
     }
     // 当这里 return config 之后，请求才会真正的发出去
     // console.log('new请求', config)
@@ -116,7 +118,7 @@ request.interceptors.response.use(
         .then(() => {
           // on confirm
           // 跳转到登录页面
-          this.$router.push('/login')
+          router.push('/login')
         })
         .catch(() => {
           // on cancel

@@ -13,8 +13,8 @@ export default new Vuex.Store({
     return {
       tabName: '单位租', // 当前选中的tab
       adImagesLink: [], // 广告图片链接
-      unitToken: '', // 单位token
-      personalToken: '', // 个人token
+      // unitToken: '', // 单位token
+      // personalToken: '', // 个人token
     }
   },
   getters: {

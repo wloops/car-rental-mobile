@@ -220,7 +220,7 @@ export default {
             global_.token = response.data.token.token
 
             /* --当刷新页面导致token不存在时,使用sessionStorage中的token--*/
-            storage.setItem('unitToken', global_.token)
+            storage.setItem('token', global_.token)
             storage.setItem('memberID', global_.userName)
             storage.setItem('usernameLERROLE', response.data.usernameLERROLE)
             storage.setItem(
@@ -231,7 +231,7 @@ export default {
             storage.setItem('nickName', nickName)
             storage.setItem('memberID', userName)
             // 单位token 存储到vuex(localStorage)
-            that.$store.commit('setUnitToken', response.data.token.token)
+            // that.$store.commit('setUnitToken', response.data.token.token)
 
             let second = 1
             const timer = setInterval(() => {
