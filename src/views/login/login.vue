@@ -31,6 +31,7 @@
             name="账号"
             label="账号"
             placeholder="请输入账号"
+            clearable
             :rules="unameRules"
           />
           <van-field
@@ -39,6 +40,7 @@
             name="密码"
             label="密码"
             placeholder="请输入密码"
+            clearable
             :rules="pwdRules"
           />
           <p class="unPassword"><a>忘记密码？</a></p>
@@ -79,7 +81,7 @@ export default {
   props: {},
   data() {
     return {
-      username: 'huangxinquan',
+      username: '',
       password: '',
       unameRules: [
         {
@@ -244,8 +246,18 @@ export default {
                 that.$toast.clear()
                 toast.message = '登录成功'
                 toast.icon = 'success'
-                // 登录成功返回上一级页面
-                that.$router.go(-1)
+                // 跳转到订单确定页面
+                if (that.$route.params.toPath === 'confirm') {
+                  that.$router.push({
+                    name: 'confirm',
+                    params: {
+                      toPath: '',
+                    },
+                  })
+                } else {
+                  // 登录成功返回上一级页面
+                  that.$router.go(-1)
+                }
               }
             }, 1000)
 

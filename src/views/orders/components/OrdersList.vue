@@ -111,9 +111,9 @@ export default {
           // 加载状态结束
           this.loading = false
           // 数据全部加载完成
-          if (this.totalNum.length) {
-            this.finished = true
-          }
+          // if (this.totalNum.length) {
+          this.finished = true
+          // }
         }
         // for (let i = 0; i < 10; i++) {
         //   this.list.push(this.list.length + 1)

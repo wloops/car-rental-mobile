@@ -320,11 +320,10 @@ export default {
       // 获取轮播图图片
       getAdImages()
         .then(res => {
-          let adImages = res.data.queryCarRentalADImg
-          if (adImages === null && adImages === undefined) {
-            console.log('获取轮播图图片失败')
+          if (res.data.rs !== '1') {
             return false
           }
+          let adImages = res.data.queryCarRentalADImg
           // console.log(adImages)
           this.adImagesLink = adImages.map(item => {
             if (item.picFile) {
@@ -359,6 +358,9 @@ export default {
     },
     loadVehicleType() {
       getVehicleType().then(res => {
+        if (res.data.rs !== '1') {
+          return false
+        }
         // 获取经济型的actNo
         res.data.queryVehicleType.forEach(item => {
           if (item.classifyName === '经济型') {
@@ -381,12 +383,12 @@ export default {
         endTime: this.endDate,
         rentalDays: this.rentalDays,
       }).then(res => {
-        let carInfos = res.data.queryVehicleOfType
-        // 拼接车辆图片信息
-        if (carInfos === null || carInfos === undefined) {
+        if (res.data.rs !== '1') {
           console.log('连接车辆信息接口失败')
           return false
         }
+        let carInfos = res.data.queryVehicleOfType
+        // 拼接车辆图片信息
         this.carInfoList = carInfos.map(item => {
           if (item.carImg) {
             item.carImg = `${BASE_DOMAIN}/socketServer/images/cardMall/imgsrc/${item.carImg}`

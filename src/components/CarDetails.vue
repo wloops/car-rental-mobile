@@ -75,13 +75,18 @@ export default {
   methods: {
     showPopup() {
       this.show = true
-      // console.log('carDetail created')
       this.checklogin()
     },
     toConfirmOrder() {
       let memberID = window.localStorage.getItem('memberID')
       if (memberID) {
-        this.$router.push('/confirm')
+        this.$router.push({
+          name: 'confirm',
+          params: {
+            toPath: 'confirm',
+          },
+        })
+        // this.$router.push('/confirm')
       } else {
         this.$dialog
           .confirm({
@@ -90,7 +95,13 @@ export default {
           })
           .then(() => {
             // on confirm
-            this.$router.push('/login')
+            // this.$router.push('/login')
+            this.$router.push({
+              name: 'login',
+              params: {
+                toPath: 'confirm',
+              },
+            })
           })
           .catch(() => {
             // this.$router.go(-1)

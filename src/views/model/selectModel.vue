@@ -23,12 +23,12 @@
             <van-list
               v-model="loading"
               :finished="finished"
-              :offset="350"
+              offset="50"
               finished-text="没有更多了"
               @load="onLoad"
               ref="checkList"
             >
-              <van-skeleton :row="10" :loading="skeletonLoading">
+              <!-- <van-skeleton :row="10" :loading="skeletonLoading"> -->
                 <van-grid
                   :column-num="1"
                   :gutter="15"
@@ -39,7 +39,7 @@
                     v-for="(item, index) in carInfo"
                     :key="index"
                     icon="photo-o"
-                    @click="selectCarItem"
+                    @click="selectCarItem(item)"
                   >
                     <template>
                       <div class="carCard">
@@ -64,7 +64,7 @@
                     </template>
                   </van-grid-item>
                 </van-grid>
-              </van-skeleton>
+              <!-- </van-skeleton> -->
             </van-list>
           </van-pull-refresh>
         </template>
@@ -105,10 +105,10 @@ export default {
       refreshing: false,
       carInfoList: [],
       total: 0, //总共的数据条数
-      skeletonLoading: true,
+      // skeletonLoading: true,
       currentCarInfo: [],
       currentPage: 0,
-      numOfPerPage: 7,
+      numOfPerPage: 10,
     }
   },
   computed: {
@@ -176,10 +176,12 @@ export default {
   methods: {
     selectCarItem(e) {
       // 当前选择车辆
-      let imgURL =
-        e.currentTarget.children[0].children[0].children[0].children[0].src
-      this.carInfoList.forEach((item, index) => {
-        if (item.carImg === imgURL) {
+      // let imgURL =
+      //   e.currentTarget.children[0].children[0].children[0].children[0].src
+      // console.log('imgURL', imgURL)
+      let prdNo = e.prdNo
+      this.carInfo.forEach((item, index) => {
+        if (item.prdNo === prdNo) {
           this.$store.commit('car/setCurrentCarInfo', item)
         }
       })
@@ -199,12 +201,11 @@ export default {
         currentPage: this.currentPage,
         numOfPerPage: this.numOfPerPage,
       }).then(res => {
-        let carInfos = res.data.queryVehicleOfType
-        console.log(carInfos)
-        if (carInfos === undefined) {
-          console.log('获取车辆信息失败')
+        if (res.data.rs !== '1') {
           return false
         }
+        let carInfos = res.data.queryVehicleOfType
+        console.log(carInfos)
         // 拼接车辆图片信息
         this.carInfoList = carInfos.map(item => {
           if (item.carImg) {
@@ -221,7 +222,8 @@ export default {
         // this.carInfoList.forEach((item, index) => {
         //   this.currentCarInfo.push(item)
         // })
-        this.currentCarInfo.push(...this.carInfoList)
+        // this.currentCarInfo.push(...this.carInfoList)
+        this.currentCarInfo = this.currentCarInfo.concat(this.carInfoList)
         this.$store.commit('car/setCarInfo', this.currentCarInfo)
         console.log('carInfo:', this.carInfo)
 
@@ -230,7 +232,9 @@ export default {
         }
 
         this.loading = false
-        this.skeletonLoading = false
+        // this.skeletonLoading = false
+        this.finished =
+          this.currentCarInfo.length >= this.total
       })
     },
     handleClickNav(index) {
@@ -246,7 +250,7 @@ export default {
       setTimeout(() => {
         this.currentPage++
         console.log('onLoad')
-        this.skeletonLoading = true
+        // this.skeletonLoading = true
 
         if (this.refreshing) {
           this.refreshing = false
@@ -282,7 +286,7 @@ export default {
         // if (this.carInfo.length >= this.total) {
         //   this.finished = true
         // }
-      }, 500)
+      }, 1000)
     },
     onRefresh() {
       console.log('onRefresh')

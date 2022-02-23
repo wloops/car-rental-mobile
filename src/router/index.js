@@ -98,6 +98,8 @@ const routes = [
     path: '/confirm',
     name: 'confirm',
     component: () => import('@/views/confirm/confirmOrder.vue'),
+    // 只有经过身份验证的用户才能创建订单
+    // meta: { requiresAuth: true },
   },
   {
     path: '/rules',
@@ -128,6 +130,7 @@ router.beforeEach((to, from, next) => {
   // console.log('unitToken', unitUser)
   //   // 验证下单页面的登录状态
   if (to.path == '/confirm') {
+    // if (to.meta.requiresAuth && user && userID) {
     if (user && userID) {
       next()
     } else {
@@ -138,11 +141,18 @@ router.beforeEach((to, from, next) => {
         duration: 1000,
       })
 
+      // 此路由需要授权，请检查是否已登录
+      // 如果没有，则重定向到登录页面
+      // return {
+      //   path: '/login',
+      //   // 保存我们所在的位置，以便以后再来
+      //   query: { redirect: to.fullPath },
+      // }
       next('/login')
     }
   }
   // 验证登录页面的登录状态
-  // if (to.path == '/login') {
+  // if () {
   //   if (unitUser) {
   //     if (from.path == 'model') {
   //       next({ path: '/confirm' })
