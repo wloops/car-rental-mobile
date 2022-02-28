@@ -8,14 +8,7 @@ import { request } from '@/utils'
 //     url: '/hello/hello'
 //   })
 // }
-// 静默登录
-export const silenceLogin = params => {
-  return request({
-    method: 'GET',
-    url: '/currencyLogin/login',
-    params,
-  })
-}
+
 // 获取常见问题
 export const getComProblem = () => {
   // !!! 在 request.js 里面统一设置了 token 。这里不用单独设置

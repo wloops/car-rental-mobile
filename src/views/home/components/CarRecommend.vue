@@ -7,7 +7,7 @@
         <van-grid-item
           v-for="(item, index) in carInfoList"
           :key="index"
-          @click="selectCarItem"
+          @click="selectCarItem(item)"
         >
           <van-image fit="contain" :src="item.carImg" />
           <div class="recommendPrice">
@@ -55,10 +55,11 @@ export default {
     selectCarItem(e) {
       // 当前选择车辆
       // console.log('e.currentTarget', e.currentTarget)
-      let imgURL = e.currentTarget.children[0].children[0].src
+      // let imgURL = e.currentTarget.children[0].children[0].src
       // console.log('imgURL', imgURL)
+      let prdNo = e.prdNo
       this.carInfoList.forEach((item, index) => {
-        if (item.carImg === imgURL) {
+        if (item.prdNo === prdNo) {
           this.$store.commit('car/setCurrentCarInfo', item)
         }
       })

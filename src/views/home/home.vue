@@ -100,6 +100,8 @@
 </template>
 
 <script>
+import VConsole from 'vconsole'
+let vConsole = new VConsole()
 // @ is an alias to /src
 import NavTopCurrency from '@/components/NavTopCurrency.vue'
 import TintDatetimePicker from '@/components/TintDatetimePicker.vue'
@@ -115,6 +117,7 @@ import global_ from '@/global/config_global'
 // 加载home接口模块
 import { getOtherAdImages, getAdImages } from '@/api/home'
 import { getVehicleType, getVehicleOfType } from '@/api/carInfo'
+import { silenceLogin } from '@/api/user'
 
 export default {
   name: 'Home',
@@ -205,7 +208,7 @@ export default {
     },
     loadSilenceLogin() {
       console.log('login:::')
-      this.dataLoading = true
+      // this.dataLoading = true
       let storage = window.localStorage
       let param = decodeURI(location.search)
       if (param == '') {
@@ -225,91 +228,73 @@ export default {
       } else {
         storage.setItem('codeAppID', param)
       }
-      var REALTERMTYPE = ''
+      let code = ''
       let appid = ''
-      let url = '/currencyLogin/login'
+      let REALTERMTYPE = ''
+      let REALUSERNAME = ''
       console.log('param::' + param)
       if (param.indexOf('appid') != -1) {
-        appid = param.substring(
-          param.indexOf('=') + 1,
-          param.indexOf('code') - 1
-        )
-        let code = param.substring(
-          param.indexOf('code') + 5,
-          param.indexOf('state') - 1
-        )
-        console.log('code::' + code)
-        REALTERMTYPE = '微信预约点餐公众号'
-        url =
-          url +
-          '?code=' +
-          code +
-          '&appid=' +
-          appid +
-          '&REALTERMTYPE=' +
-          REALTERMTYPE
+        let params = param.split('&')
+        params.forEach((item, index, err) => {
+          if (item.indexOf('appid') != -1) {
+            appid = item.substring(item.indexOf('=') + 1)
+          }
+          if (item.indexOf('REALTERMTYPE') != -1) {
+            REALTERMTYPE = item.substring(item.indexOf('=') + 1)
+          }
+          if (item.indexOf('REALUSERNAME') != -1) {
+            REALUSERNAME = item.substring(item.indexOf('=') + 1)
+          }
+          if (item.indexOf('code') != -1) {
+            code = item.substring(item.indexOf('=') + 1)
+          }
+        })
         storage.setItem('appid', appid)
+
+        console.log('appid::' + appid)
+        console.log('code::' + code)
+        console.log('REALTERMTYPE::' + REALTERMTYPE)
+        console.log('REALUSERNAME::' + REALUSERNAME)
       }
       if (appid.length < 18) {
         // 解决分享过来时获取不到appid的问题,从分享登录时存入sessionStorage中重新获取
         appid = storage.getItem('appid')
       }
-      var that = this
-      console.log('url:::' + url)
-
-      this.$http
-        .get(`http://www.paytunnel.cn/carRentalServerRH${url}`)
-        .then(res => {
+      silenceLogin({
+        code: code,
+        appid: appid,
+        REALTERMTYPE: REALTERMTYPE,
+        REALUSERNAME: REALUSERNAME,
+      }).then(res => {
+        // console.log('res:::', res)
+        console.log('res.data:::', res.data)
+        let rs = JSON.stringify(res.data)
+        if (rs.indexOf('-11419') != -1) {
+          // 则是没有注册
+          that.regSchool('广西德保县惠保投资发展有限公司')
+        } else {
+          let userName = res.data.userName
+          // that.$toast('欢迎您，' + userName)
+          global_.token = res.data.token.token
+          global_.userName = userName
+          global_.openid = res.data.openid
+          global_.TELLERCOMPANY = res.data.TELLERCOMPANY
+          appid = res.data.appid
+          /* --当刷新页面导致token不存在时,使用sessionStorage中的token-- */
+          storage.setItem('token', global_.token)
+          storage.setItem('openid', global_.openid)
+          storage.setItem('guestMemberID', global_.userName)
+          storage.setItem('appid', appid)
+          storage.setItem('TELLERCOMPANY', res.data.TELLERCOMPANY)
+          this.schoolName = storage.getItem('TELLERCOMPANY')
           // 加载 获取广告图片
           this.loadAdImages()
           this.loadOtherAdImages()
           // 加载 获取车辆类型
           this.loadVehicleType()
-          // 将接口返回的用户相关数据放到本地存储，方便应用数据共享
-          // window.localStorage.setItem('user', res.data.data)
-          // 但是本地存储只能存储字符串
-          // 想要存储对象、数组类型的数据，则把他们转为 JSON 格式字符串进行存储
-          // window.localStorage.setItem('user', JSON.stringify(res.data.data))
-          // console.log(window.localStorage.getItem('user'))
-          // if (res.status === 200) {
-          // await this.login()
-          console.log('res:::', res)
-          console.log('res.data:::', res.data)
-          var rs = JSON.stringify(res.data)
-          if (rs.indexOf('-11419') != -1) {
-            // 则是没有注册
-            that.regSchool('广西德保县惠保投资发展有限公司')
-          } else {
-            var userName = res.data.userName
-            // that.$toast('欢迎您，' + userName)
-            global_.token = res.data.token.token
-            global_.userName = userName
-            global_.openid = res.data.openid
-            global_.TELLERCOMPANY = res.data.TELLERCOMPANY
-            appid = res.data.appid
-            /* --当刷新页面导致token不存在时,使用sessionStorage中的token-- */
-            storage.setItem('token', global_.token)
-            storage.setItem('openid', global_.openid)
-            storage.setItem('guestMemberID', global_.userName)
-            storage.setItem('appid', appid)
-            storage.setItem('TELLERCOMPANY', res.data.TELLERCOMPANY)
-            that.schoolName = storage.getItem('TELLERCOMPANY')
-            // that.dataLoading = false
-
-            that.checklogin()
-            // that.getShopList()
-            // that.getBannerImages()
-            // that.getNotice()
-            // that.wxConfig()
-            // callback(true)
-          }
-
-          // console.log(res.status)
-          // }
-        })
-        .catch(err => {
-          console.log(err)
-        })
+          this.checklogin()
+        }
+      })
     },
     loadAdImages() {
       if (this.$store.getters.getAdImagesLink.length > 0) {

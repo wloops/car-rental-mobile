@@ -73,6 +73,8 @@
 import { Dialog } from 'vant'
 import { mapGetters, mapMutations } from 'vuex'
 import global_ from '@/global/config_global'
+import { loginOfAccount } from '@/api/user'
+
 export default {
   name: 'login',
   components: {
@@ -125,6 +127,7 @@ export default {
   created() {
     let storage = window.localStorage
     this.token = storage.getItem('token')
+    this.appid = storage.getItem('appid')
     this.show = true
     this.getCookie()
     this.getPK()
@@ -186,54 +189,49 @@ export default {
         //   console.log("清空cookie")
         this.clearCookie()
       }
-      var that = this
-      console.log(this.token)
-      console.log(this.appid)
-      const toast = that.$toast.loading({
+      // var that = this
+      console.log('this.token', this.token)
+      console.log('this.appid', this.appid)
+      console.log('this.username', this.username)
+      console.log('this.password', password_temp)
+      const toast = this.$toast.loading({
         duration: 0, // 持续展示 toast
         forbidClick: true,
         message: '登录中...',
       })
-      this.$http
-        .post(
-          'http://www.paytunnel.cn/carRentalServerRH/app/apploginByAccount?_csrf=' +
-            this.token +
-            '&cipherText=' +
-            password_temp +
-            '&tellerNo=' +
-            this.username +
-            '&appId=' +
-            this.appid
-        )
-        .then(function (response) {
+
+      loginOfAccount({
+        _csrf: this.token,
+        cipherText: password_temp,
+        tellerNo: this.username,
+        appId: this.appid,
+      })
+        .then(res => {
           //请求成功
-          var result = response.data.rs
+          var result = res.data.rs
           console.log(result)
-          console.log('response.data', response.data)
+          console.log('res.data', res.data)
           if (result == '1') {
             let storage = window.localStorage
-            var userName = response.data.memberID
-            // var nickName = response.data.usernameLERNAME
-            var nickName = response.data.TELLERNAME
+            var userName = res.data.memberID
+            // var nickName = res.data.usernameLERNAME
+            var nickName = res.data.TELLERNAME
             global_.userName = userName
             global_.nickName = nickName
-            global_.usernameLERCOMPANY = response.data.usernameLERCOMPANY
-            global_.usernameLERROLE = response.data.usernameLERROLE
-            global_.token = response.data.token.token
+            global_.usernameLERCOMPANY = res.data.usernameLERCOMPANY
+            global_.usernameLERROLE = res.data.usernameLERROLE
+            global_.token = res.data.token.token
 
             /* --当刷新页面导致token不存在时,使用sessionStorage中的token--*/
             storage.setItem('token', global_.token)
             storage.setItem('memberID', global_.userName)
-            storage.setItem('usernameLERROLE', response.data.usernameLERROLE)
-            storage.setItem(
-              'usernameLERCOMPANY1',
-              response.data.usernameLERCOMPANY
-            )
-            storage.setItem('user', JSON.stringify(response.data))
+            storage.setItem('usernameLERROLE', res.data.usernameLERROLE)
+            storage.setItem('usernameLERCOMPANY1', res.data.usernameLERCOMPANY)
+            storage.setItem('user', JSON.stringify(res.data))
             storage.setItem('nickName', nickName)
             storage.setItem('memberID', userName)
             // 单位token 存储到vuex(localStorage)
-            // that.$store.commit('setUnitToken', response.data.token.token)
+            // that.$store.commit('setUnitToken', res.data.token.token)
 
             let second = 1
             const timer = setInterval(() => {
@@ -243,12 +241,12 @@ export default {
               } else {
                 clearInterval(timer)
                 // 手动清除 Toast
-                that.$toast.clear()
+                this.$toast.clear()
                 toast.message = '登录成功'
                 toast.icon = 'success'
                 // 跳转到订单确定页面
-                if (that.$route.params.toPath === 'confirm') {
-                  that.$router.push({
+                if (this.$route.params.toPath === 'confirm') {
+                  this.$router.push({
                     name: 'confirm',
                     params: {
                       toPath: '',
@@ -256,7 +254,7 @@ export default {
                   })
                 } else {
                   // 登录成功返回上一级页面
-                  that.$router.go(-1)
+                  this.$router.go(-1)
                 }
               }
             }, 1000)
@@ -277,19 +275,115 @@ export default {
               } else {
                 clearInterval(timer)
                 // 手动清除 Toast
-                that.$toast.clear()
+                this.$toast.clear()
                 toast.message = '登录失败'
                 toast.icon = 'fail'
                 // 登录成功返回上一级页面
-                that.$router.go(-1)
+                this.$router.go(-1)
               }
             }, 1000)
           }
         })
-        .catch(function (error) {
+        .catch(err => {
           //请求失败
-          console.log('error:' + error)
+          console.log(err)
         })
+      // this.$http
+      //   .post(
+      //     'http://www.paytunnel.cn/carRentalServerRH/app/apploginByAccount?_csrf=' +
+      //       this.token +
+      //       '&cipherText=' +
+      //       password_temp +
+      //       '&tellerNo=' +
+      //       this.username +
+      //       '&appId=' +
+      //       this.appid
+      //   )
+      //   .then(function (response) {
+      //     //请求成功
+      //     var result = response.data.rs
+      //     console.log('result', result)
+      //     console.log('response.data', response.data)
+      //     if (result == '1') {
+      //       let storage = window.localStorage
+      //       var userName = response.data.memberID
+      //       // var nickName = response.data.usernameLERNAME
+      //       var nickName = response.data.TELLERNAME
+      //       global_.userName = userName
+      //       global_.nickName = nickName
+      //       global_.usernameLERCOMPANY = response.data.usernameLERCOMPANY
+      //       global_.usernameLERROLE = response.data.usernameLERROLE
+      //       global_.token = response.data.token.token
+
+      //       /* --当刷新页面导致token不存在时,使用sessionStorage中的token--*/
+      //       storage.setItem('token', global_.token)
+      //       storage.setItem('memberID', global_.userName)
+      //       storage.setItem('usernameLERROLE', response.data.usernameLERROLE)
+      //       storage.setItem(
+      //         'usernameLERCOMPANY1',
+      //         response.data.usernameLERCOMPANY
+      //       )
+      //       storage.setItem('user', JSON.stringify(response.data))
+      //       storage.setItem('nickName', nickName)
+      //       storage.setItem('memberID', userName)
+      //       // 单位token 存储到vuex(localStorage)
+      //       // that.$store.commit('setUnitToken', response.data.token.token)
+
+      //       let second = 1
+      //       const timer = setInterval(() => {
+      //         second--
+      //         if (second) {
+      //           toast.message = `正在登录,稍后跳转到登录前页面(${second}s)`
+      //         } else {
+      //           clearInterval(timer)
+      //           // 手动清除 Toast
+      //           that.$toast.clear()
+      //           toast.message = '登录成功'
+      //           toast.icon = 'success'
+      //           // 跳转到订单确定页面
+      //           if (that.$route.params.toPath === 'confirm') {
+      //             that.$router.push({
+      //               name: 'confirm',
+      //               params: {
+      //                 toPath: '',
+      //               },
+      //             })
+      //           } else {
+      //             // 登录成功返回上一级页面
+      //             that.$router.go(-1)
+      //           }
+      //         }
+      //       }, 1000)
+
+      //       // that.$router.push('/')
+      //       // window.location.href = global_.clientUrl
+      //     } else {
+      //       // Dialog.alert({
+      //       //   message: result,
+      //       // }).then(() => {
+      //       //   return false
+      //       // })
+      //       let second = 1
+      //       const timer = setInterval(() => {
+      //         second--
+      //         if (second) {
+      //           toast.message = `正在登录...`
+      //         } else {
+      //           clearInterval(timer)
+      //           // 手动清除 Toast
+      //           that.$toast.clear()
+      //           toast.message = '登录失败'
+      //           toast.icon = 'fail'
+      //           // 登录成功返回上一级页面
+      //           that.$router.go(-1)
+      //         }
+      //       }, 1000)
+      //     }
+      //   })
+      //   .catch(function (error) {
+      //     //请求失败
+      //     console.log('error:' + error)
+      //   })
     },
     setCookie(username, pass, exdays) {
       var exdate = new Date() //获取时间
@@ -347,6 +441,13 @@ export default {
   font-size: 1rem;
   color: #3c3839;
 }
+
+/deep/ .van-field__control {
+  -webkit-appearance: none; /*去除系统默认的样式*/
+}
+// select {
+//   -webkit-appearance: none; /*去除系统默认的样式*/
+// }
 .logoBox {
   text-align: center;
   margin-top: 2rem;
