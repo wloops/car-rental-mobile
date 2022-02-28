@@ -338,6 +338,8 @@ export default {
             }
             console.log('end:', end)
             this.$refs.picker.setColumnValue(1, end)
+            // 保存到vuex
+            this.setEndTime(end)
           }
           this.isDisabled = false
         }
