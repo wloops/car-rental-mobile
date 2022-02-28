@@ -18,21 +18,15 @@
                       >用车</van-tag
                     ></span
                   >
-                  <span class="" style="font-size: small; color: #adadad">{{
-                    item.orderStatusShow
-                  }}</span>
-                  <!-- <span
-                    class=""
-                    style="font-size: small; color: #adadad"
-                    v-if="item.orderStatusShow === '1'"
-                    >已提车</span
-                  >
                   <span
-                    class=""
-                    style="font-size: small; color: #adadad"
-                    v-if="item.orderStatusShow === '2'"
-                    >已还车</span
-                  > -->
+                    :class="{
+                      statusShow: item.tradeStatus === '2',
+                      defaultStatusShow: item.tradeStatus !== '2',
+                    }"
+                    >{{
+                      item.tradeStatus !== '2' ? item.orderStatusShow : '已取消'
+                    }}</span
+                  >
                 </div>
                 <div class="orderInfo">
                   <p>订单编号 : {{ item.billNo }}</p>
@@ -42,6 +36,21 @@
                     还车时间 : {{ item.carUseTimeEnd }}（{{ item.useDays }}天）
                   </p>
                   <p>订单金额 : ￥{{ item.orderTotalPrice }}</p>
+                  <div
+                    class="orderBtn"
+                    v-if="
+                      item.tradeStatus !== '2' &&
+                      item.orderStatusShow !== '已提车'
+                    "
+                  >
+                    <van-button
+                      class="cancelOrder"
+                      size="small"
+                      type="warning"
+                      @click="cancelOrder(item)"
+                      >取消订单</van-button
+                    >
+                  </div>
                 </div>
               </div>
             </van-grid-item>
@@ -54,7 +63,9 @@
 </template>
 
 <script>
-import { getNotOutOrder, getAllOrder } from '@/api/order'
+import { getNotOutOrder, getAllOrder, setCancelOrder } from '@/api/order'
+import { BASE_COMNAME } from '@/global/config'
+import moment from 'moment'
 export default {
   name: 'OrdersList',
   components: {},
@@ -136,6 +147,45 @@ export default {
       this.loading = true
       this.onLoad()
     },
+    // 取消订单
+    cancelOrder(item) {
+      // 格式化当前时间
+      let cancelDate = moment().format('YYYYMMDD')
+      let cancelTime = moment().format('HHmmss')
+      console.log('cancelDate', cancelDate)
+      console.log('cancelTime', cancelTime)
+      let params = {
+        srlIDForEngine: 'Splenwise微信预约点餐系统',
+        busiNameForEngine: '汽车租赁业务',
+        busiFunNameForEngine: '取消租车订单',
+        miniProcNameForEngine: '取消租车订单',
+        saleCmpName: BASE_COMNAME,
+        driver: item.driver ? item.driver : '',
+        carSender: '',
+        carReceiver: '',
+        carID: item.carID ? item.carID : '',
+        billNo: item.billNo,
+        cancelDate: cancelDate,
+        cancelTime: cancelTime,
+        remark: '',
+      }
+      console.log('取消订单参数', params)
+      this.$dialog
+        .confirm({
+          title: '提示',
+          message: '确定取消订单吗？',
+        })
+        .then(() => {
+          setCancelOrder(params).then(res => {
+            if (res.data.rs === '1') {
+              this.onRefresh()
+              this.$toast('取消订单成功')
+            } else {
+              this.$toast(res.data.rs)
+            }
+          })
+        })
+    },
     loadAllOrder() {
       getAllOrder({
         currentPage: this.page,
@@ -175,7 +225,7 @@ export default {
 }
 .orderItem {
   width: 95%;
-  height: 8rem;
+  // height: 8rem;
 }
 .useStatus {
   display: flex;
@@ -187,5 +237,17 @@ export default {
   font-size: small;
   color: #6f6f6f;
   line-height: 0.5rem;
+  .orderBtn {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+}
+.statusShow {
+  font-size: small;
+  color: #6f6f6f;
+}
+.defaultStatusShow {
+  font-size: small;
 }
 </style>
