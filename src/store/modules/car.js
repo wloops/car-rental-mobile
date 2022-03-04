@@ -23,7 +23,16 @@ export default {
   },
   mutations: {
     setCarInfo(state, payload) {
-      state.carInfo = payload
+      //  去重方法1：利用对象访问属性的方法，判断对象中是否存在key
+      var result = []
+      var obj = {}
+      for (var i = 0; i < payload.length; i++) {
+        if (!obj[payload[i].prdNo]) {
+          result.push(payload[i])
+          obj[payload[i].prdNo] = true
+        }
+      }
+      state.carInfo = result
     },
     setCurrentCarInfo(state, payload) {
       state.currentCarInfo = payload

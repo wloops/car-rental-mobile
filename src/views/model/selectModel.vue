@@ -29,41 +29,36 @@
               ref="checkList"
             >
               <!-- <van-skeleton :row="10" :loading="skeletonLoading"> -->
-                <van-grid
-                  :column-num="1"
-                  :gutter="15"
-                  clickable
-                  :border="false"
+              <van-grid :column-num="1" :gutter="15" clickable :border="false">
+                <van-grid-item
+                  v-for="(item, index) in carInfo"
+                  :key="index"
+                  icon="photo-o"
+                  @click="selectCarItem(item)"
                 >
-                  <van-grid-item
-                    v-for="(item, index) in carInfo"
-                    :key="index"
-                    icon="photo-o"
-                    @click="selectCarItem(item)"
-                  >
-                    <template>
-                      <div class="carCard">
-                        <div class="carImg">
-                          <van-image
-                            width="5rem"
-                            height="5rem"
-                            fit="contain"
-                            :src="item.carImg"
-                          />
+                  <template>
+                    <div class="carCard">
+                      <div class="carImg">
+                        <van-image
+                          width="5rem"
+                          height="5rem"
+                          fit="contain"
+                          :src="item.carImg"
+                        />
+                      </div>
+                      <div class="carInfo">
+                        <div class="carName">{{ item.carModelShowName }}</div>
+                        <div class="carMsg van-ellipsis">
+                          {{ item.carDescription }}
                         </div>
-                        <div class="carInfo">
-                          <div class="carName">{{ item.carModelShowName }}</div>
-                          <div class="carMsg van-ellipsis">
-                            {{ item.carDescription }}
-                          </div>
-                          <div class="carPrice">
-                            ￥{{ item.carPrice }} <span>日均</span>
-                          </div>
+                        <div class="carPrice">
+                          ￥{{ item.carPrice }} <span>日均</span>
                         </div>
                       </div>
-                    </template>
-                  </van-grid-item>
-                </van-grid>
+                    </div>
+                  </template>
+                </van-grid-item>
+              </van-grid>
               <!-- </van-skeleton> -->
             </van-list>
           </van-pull-refresh>
@@ -165,10 +160,32 @@ export default {
       },
       // immediate: true, // 初始化时立即触发
     },
+    $route(to, from) {
+      console.log('$route', to, from)
+      if (from.path === '/') {
+        this.onRefresh()
+      }
+    },
   },
   created() {
-    // console.log('SelectModel created')
-    // this.onLoad()
+    // 获取车型分类
+    getVehicleType().then(res => {
+      if (res.data.rs !== '1') {
+        console.log('res.data.queryVehicleType', res.data.queryVehicleType)
+        console.log('获取车型分类失败')
+        return false
+      }
+      this.itemsTree = res.data.queryVehicleType.map(item => {
+        return {
+          // id: item.id,
+          text: item.displayName,
+          classifyName: item.classifyName,
+          actNo: item.actNo,
+        }
+      })
+      this.$store.commit('car/setActNo', this.itemsTree[this.active].actNo)
+      // this.loadVehicleOfType()
+    })
   },
   mounted() {
     // console.log(this.startDate, this.endDate, this.rentalDays)
@@ -224,7 +241,17 @@ export default {
         // })
         // this.currentCarInfo.push(...this.carInfoList)
         this.currentCarInfo = this.currentCarInfo.concat(this.carInfoList)
-        this.$store.commit('car/setCarInfo', this.currentCarInfo)
+
+        let currentCarInfoNew = []
+        // currentCarInfo每一项的classifyName都相等时，才能渲染
+        this.currentCarInfo.forEach((item, index) => {
+          if (item.classifyName === this.itemsTree[this.active].classifyName) {
+            currentCarInfoNew.push(item)
+          }
+        })
+
+        // this.$store.commit('car/setCarInfo', this.currentCarInfo)
+        this.$store.commit('car/setCarInfo', currentCarInfoNew)
         console.log('carInfo:', this.carInfo)
 
         if (this.carInfo.length >= parseInt(this.total)) {
@@ -233,17 +260,17 @@ export default {
 
         this.loading = false
         // this.skeletonLoading = false
-        this.finished =
-          this.currentCarInfo.length >= this.total
+        this.finished = this.currentCarInfo.length >= this.total
       })
     },
     handleClickNav(index) {
       this.active = index
-      this.currentPage = 0
-      this.currentCarInfo = []
-      this.loading = true
-      this.finished = false
-      this.onLoad()
+      // this.currentPage = 0
+      // this.currentCarInfo = []
+      // this.loading = true
+      // this.finished = false
+      this.$store.commit('car/setCarInfo', [])
+      this.onRefresh()
     },
     //加载时触发
     onLoad() {
@@ -256,31 +283,31 @@ export default {
           this.refreshing = false
         }
 
-        if (this.itemsTree.length === 0) {
-          // 获取车型分类
-          getVehicleType().then(res => {
-            console.log('res.data.queryVehicleType', res.data.queryVehicleType)
-            if (res.data.queryVehicleType === undefined) {
-              console.log('获取车型分类失败')
-              return false
-            }
-            this.itemsTree = res.data.queryVehicleType.map(item => {
-              return {
-                // id: item.id,
-                text: item.displayName,
-                classifyName: item.classifyName,
-                actNo: item.actNo,
-              }
-            })
-            this.$store.commit(
-              'car/setActNo',
-              this.itemsTree[this.active].actNo
-            )
-            this.loadVehicleOfType()
-          })
-        } else {
-          this.loadVehicleOfType()
-        }
+        // if (this.itemsTree.length === 0) {
+        // // 获取车型分类
+        // getVehicleType().then(res => {
+        //   console.log('res.data.queryVehicleType', res.data.queryVehicleType)
+        //   if (res.data.queryVehicleType === undefined) {
+        //     console.log('获取车型分类失败')
+        //     return false
+        //   }
+        //   this.itemsTree = res.data.queryVehicleType.map(item => {
+        //     return {
+        //       // id: item.id,
+        //       text: item.displayName,
+        //       classifyName: item.classifyName,
+        //       actNo: item.actNo,
+        //     }
+        //   })
+        //   this.$store.commit(
+        //     'car/setActNo',
+        //     this.itemsTree[this.active].actNo
+        //   )
+        //   this.loadVehicleOfType()
+        // })
+        // } else {
+        this.loadVehicleOfType()
+        // }
 
         // this.loading = false
         // if (this.carInfo.length >= this.total) {
