@@ -40,7 +40,8 @@
                     class="orderBtn"
                     v-if="
                       item.tradeStatus !== '2' &&
-                      item.orderStatusShow !== '已提车'
+                      item.orderStatusShow !== '已提车' &&
+                      item.orderStatusShow !== '已还车'
                     "
                   >
                     <van-button

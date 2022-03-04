@@ -390,6 +390,8 @@ export default {
       this.$router.back()
     },
     loadPriceInfo(key) {
+      // let base_comname = window.localStorage.getItem('REALUSERNAME')
+      console.log('loadPriceInfo',BASE_COMNAME)
       let param = {
         actNo: this.actNo,
         priceAttrValueList: this.carModel,

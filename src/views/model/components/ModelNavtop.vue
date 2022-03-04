@@ -78,7 +78,7 @@ export default {
   mounted() {},
   methods: {
     backHome() {
-      this.$router.push('/')
+      this.$router.go(-1)
     },
     closePopup() {
       this.popupShow = false
