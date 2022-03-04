@@ -38,7 +38,7 @@
             color="#ffc65f"
             block
             size="normal"
-            to="model"
+            @click="selectionCar"
             >去选车</van-button
           >
           <tint-datetime-picker ref="tintPicker"></tint-datetime-picker>
@@ -255,6 +255,8 @@ export default {
         console.log('code::' + code)
         console.log('REALTERMTYPE::' + REALTERMTYPE)
         console.log('REALUSERNAME::' + REALUSERNAME)
+
+        storage.setItem('REALUSERNAME', REALUSERNAME)
       }
       if (appid.length < 18) {
         // 解决分享过来时获取不到appid的问题,从分享登录时存入sessionStorage中重新获取
@@ -445,6 +447,12 @@ export default {
       // console.log('selectCarItem')
       this.$refs.showCarDetails.showPopup()
     },
+    selectionCar() {
+      // to /model
+      this.$router.push({
+        name: 'model'
+      })
+    }
   },
 }
 </script>

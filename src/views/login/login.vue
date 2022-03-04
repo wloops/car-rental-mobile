@@ -195,7 +195,7 @@ export default {
       console.log('this.username', this.username)
       console.log('this.password', password_temp)
       const toast = this.$toast.loading({
-        duration: 0, // 持续展示 toast
+        duration: 1000, // 持续展示 toast
         forbidClick: true,
         message: '登录中...',
       })
@@ -230,6 +230,8 @@ export default {
             storage.setItem('user', JSON.stringify(res.data))
             storage.setItem('nickName', nickName)
             storage.setItem('memberID', userName)
+
+            storage.setItem('REALUSERNAME', res.data.TELLERCOMPANY)
             // 单位token 存储到vuex(localStorage)
             // that.$store.commit('setUnitToken', res.data.token.token)
 
@@ -262,26 +264,13 @@ export default {
             // that.$router.push('/')
             // window.location.href = global_.clientUrl
           } else {
-            // Dialog.alert({
-            //   message: result,
-            // }).then(() => {
-            //   return false
-            // })
-            let second = 1
-            const timer = setInterval(() => {
-              second--
-              if (second) {
-                toast.message = `正在登录...`
-              } else {
-                clearInterval(timer)
-                // 手动清除 Toast
-                this.$toast.clear()
-                toast.message = '登录失败'
-                toast.icon = 'fail'
-                // 登录成功返回上一级页面
-                this.$router.go(-1)
-              }
-            }, 1000)
+            this.$dialog
+              .alert({
+                message: result,
+              })
+              .then(() => {
+                return false
+              })
           }
         })
         .catch(err => {
