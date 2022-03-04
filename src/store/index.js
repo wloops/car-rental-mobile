@@ -26,12 +26,12 @@ export default new Vuex.Store({
       // 实时监听state值里的广告图片链接的最新状态的变化
       return state.adImagesLink
     },
-    getUnitToken(state) {
-      return state.unitToken
-    },
-    getPersonalToken(state) {
-      return state.personalToken
-    },
+    // getUnitToken(state) {
+    //   return state.unitToken
+    // },
+    // getPersonalToken(state) {
+    //   return state.personalToken
+    // },
   },
   mutations: {
     setTabName(state, payload) {
@@ -42,12 +42,12 @@ export default new Vuex.Store({
       // 通过mutations方式修改state里的值，更改当前选中的tab
       state.adImagesLink = payload
     },
-    setUnitToken(state, payload) {
-      state.unitToken = payload
-    },
-    setPersonalToken(state, payload) {
-      state.personalToken = payload
-    },
+    // setUnitToken(state, payload) {
+    //   state.unitToken = payload
+    // },
+    // setPersonalToken(state, payload) {
+    //   state.personalToken = payload
+    // },
   },
   modules: {
     // 模块
@@ -57,14 +57,15 @@ export default new Vuex.Store({
   },
   plugins: [
     createPersistedState({
-      storage: window.localStorage,
+      // storage: window.localStorage,
+      storage: window.sessionStorage,
       // vuex-persistedstate默认持久化所有state，指定需要持久化的state
       reducer(val) {
         return {
           // 只储存state中的user
           adImagesLink: val.adImagesLink,
-          unitToken: val.unitToken,
-          personalToken: val.personalToken,
+          // unitToken: val.unitToken,
+          // personalToken: val.personalToken,
         }
       },
     }),

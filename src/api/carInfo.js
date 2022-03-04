@@ -7,13 +7,7 @@ import { request } from '@/utils'
 //     url: '/hello/hello'
 //   })
 // }
-// 静默登录
-export const silenceLogin = () => {
-  return request({
-    method: 'GET',
-    url: '/currencyLogin/login?REALUSERNAME=广州睿颢软件技术有限公司',
-  })
-}
+
 // 获取车型分类
 export const getVehicleType = () => {
   return request({

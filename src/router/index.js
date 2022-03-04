@@ -23,6 +23,10 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "layout" */ '@/views/layout/layout.vue'),
+    meta: {
+      keepAlive: true, // 此组件需要被缓存
+      // deepth: 1,
+    },
     children: [
       // 子路由
       {
@@ -31,7 +35,7 @@ const routes = [
         component: () => import('@/views/home/home.vue'),
         meta: {
           keepAlive: true, // 此组件需要被缓存
-          deepth: 1,
+          // deepth: 1,
         },
       },
       {
@@ -39,8 +43,7 @@ const routes = [
         name: 'orders',
         component: () => import('@/views/orders/orders.vue'),
         meta: {
-          keepAlive: false, // 此组件需要被缓存
-          deepth: 2,
+          keepAlive: false, // 此组件不需要被缓存
         },
       },
       {
@@ -48,8 +51,7 @@ const routes = [
         name: 'my',
         component: () => import('@/views/my/my.vue'),
         meta: {
-          keepAlive: false, // 此组件需要被缓存
-          deepth: 2,
+          keepAlive: false, // 此组件不需要被缓存
         },
       },
     ],
@@ -68,7 +70,6 @@ const routes = [
     component: () => import('@/views/home/pages/feedbacks.vue'),
     meta: {
       keepAlive: true, // 此组件需要被缓存
-      deepth: 2,
     },
   },
   {
@@ -77,7 +78,6 @@ const routes = [
     component: () => import('@/views/home/pages/guide.vue'),
     meta: {
       keepAlive: true, // 此组件需要被缓存
-      deepth: 2,
     },
   },
   {
@@ -86,13 +86,15 @@ const routes = [
     component: () => import('@/views/home/pages/contactUs.vue'),
     meta: {
       keepAlive: true, // 此组件需要被缓存
-      deepth: 2,
     },
   },
   {
     path: '/model',
     name: 'model',
     component: () => import('@/views/model/selectModel.vue'),
+    meta: {
+      keepAlive: false, // 此组件不需要被缓存
+    },
   },
   {
     path: '/confirm',
