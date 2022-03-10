@@ -1,5 +1,14 @@
 <template>
   <div class="OrdersList">
+    <!-- description 展示描述信息 -->
+    <van-action-sheet
+      v-model="showDescription"
+      :actions="actions"
+      cancel-text="关闭"
+      :description="descriptionText"
+      close-on-click-action
+      get-container="body"
+    />
     <div class="orderList">
       <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
         <van-list
@@ -30,27 +39,55 @@
                 </div>
                 <div class="orderInfo">
                   <p>订单编号 : {{ item.billNo }}</p>
+                  <p>用车单位 : {{ item.unitName }}</p>
                   <p>用车车型 : {{ item.carType }}</p>
-                  <p>用车时间 : {{ item.carUseTimeBegin }}</p>
                   <p>
-                    还车时间 : {{ item.carUseTimeEnd }}（{{ item.useDays }}天）
+                    用车时间 : {{ item.carUseTimeBegin }}
+                    <span>{{ item.carUseBeginTime }}</span>
                   </p>
+                  <p>
+                    还车时间 : {{ item.carUseTimeEnd }}
+                    <span>{{ item.carUseEndTime }}</span> （{{
+                      item.useDays
+                    }}天）
+                  </p>
+                  <p>联系人 : {{ item.receiverName }}</p>
+                  <p>联系电话 : {{ item.receiverMobile }}</p>
+                  <p>送车地址 : {{ item.receiverAddress }}</p>
                   <p>订单金额 : ￥{{ item.orderTotalPrice }}</p>
-                  <div
-                    class="orderBtn"
-                    v-if="
-                      item.tradeStatus !== '2' &&
-                      item.orderStatusShow !== '已提车' &&
-                      item.orderStatusShow !== '已还车'
-                    "
-                  >
-                    <van-button
-                      class="cancelOrder"
-                      size="small"
-                      type="warning"
-                      @click="cancelOrder(item)"
-                      >取消订单</van-button
+                  <div class="orderBtn" v-if="item.tradeStatus !== '2'">
+                    <template
+                      v-if="
+                        item.orderStatusShow !== '已提车' &&
+                        item.orderStatusShow !== '已还车'
+                      "
                     >
+                      <van-button
+                        class="cancelOrder"
+                        size="small"
+                        type="warning"
+                        @click="cancelOrder(item)"
+                        >取消订单</van-button
+                      >
+                    </template>
+                    <template v-if="item.driver">
+                      <van-button
+                        class="checkDriver"
+                        size="small"
+                        type="primary"
+                        @click="checkDriver(item)"
+                        >查看司机</van-button
+                      >
+                    </template>
+                    <template v-if="item.orderStatusShow === '已还车'">
+                      <van-button
+                        class="feeDetailed"
+                        size="small"
+                        type="primary"
+                        @click="feeDetailed(item)"
+                        >费用明细</van-button
+                      >
+                    </template>
                   </div>
                 </div>
               </div>
@@ -64,7 +101,12 @@
 </template>
 
 <script>
-import { getNotOutOrder, getAllOrder, setCancelOrder } from '@/api/order'
+import {
+  getNotOutOrder,
+  getAllOrder,
+  setCancelOrder,
+  getOrderFeeDetailed,
+} from '@/api/order'
 import { BASE_COMNAME } from '@/global/config'
 import moment from 'moment'
 export default {
@@ -80,6 +122,10 @@ export default {
       page: 0, // 当前页码
       pageSize: 10, // 每页条数
       totalNum: 0, // 总条数
+
+      showDescription: false, // 是否展示描述信息
+      descriptionText: '', // 描述信息
+      actions: [], // 描述信息
     }
   },
   computed: {},
@@ -187,11 +233,46 @@ export default {
           })
         })
     },
+    // 查看司机
+    checkDriver(item) {
+      this.showDescription = true
+      this.descriptionText = '当前指派的司机详情'
+      this.actions = [
+        {
+          name: '司机姓名：' + item.driver,
+        },
+        {
+          name: '联系方式：' + item.driverMobile,
+        },
+      ]
+    },
+    // 费用明细
+    feeDetailed(item) {
+      this.showDescription = true
+      this.descriptionText = '所有费用明细'
+      // 费用计算清单：基础租车费、司机费用、超百公里费用、过路费、其它费用，总计费用。
+      getOrderFeeDetailed({
+        billNo: item.billNo,
+      }).then(res => {
+        if (res.data.rs === '1') {
+          let data = res.data.queryMyCarOrderCostDtl
+          this.actions = []
+          data.forEach(item => {
+            this.actions.push({
+              name: item.srlID + '：' + item.costTotal,
+            })
+          })
+        } else {
+          this.$toast(res.data.rs)
+        }
+      })
+    },
     loadAllOrder() {
       getAllOrder({
         currentPage: this.page,
         numOfPerPage: this.pageSize,
       }).then(res => {
+        console.log('获取全部订单', res)
         this.list = this.list.concat(res.data.queryMyAllCarOrders)
         this.totalNum = res.data.queryMyAllCarOrders_totalRecNum
 
@@ -242,6 +323,9 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    /deep/ .van-button {
+      margin-left: 0.5rem;
+    }
   }
 }
 .statusShow {

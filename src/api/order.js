@@ -50,3 +50,12 @@ export const setCancelOrder = params => {
     params,
   })
 }
+
+// (费用明细)queryMyCarOrderCostDtl
+export const getOrderFeeDetailed = params => {
+  return request({
+    method: 'GET',
+    url: '/search/queryMyCarOrderCostDtl',
+    params,
+  })
+}

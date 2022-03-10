@@ -50,6 +50,7 @@ import {
   AddressList,
   AddressEdit,
   Dialog,
+  ActionSheet,
 } from 'vant'
 
 const components = [
@@ -103,6 +104,7 @@ const components = [
   AddressList,
   AddressEdit,
   Dialog,
+  ActionSheet,
 ]
 
 function install(Vue) {
