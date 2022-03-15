@@ -6,7 +6,6 @@
       :actions="actions"
       cancel-text="关闭"
       :description="descriptionText"
-      close-on-click-action
       get-container="body"
     />
     <div class="orderList">
@@ -250,6 +249,7 @@ export default {
     feeDetailed(item) {
       this.showDescription = true
       this.descriptionText = '所有费用明细'
+      this.actions = [{ name: '加载选项', loading: true }]
       // 费用计算清单：基础租车费、司机费用、超百公里费用、过路费、其它费用，总计费用。
       getOrderFeeDetailed({
         billNo: item.billNo,
@@ -259,7 +259,7 @@ export default {
           this.actions = []
           data.forEach(item => {
             this.actions.push({
-              name: item.srlID + '：' + item.costTotal,
+              name: item.srlID + '：￥' + item.costTotal,
             })
           })
         } else {

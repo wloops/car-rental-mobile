@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "commit": "cz",
-    "dev": "vue-cli-service build && rm -rf ~/tomcat7/webapps/carRentalMobile/* && cp -rf ./dist/* ~/tomcat7/webapps/carRentalMobile/ && echo '--部署完成-- [http://www.paytunnel.cn/carRentalMobile]'"
+    "deployment": "vue-cli-service build && rm -rf ~/tomcat7/webapps/carRentalMobile/* && cp -rf ./dist/* ~/tomcat7/webapps/carRentalMobile/ && echo '--部署完成-- [http://www.paytunnel.cn/carRentalMobile]'"
   },
   "dependencies": {
     "@vant/area-data": "^1.2.2",
