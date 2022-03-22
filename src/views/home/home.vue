@@ -288,6 +288,8 @@ export default {
           storage.setItem('guestMemberID', global_.userName)
           storage.setItem('appid', appid)
           storage.setItem('TELLERCOMPANY', res.data.TELLERCOMPANY)
+
+          storage.setItem('userIcon', res.data.usrIcon)
           this.schoolName = storage.getItem('TELLERCOMPANY')
           // 加载 获取广告图片
           this.loadAdImages()

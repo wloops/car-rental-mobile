@@ -10,7 +10,7 @@
         width="5rem"
         height="5rem"
         fit="cover"
-        src="https://img01.yzcdn.cn/vant/cat.jpeg"
+        :src="userInfo.icon"
       />
       <div class="userInfo-info">
         <div class="userInfo-info-name">
@@ -72,6 +72,7 @@ export default {
       userInfo: {
         nickName: '',
         id: '',
+        icon: '',
       },
       isLogin: false,
     }
@@ -96,8 +97,10 @@ export default {
         this.userInfo.id = user
         this.isLogin = true
         this.userInfo.nickName = window.localStorage.getItem('nickName')
+        this.userInfo.icon = window.localStorage.getItem('userIcon')
       } else {
         this.userInfo.id = guest
+        this.userInfo.icon = window.localStorage.getItem('userIcon')
         this.isLogin = false
       }
     },
