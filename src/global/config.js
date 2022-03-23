@@ -56,8 +56,12 @@ if (process.env.NODE_ENV === 'development') {
   BASE_DOMAIN = 'http://www.paytunnel.cn'
   BASE_COMNAME = window.localStorage.getItem('REALUSERNAME')
 } else if (process.env.NODE_ENV === 'production') {
+  // 测试环境
   BASE_URL = 'http://www.paytunnel.cn/carRentalServerRH'
   BASE_DOMAIN = 'http://www.paytunnel.cn'
+  // 生产环境
+  // BASE_URL = ''
+  // BASE_DOMAIN = ''
   BASE_COMNAME = window.localStorage.getItem('REALUSERNAME')
 } else {
   BASE_URL = 'http://www.paytunnel.cn/carRentalServerRH'

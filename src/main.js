@@ -11,7 +11,7 @@ import { globalRegister } from './global'
 /* 引入config文件模块 */
 import global_ from '@/global/config_global'
 
-import { checkLogin } from '@/api/user'
+import { checkLogin, getPK } from '@/api/user'
 // import { BASE_URL } from '@/global/config'
 
 Vue.use(globalRegister)
@@ -62,17 +62,12 @@ Vue.prototype.stringToHex = function (str) {
   return val.toUpperCase()
 }
 Vue.prototype.getPK = function () {
-  var that = this
-  this.$http
-    .post('http://www.paytunnel.cn/carRentalServerRH/app/getPK')
-    .then(function (response) {
-      //请求成功
-      var result = response.data
-      that.pkbase64 = result.pkkey
+  getPK()
+    .then(res => {
+      this.pkbase64 = res.data.pkkey
     })
-    .catch(function (error) {
-      //请求失败
-      console.log('error:' + error)
+    .catch(err => {
+      console.log(err)
     })
 }
 Vue.prototype.PARAMETER = function () {

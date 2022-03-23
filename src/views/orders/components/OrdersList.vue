@@ -273,6 +273,10 @@ export default {
         numOfPerPage: this.pageSize,
       }).then(res => {
         console.log('获取全部订单', res)
+        if (res.data.rs !== '1') {
+          console.log(res.data.rs)
+          return
+        }
         this.list = this.list.concat(res.data.queryMyAllCarOrders)
         this.totalNum = res.data.queryMyAllCarOrders_totalRecNum
 
@@ -287,6 +291,10 @@ export default {
         currentPage: this.page,
         numOfPerPage: this.pageSize,
       }).then(res => {
+        if (res.data.rs !== '1') {
+          console.log(res.data.rs)
+          return
+        }
         this.list = this.list.concat(res.data.queryMyCarOrdersOfNoTravel)
         this.totalNum = res.data.queryMyCarOrdersOfNoTravel_totalRecNum
         console.log('orders(未出行) list', this.list, 'page:', this.page)

@@ -7,11 +7,19 @@
         placeholder
         title="订单确认"
         left-text=""
+        left-arrow
+        @click-left="backPage"
+      />
+      <!-- <van-nav-bar
+        fixed
+        placeholder
+        title="订单确认"
+        left-text=""
         right-text="规则说明"
         left-arrow
         @click-left="backPage"
         @click-right="toRules"
-      />
+      /> -->
     </div>
     <div class="orderInfo">
       <van-cell-group inset>
@@ -391,7 +399,7 @@ export default {
     },
     loadPriceInfo(key) {
       // let base_comname = window.localStorage.getItem('REALUSERNAME')
-      console.log('loadPriceInfo',BASE_COMNAME)
+      console.log('loadPriceInfo', BASE_COMNAME)
       let param = {
         actNo: this.actNo,
         priceAttrValueList: this.carModel,
