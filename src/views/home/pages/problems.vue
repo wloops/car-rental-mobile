@@ -3,8 +3,8 @@
     <van-nav-bar title="常见问题" left-arrow @click-left="onClickLeft" />
 
     <div v-for="(item, index) in comProblemList" :key="index">
-      <h4>{{ item.title }}</h4>
-      <span>{{ item.content }}</span>
+      <h4 class="title">{{ item.title }}</h4>
+      <span class="content">{{ item.content }}</span>
     </div>
   </div>
 </template>
@@ -47,4 +47,15 @@ export default {
 }
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.title {
+  color: #333;
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
+.content {
+  color: #999;
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
+</style>

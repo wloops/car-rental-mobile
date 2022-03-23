@@ -32,13 +32,13 @@
           is-link
           to="orders"
         />
-        <van-cell title="我的违章" size="large" icon="underway" is-link />
+        <!-- <van-cell title="我的违章" size="large" icon="underway" is-link />
         <van-cell
           title="密码管理"
           size="large"
           icon="umbrella-circle"
           is-link
-        />
+        /> -->
         <van-cell
           title="常见问题"
           size="large"

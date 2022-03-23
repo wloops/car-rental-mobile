@@ -2,7 +2,7 @@
   <div class="ContactUs">
     <van-nav-bar title="联系我们" left-arrow @click-left="onClickLeft" />
     <div v-for="(item, index) in contactUsList" :key="index">
-      <span>{{ item.content }}</span>
+      <h4 class="content_title">{{ item.content }}</h4>
     </div>
   </div>
 </template>
@@ -44,4 +44,10 @@ export default {
 }
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.content_title {
+  color: #333;
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
+</style>

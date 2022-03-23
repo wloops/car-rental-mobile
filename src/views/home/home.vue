@@ -77,9 +77,14 @@
             icon="smile-comment"
             text="客户反馈"
             route
-            to="/feedbacks"
+            @click="toFeedbacks"
           />
-          <van-grid-item icon="todo-list" text="租车引导" route to="/guide" />
+          <van-grid-item
+            icon="todo-list"
+            text="租车引导"
+            route
+            @click="toGuide"
+          />
           <van-grid-item
             color="red"
             icon="friends"
@@ -452,9 +457,22 @@ export default {
     selectionCar() {
       // to /model
       this.$router.push({
-        name: 'model'
+        name: 'model',
       })
-    }
+    },
+    toFeedbacks() {
+      // 提示暂未开放
+      this.$toast.fail('客户反馈功能暂未开放')
+      // this.$router.push({
+      //   name: 'feedbacks'
+      // })
+    },
+    toGuide() {
+      this.$toast.fail('租车引导功能暂未开放')
+      // this.$router.push({
+      //   name: 'guide'
+      // })
+    },
   },
 }
 </script>
