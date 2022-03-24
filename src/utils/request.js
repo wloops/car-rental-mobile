@@ -51,10 +51,14 @@ request.interceptors.request.use(
     // 然后我们就可以在允许请求出去之前定制统一业务功能处理
     // 例如：统一的设置 token
 
-    if (config.method === 'post') {
-      // console.log('old config.data', config.data)
+    if (config.method === 'post' && config.data) {
+      console.log('old config.data', config.data)
       // 设置请求头 发送的数据是x-www-form-urlencoded 格式
       config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+      // data带token
+      config.data._csrf = window.localStorage.getItem('token_csrf')
+      console.log('new config.data', config.data)
+      // 序列化post请求参数
       // qs.stringify(object, [options]) 字符串化时，默认情况下，qs 对输出进行 URI 编码，以避免某些特殊字符对某些接口的调用造成请求失败。
       //encode: false 禁用encode编码
       config.data = qs.stringify(config.data, { encode: false })
