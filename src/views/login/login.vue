@@ -73,7 +73,7 @@
 import { Dialog } from 'vant'
 import { mapGetters, mapMutations } from 'vuex'
 import global_ from '@/global/config_global'
-import { loginOfAccount } from '@/api/user'
+import { loginOfAccount, verificationAccount } from '@/api/user'
 
 export default {
   name: 'login',
@@ -115,6 +115,7 @@ export default {
           trigger: 'onBlur',
         },
       ],
+      REALUSERNAME: '',
     }
   },
   computed: {
@@ -126,6 +127,7 @@ export default {
   watch: {},
   created() {
     let storage = window.localStorage
+    this.REALUSERNAME = storage.getItem('REALUSERNAME')
     this.token = storage.getItem('token')
     this.appid = storage.getItem('appid')
     this.show = true
@@ -179,6 +181,7 @@ export default {
           this.pkbase64 +
           '-----END PUBLIC KEY-----'
         newPassword = this.encryptedData(privateKey, newPassword)
+        console.log('newPassword', newPassword)
         var password_temp = newPassword.replace(/\+/g, '%2B')
       }
       if (this.checked) {
@@ -201,10 +204,10 @@ export default {
       })
 
       loginOfAccount({
-        _csrf: this.token,
         cipherText: password_temp,
         tellerNo: this.username,
         appId: this.appid,
+        REALUSERNAME: this.REALUSERNAME,
       })
         .then(res => {
           //请求成功
@@ -231,21 +234,59 @@ export default {
             storage.setItem('nickName', nickName)
             storage.setItem('memberID', userName)
 
-            storage.setItem('REALUSERNAME', res.data.TELLERCOMPANY)
+            // storage.setItem('REALUSERNAME', res.data.TELLERCOMPANY)
 
-            this.$toast.success('登录成功')
-            // 跳转到订单确定页面
-            if (this.$route.params.toPath === 'confirm') {
-              this.$router.push({
-                name: 'confirm',
-                params: {
-                  toPath: '',
-                },
-              })
-            } else {
-              // 登录成功返回上一级页面
-              this.$router.go(-1)
-            }
+            // 验证账号是否属于授权租车单位
+            // srlIDForEngine:Splenwise身份认证服务系统
+            // busiNameForEngine:机构客户管理
+            // busiFunNameForEngine:验证机构客户角色
+            // miniProcNameForEngine:判断机构是否授权了指定角色
+            // myCompanyName:传租车单位的名称
+            // prjDesCmpName:传跟REALUSERNAME一样的值
+            // projectName:Splenwise微信预约点餐平台
+            // userCate:租车单位
+            // closeUserInter:1
+            // ISRETURNDIRECTLYWHENERROR:1
+            // _csrf:9681b818-bc33-4551-bded-35564058e4f9
+            let REALUSERNAME = window.localStorage.getItem('REALUSERNAME')
+            verificationAccount({
+              srlIDForEngine: 'Splenwise身份认证服务系统',
+              busiNameForEngine: '机构客户管理',
+              busiFunNameForEngine: '验证机构客户角色',
+              miniProcNameForEngine: '判断机构是否授权了指定角色',
+              myCompanyName: res.data.TELLERCOMPANY,
+              prjDesCmpName: REALUSERNAME,
+              projectName: 'Splenwise微信预约点餐平台',
+              userCate: '租车单位',
+              closeUserInter: '1',
+              ISRETURNDIRECTLYWHENERROR: '1',
+            }).then(res => {
+              console.log('res', res)
+              if (res.data.rs == '1') {
+                // 如果是授权租车单位，则登录通过
+                this.$toast.success('登录成功')
+                // 跳转到订单确定页面
+                if (this.$route.params.toPath === 'confirm') {
+                  this.$router.push({
+                    name: 'confirm',
+                    params: {
+                      toPath: '',
+                    },
+                  })
+                } else {
+                  // 登录成功返回上一级页面
+                  this.$router.go(-1)
+                }
+              } else {
+                this.$dialog
+                  .alert({
+                    message: res.data.rs,
+                  })
+                  .then(() => {
+                    return false
+                  })
+              }
+            })
           } else {
             this.$dialog
               .alert({

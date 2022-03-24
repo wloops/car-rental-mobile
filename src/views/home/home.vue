@@ -294,6 +294,8 @@ export default {
           storage.setItem('appid', appid)
           storage.setItem('TELLERCOMPANY', res.data.TELLERCOMPANY)
 
+          storage.setItem('token_csrf', res.data.token.token)
+
           storage.setItem('userIcon', res.data.usrIcon)
           this.schoolName = storage.getItem('TELLERCOMPANY')
           // 加载 获取广告图片

@@ -15,7 +15,7 @@ export const silenceLogin = params => {
     params,
   })
 }
-// getPk 
+// getPk
 export const getPK = () => {
   return request({
     method: 'POST',
@@ -31,11 +31,20 @@ export const checkLogin = () => {
   })
 }
 // 登录
-export const loginOfAccount = params => {
+export const loginOfAccount = data => {
   return request({
     method: 'POST',
     url: '/app/apploginByAccount',
-    data: params,
+    data,
+  })
+}
+
+// (验证账号是否属于授权租车单位)ZCbtnVerificationAccount
+export const verificationAccount = data => {
+  return request({
+    method: 'POST',
+    url: '/insertReturn/ZCbtnVerificationAccount',
+    data,
   })
 }
 // 退出登录
