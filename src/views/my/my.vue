@@ -46,6 +46,13 @@
           is-link
           to="problems"
         />
+        <van-cell
+          title="管理员入口"
+          size="large"
+          icon="manager"
+          is-link
+          @click="adminEntrance"
+        />
       </van-cell-group>
     </div>
 
@@ -63,6 +70,7 @@
 
 <script>
 // import { setLogout } from '@/api/user'
+import { BASE_TO_HREF } from '@/global/config'
 export default {
   name: 'myPage',
   components: {},
@@ -160,6 +168,22 @@ export default {
       }
 
       // this.$router.push('/login')
+    },
+    adminEntrance() {
+      this.$dialog
+        .confirm({
+          title: '提示',
+          message: '确定要进入管理员界面吗？',
+        })
+        .then(() => {
+          // on confirm
+          // 链接到管理员入口
+          // 测试环境
+          window.location.href = BASE_TO_HREF
+        })
+        .catch(() => {
+          // on cancel
+        })
     },
   },
 }
