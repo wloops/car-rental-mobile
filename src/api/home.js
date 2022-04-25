@@ -58,3 +58,11 @@ export const getContactUs = () => {
 // export const updateUser = () => {
 
 // }
+// (查询汽车租赁租车引导)queryCarRentalCarGuidance
+export const getCarGuidance = params => {
+  return request({
+    method: 'GET',
+    url: '/search/queryCarRentalCarGuidance',
+    params,
+  })
+}

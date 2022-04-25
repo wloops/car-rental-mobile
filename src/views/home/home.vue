@@ -470,10 +470,10 @@ export default {
       // })
     },
     toGuide() {
-      this.$toast.fail('租车引导功能暂未开放')
-      // this.$router.push({
-      //   name: 'guide'
-      // })
+      // this.$toast.fail('租车引导功能暂未开放')
+      this.$router.push({
+        name: 'guide'
+      })
     },
   },
 }
