@@ -76,7 +76,7 @@
                   <van-radio name="0" shape="square">自行驾驶</van-radio>
                 </van-radio-group>
               </div>
-              <div class="tagChecks">
+              <!-- <div class="tagChecks">
                 <van-tag color="#5e4618" size="medium">取车方式</van-tag>
                 <van-radio-group
                   class="radioGroup"
@@ -105,7 +105,7 @@
                   <van-radio name="1" shape="square">上门服务</van-radio>
                   <van-radio name="0" shape="square">自行还车</van-radio>
                 </van-radio-group>
-              </div>
+              </div> -->
             </template>
           </van-cell>
         </div>
@@ -277,8 +277,8 @@ export default {
       payChecked: true,
       orderSuccessShow: false,
       isDrier: '1', // 是否需要司机
-      isPickupCar: '1', // 是否自助取车
-      isReturnCar: '1', // 是否自助还车
+      isPickupCar: '0', // 是否自助取车
+      isReturnCar: '0', // 是否自助还车
 
       // 原价
       originalPrice: '',
