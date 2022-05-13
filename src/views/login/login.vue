@@ -106,14 +106,14 @@ export default {
           required: true,
           message: '请输入密码',
         },
-        {
-          // 自定义校验规则
-          validator: value => {
-            return /^[a-zA-Z0-9_]{6,16}$/.test(value)
-          },
-          message: '请输入正确格式的密码',
-          trigger: 'onBlur',
-        },
+        // {
+        //   // 自定义校验规则
+        //   validator: value => {
+        //     return /^[a-zA-Z0-9_]{6,16}$/.test(value)
+        //   },
+        //   message: '请输入正确格式的密码',
+        //   trigger: 'onBlur',
+        // },
       ],
       REALUSERNAME: '',
     }

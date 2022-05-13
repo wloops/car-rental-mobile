@@ -180,6 +180,8 @@ export default {
           // 链接到管理员入口
           // 测试环境
           window.location.href = BASE_TO_HREF
+          window.localStorage.removeItem('userAdmin')
+          window.localStorage.removeItem('adminMemberID')
         })
         .catch(() => {
           // on cancel
