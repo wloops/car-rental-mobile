@@ -262,7 +262,7 @@
 import ContactCard from '@/components/ContactCard.vue'
 import { mapGetters } from 'vuex'
 
-import { getPriceInfo, setCreatOrder } from '@/api/order'
+import { getPriceInfo, setCreatOrder, sendSMSNotification } from '@/api/order'
 import { BASE_COMNAME } from '@/global/config'
 
 export default {
@@ -477,9 +477,20 @@ export default {
         // console.log('res.data.orderData', res.data.orderData)
         if (res.data.rs === '1') {
           this.orderSuccessShow = true
+          this.sendSMS()
         } else {
           this.$toast.fail(res.data.msg)
         }
+      })
+    },
+    sendSMS() {
+      sendSMSNotification({
+        srlIDForEngine: 'Splenwise微信预约点餐系统',
+        busiNameForEngine: '汽车租赁业务',
+        busiFunNameForEngine: '生成租车订单',
+        miniProcNameForEngine: '下单成功发送短信通知',
+      }).then(res => {
+        console.log('发送下单成功通知:', res)
       })
     },
     toOrders() {

@@ -59,3 +59,12 @@ export const getOrderFeeDetailed = params => {
     params,
   })
 }
+
+// (发送下单成功短信通知)ZCbtnsendSMSNotification
+export const sendSMSNotification = data => {
+  return request({
+    method: 'POST',
+    url: '/insertReturn/ZCbtnsendSMSNotification',
+    data,
+  })
+}

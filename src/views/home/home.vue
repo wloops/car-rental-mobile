@@ -105,8 +105,6 @@
 </template>
 
 <script>
-// import VConsole from 'vconsole'
-// let vConsole = new VConsole()
 // @ is an alias to /src
 import NavTopCurrency from '@/components/NavTopCurrency.vue'
 import TintDatetimePicker from '@/components/TintDatetimePicker.vue'

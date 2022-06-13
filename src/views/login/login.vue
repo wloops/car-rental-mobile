@@ -131,7 +131,7 @@ export default {
     this.token = storage.getItem('token')
     this.appid = storage.getItem('appid')
     this.show = true
-    this.getCookie()
+    // this.getCookie()
     this.getPK()
   },
   mounted() {},
