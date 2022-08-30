@@ -1,16 +1,14 @@
 <template>
   <div class="CarDetails">
-    <van-popup
-      v-model="show"
-      closeable
-      position="bottom"
-      round
-      close-on-popstate
-      safe-area-inset-bottom
-    >
+    <van-popup v-model="show" closeable position="bottom" round close-on-popstate safe-area-inset-bottom>
       <template>
         <div class="carImg">
-          <van-image width="10rem" height="10rem" fit="contain" :src="carImg" />
+          <van-badge color="#fec760">
+            <van-image width="10rem" height="10rem" fit="contain" :src="carImg" @click="bigImagePreview" />
+            <template #content>
+              <van-icon name="photo-o" class="badge-icon" /> <span>{{ badgeContent }}</span>
+            </template>
+          </van-badge>
         </div>
         <div class="carInfo">
           <div class="carName">{{ carName }}</div>
@@ -21,16 +19,7 @@
         <div style="height: 4rem"></div>
         <div class="footerBtn">
           <div class="carPrice">￥{{ carPrice }} <span>日均</span></div>
-          <van-button
-            block
-            color="#fec760"
-            size="large"
-            loading-type="spinner"
-            :loading="isLoading"
-            @click="toConfirmOrder"
-          >
-            立即预定</van-button
-          >
+          <van-button block color="#fec760" size="large" loading-type="spinner" :loading="isLoading" @click="toConfirmOrder"> 立即预定</van-button>
         </div>
       </template>
     </van-popup>
@@ -41,7 +30,9 @@
 <script>
 import DateTimeSection from '@/components/DateTimeSection.vue'
 // import TintDatetimePicker from '@/components/TintDatetimePicker.vue'
-
+import { ImagePreview } from 'vant'
+import { queryVehicleImages } from '@/api/carInfo'
+import { BASE_DOMAIN } from '@/global/config'
 export default {
   name: 'CarDetails',
   components: {
@@ -53,9 +44,13 @@ export default {
     return {
       show: false,
       isLoading: true,
+      badgeContent: '1/1',
     }
   },
   computed: {
+    currentCarInfo() {
+      return this.$store.getters['car/getCurrentCarInfo']
+    },
     carImg() {
       return this.$store.getters['car/getCurrentCarInfo'].carImg
     },
@@ -75,6 +70,8 @@ export default {
   methods: {
     showPopup() {
       this.show = true
+      this.getVehicleImages()
+      console.log('currentCarInfo::', this.currentCarInfo)
       this.checklogin()
     },
     toConfirmOrder() {
@@ -110,9 +107,43 @@ export default {
           })
       }
     },
-    // showPicker() {
-    //   this.$refs.tintPicker.showView()
-    // },
+    getVehicleImages() {
+      queryVehicleImages({
+        operObjectID: this.currentCarInfo.operObjectID,
+      }).then(res => {
+        console.log('详情图片:', res.data)
+        if (res.data.rs !== '1') {
+          console.log('连接详情图片接口失败')
+          return false
+        }
+        let carImages = res.data.queryVehicleImages
+        // 拼接车辆图片信息
+        this.carImgList = []
+        carImages.forEach(item => {
+          if (item.carImg) {
+            let carImg = `${BASE_DOMAIN}/socketServer/images/cardMall/imgsrc/${item.carImg}`
+            this.carImgList.push(carImg)
+          }
+        })
+        // this.$store.commit('setCarInfo', this.carImgList)
+        // this.total = res.data.queryVehicleOfType_totalRecNum
+        console.log('carImgList:', this.carImgList)
+        let num = this.carImgList.length > 0 ? this.carImgList.length : 1
+        this.badgeContent = `1/${num}`
+      })
+    },
+    bigImagePreview() {
+      let carImgList
+      if (this.carImgList.length > 0) {
+        carImgList = this.carImgList
+      } else {
+        carImgList = [this.carImg]
+      }
+      ImagePreview({
+        images: carImgList,
+        startPosition: 0,
+      })
+    },
   },
 }
 </script>

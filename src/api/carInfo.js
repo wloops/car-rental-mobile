@@ -26,3 +26,14 @@ export const getVehicleOfType = params => {
     params,
   })
 }
+// 获取汽车的图片
+export const queryVehicleImages = params => {
+  return request({
+    method: 'GET',
+    url: '/search/queryVehicleImages',
+    // Headers 参数使用 Headers 设置
+    // Body 参数使用 data 设置
+    // Query 参数使用 params 设置
+    params,
+  })
+}

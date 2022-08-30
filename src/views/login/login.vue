@@ -3,12 +3,7 @@
   <div class="login">
     <div class="loginBox">
       <div class="topNav">
-        <van-nav-bar
-          title=""
-          left-arrow
-          @click-left="backPage"
-          @click-right="toRegister"
-        >
+        <van-nav-bar title="" left-arrow @click-left="backPage" @click-right="toRegister">
           <template #right v-if="tabName === '个人租'">
             <div class="register">
               <a>注册</a>
@@ -17,39 +12,20 @@
         </van-nav-bar>
       </div>
       <div class="logoBox">
-        <van-image
-          width="10rem"
-          height="4rem"
-          fit="contain"
-          :src="require('./logo.jpg')"
-        />
+        <van-image width="10rem" height="4rem" fit="contain" :src="require('./logo.jpg')" />
       </div>
       <main>
         <van-form @submit="checkInfo">
-          <van-field
-            v-model="username"
-            name="账号"
-            label="账号"
-            placeholder="请输入账号"
-            clearable
-            :rules="unameRules"
-          />
-          <van-field
-            v-model="password"
-            type="password"
-            name="密码"
-            label="密码"
-            placeholder="请输入密码"
-            clearable
-            :rules="pwdRules"
-          />
-          <p class="unPassword"><a>忘记密码？</a></p>
-          <div style="margin: 16px">
-            <van-button block type="info" color="#ffc65f" native-type="submit"
-              >登录</van-button
-            >
+          <van-field v-model="username" name="账号" label="账号" placeholder="请输入账号" clearable :rules="unameRules" />
+          <van-field v-model="password" type="password" name="密码" label="密码" placeholder="请输入密码" clearable :rules="pwdRules" />
+          <div class="RememberCode">
+            <van-checkbox v-model="checked" checked-color="#ffc65f">记住密码</van-checkbox>
           </div>
-          <p
+          <!-- <p class="unPassword"><a>忘记密码？</a></p> -->
+          <div style="margin: 16px">
+            <van-button block type="info" color="#ffc65f" native-type="submit">登录</van-button>
+          </div>
+          <!-- <p
             class="toPersonalLogin"
             v-if="tabName === '单位租'"
             @click="changePersonal"
@@ -62,7 +38,7 @@
             @click="changeCompany"
           >
             我是单位用户 <van-icon name="sort" />
-          </p>
+          </p> -->
         </van-form>
       </main>
     </div>
@@ -83,6 +59,7 @@ export default {
   props: {},
   data() {
     return {
+      checked: true,
       username: '',
       password: '',
       unameRules: [
@@ -131,7 +108,7 @@ export default {
     this.token = storage.getItem('token')
     this.appid = storage.getItem('appid')
     this.show = true
-    // this.getCookie()
+    this.getCookie()
     this.getPK()
   },
   mounted() {},
@@ -176,10 +153,7 @@ export default {
         let newPassword = this.PrefixZero(this.password.length * 2, 4)
         newPassword = newPassword + this.stringToHex(this.password)
         //使用标准RSA算法处理
-        let privateKey =
-          '-----BEGIN PUBLIC KEY-----' +
-          this.pkbase64 +
-          '-----END PUBLIC KEY-----'
+        let privateKey = '-----BEGIN PUBLIC KEY-----' + this.pkbase64 + '-----END PUBLIC KEY-----'
         newPassword = this.encryptedData(privateKey, newPassword)
         console.log('newPassword', newPassword)
         var password_temp = newPassword.replace(/\+/g, '%2B')
@@ -187,7 +161,7 @@ export default {
       if (this.checked) {
         // console.log("选中记住密码")
         //传入手机号，密码，和保存天数3个参数
-        this.setCookie(this.username, this.password, 7)
+        this.setCookie(this.username, this.password, 30)
       } else {
         //   console.log("清空cookie")
         this.clearCookie()
@@ -306,10 +280,8 @@ export default {
       var exdate = new Date() //获取时间
       exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays) //保存的天数
       //字符串拼接cookie
-      window.document.cookie =
-        'userName' + '=' + username + ';path=/;expires=' + exdate.toGMTString()
-      window.document.cookie =
-        'userPwd' + '=' + pass + ';path=/;expires=' + exdate.toGMTString()
+      window.document.cookie = 'userNameCar' + '=' + username + ';path=/;expires=' + exdate.toGMTString()
+      window.document.cookie = 'userPwdCar' + '=' + pass + ';path=/;expires=' + exdate.toGMTString()
     },
     //读取cookie
     getCookie() {
@@ -319,9 +291,9 @@ export default {
         for (var i = 0; i < arr.length; i++) {
           var arr2 = arr[i].split('=') //再次切割
           //判断查找相对应的值
-          if (arr2[0] == 'userName') {
+          if (arr2[0] == 'userNameCar') {
             this.username = arr2[1] //保存到保存数据的地方
-          } else if (arr2[0] == 'userPwd') {
+          } else if (arr2[0] == 'userPwdCar') {
             this.password = arr2[1]
           }
         }
@@ -381,5 +353,10 @@ export default {
   text-align: center;
   margin-top: 2rem;
   color: #ff7636;
+}
+.RememberCode {
+  // font-size: 28px;
+  margin: 1rem;
+  color: #666;
 }
 </style>

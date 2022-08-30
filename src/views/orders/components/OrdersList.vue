@@ -164,7 +164,19 @@ export default {
         } else {
           // this.$router.push('/login')
           // 提示登录过期,跳转到登录页面
-          this.$toast('登录过期,请重新登录')
+          this.$dialog
+            .confirm({
+              title: '提示',
+              message: '登录过期,请重新登录',
+            })
+            .then(() => {
+              // on confirm
+              // 跳转到登录页面
+              this.$router.push('/login')
+            })
+            .catch(() => {
+              // on cancel
+            })
           // 加载状态结束
           this.loading = false
           // 数据全部加载完成

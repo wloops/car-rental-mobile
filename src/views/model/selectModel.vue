@@ -1,7 +1,7 @@
 <!-- 车型选择页面 -->
 <template>
   <div class="SelectModel">
-    <div class="top-navBar">
+    <div class="top-navBar" id="navBar">
       <model-navtop></model-navtop>
     </div>
     <div class="imgLinkAD">
@@ -9,7 +9,7 @@
     </div>
     <div class="treeSelect">
       <van-tree-select
-        height="75vh"
+        :height="treeHeight"
         :items="itemsTree"
         :main-active-index.sync="active"
         @click-nav="handleClickNav"
@@ -188,7 +188,14 @@ export default {
     })
   },
   mounted() {
-    // console.log(this.startDate, this.endDate, this.rentalDays)
+    // 计算高度
+    console.log('可视高度', window.screen.availHeight)
+    // let navBarH = document.getElementById('navBar').offsetHeight
+    let imgLinkH = document.getElementsByClassName('imgLinkAD')[0].offsetHeight
+    this.treeHeight = window.screen.availHeight - imgLinkH - 100
+    // console.log('navBarH', navBarH)
+    console.log('imgLinkH', imgLinkH)
+    console.log('treeHeight', this.treeHeight)
   },
   methods: {
     selectCarItem(e) {

@@ -96,8 +96,8 @@ export default {
     }
   }
   .van-image {
-    width: 5rem;
-    height: 5rem;
+    width: 8rem;
+    height: 6rem;
   }
   .van-button--default {
     color: #111 !important;

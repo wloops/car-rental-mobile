@@ -13,8 +13,8 @@ import global_ from '@/global/config_global'
 
 import { checkLogin, getPK } from '@/api/user'
 // import { BASE_URL } from '@/global/config'
-// import VConsole from 'vconsole'
-// let vConsole = new VConsole()
+import VConsole from 'vconsole'
+let vConsole = new VConsole()
 
 Vue.use(globalRegister)
 

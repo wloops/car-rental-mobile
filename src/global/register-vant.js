@@ -51,6 +51,8 @@ import {
   AddressEdit,
   Dialog,
   ActionSheet,
+  ImagePreview,
+  Badge,
 } from 'vant'
 
 const components = [
@@ -105,6 +107,8 @@ const components = [
   AddressEdit,
   Dialog,
   ActionSheet,
+  ImagePreview,
+  Badge,
 ]
 
 function install(Vue) {
