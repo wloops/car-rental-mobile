@@ -2,14 +2,7 @@
 <template>
   <div class="confirmOrder">
     <div class="topNav">
-      <van-nav-bar
-        fixed
-        placeholder
-        title="订单确认"
-        left-text=""
-        left-arrow
-        @click-left="backPage"
-      />
+      <van-nav-bar fixed placeholder title="订单确认" left-text="" left-arrow @click-left="backPage" />
       <!-- <van-nav-bar
         fixed
         placeholder
@@ -33,12 +26,10 @@
             </template>
           </van-card>
         </van-cell>
-        <van-cell>
+        <van-cell @click="changeDataTime">
           <div class="useCarTime">
             <div class="startDateCell">
-              <span class="startDateMD"
-                >{{ startDateM }}月{{ startDateD }}日</span
-              >&nbsp;&nbsp;
+              <span class="startDateMD">{{ startDateM }}月{{ startDateD }}日</span>&nbsp;&nbsp;
               <span class="startDateTime timeText1">{{ startTime }}</span>
             </div>
             <div class="dayinTotal">
@@ -53,8 +44,7 @@
               </van-divider>
             </div>
             <div class="endDateCell">
-              <span class="endDateMD">{{ endDateM }}月{{ endDateD }}日</span
-              >&nbsp;&nbsp;
+              <span class="endDateMD">{{ endDateM }}月{{ endDateD }}日</span>&nbsp;&nbsp;
               <span class="endDateTime timeText1">{{ endTime }}</span>
             </div>
           </div>
@@ -204,12 +194,7 @@
 
     <div style="height: 6rem"></div>
     <div class="confirmOrderBox">
-      <van-submit-bar
-        :price="totalFee"
-        button-text="提交订单"
-        @submit="orderSubmit"
-        label="预计："
-      >
+      <van-submit-bar :price="totalFee" button-text="提交订单" @submit="orderSubmit" label="预计：">
         <!-- <template #tip>
           你的收货地址不支持同城送,
           <span @click="onClickEditAddress">修改地址</span>
@@ -225,26 +210,13 @@
     <div class="orderSuccess">
       <van-popup v-model="orderSuccessShow" style="width: 100%; height: 100%">
         <div class="orderSuccessContainer">
-          <van-nav-bar
-            fixed
-            placeholder
-            right-text="完成"
-            @click-right="toOrders"
-          />
+          <van-nav-bar fixed placeholder right-text="完成" @click-right="toOrders" />
           <van-icon name="checked" color="#fec760" size="50" />
           <p v-if="tabName === '单位租'">下单成功</p>
           <p v-else>预订成功</p>
-          <p style="font-size: small; color: #bcbcbc">
-            请保持手机畅通，如行程有变，请在规定时间取消订单
-          </p>
+          <p style="font-size: small; color: #bcbcbc">请保持手机畅通，如行程有变，请在规定时间取消订单</p>
           <template v-if="tabName === '单位租'" class="btnBox">
-            <van-button
-              block
-              color="#fec760"
-              style="width: 90%; margin-top: 3rem"
-              to="orders"
-              >查看订单</van-button
-            >
+            <van-button block color="#fec760" style="width: 90%; margin-top: 3rem" to="orders">查看订单</van-button>
           </template>
           <template v-else>
             <div class="btnBox1">
@@ -255,11 +227,14 @@
         </div>
       </van-popup>
     </div>
+
+    <tint-datetime-picker ref="tintPicker"></tint-datetime-picker>
   </div>
 </template>
 
 <script>
 import ContactCard from '@/components/ContactCard.vue'
+import TintDatetimePicker from '@/components/TintDatetimePicker.vue'
 import { mapGetters } from 'vuex'
 
 import { getPriceInfo, setCreatOrder, sendSMSNotification } from '@/api/order'
@@ -269,6 +244,7 @@ export default {
   name: 'confirmOrder',
   components: {
     ContactCard,
+    TintDatetimePicker,
   },
   props: {},
   data() {
@@ -363,11 +339,7 @@ export default {
     },
     driverFeeTotal() {
       // 计算司机费用
-      return (
-        Number(this.thisDriverPrice) +
-        Number(this.thisDeliveryPrice) +
-        Number(this.thisReturnPrice)
-      )
+      return Number(this.thisDriverPrice) + Number(this.thisDeliveryPrice) + Number(this.thisReturnPrice)
     },
     totalFee() {
       // 计算总费用,并化为分
@@ -381,6 +353,38 @@ export default {
         this.driverFeeShow = val.toFixed(2)
       },
       immediate: true,
+    },
+    startDate: {
+      handler(val) {
+        // 通过接口获取司机以及服务费
+        this.loadPriceInfo()
+        this.loadPriceInfo('0')
+      },
+      // immediate: true,
+    },
+    endDate: {
+      handler(val) {
+        // 通过接口获取司机以及服务费
+        this.loadPriceInfo()
+        this.loadPriceInfo('0')
+      },
+      // immediate: true,
+    },
+    startTime: {
+      handler(val) {
+        // 通过接口获取司机以及服务费
+        this.loadPriceInfo()
+        this.loadPriceInfo('0')
+      },
+      // immediate: true,
+    },
+    endTime: {
+      handler(val) {
+        // 通过接口获取司机以及服务费
+        this.loadPriceInfo()
+        this.loadPriceInfo('0')
+      },
+      // immediate: true,
     },
   },
   created() {
@@ -421,23 +425,14 @@ export default {
         let priceData = res.data.priceData
         if (key) {
           // 取车费用(折扣后)
-          this.$store.commit(
-            'order/setDeliveryPrice',
-            priceData.deliveryPriceAfterDiscount
-          )
+          this.$store.commit('order/setDeliveryPrice', priceData.deliveryPriceAfterDiscount)
           // this.thisDeliveryPrice = Number(this.deliveryPrice)
           // 还车费用(折扣后)
-          this.$store.commit(
-            'order/setReturnPrice',
-            priceData.returnPriceAfterDiscount
-          )
+          this.$store.commit('order/setReturnPrice', priceData.returnPriceAfterDiscount)
           // this.thisReturnPrice = Number(this.returnPrice)
         } else {
           // 司机费用(折扣后)
-          this.$store.commit(
-            'order/setDriverPrice',
-            priceData.totalDriverPriceAfterDiscount
-          )
+          this.$store.commit('order/setDriverPrice', priceData.totalDriverPriceAfterDiscount)
           this.thisDriverPrice = Number(this.driverPrice)
         }
 
@@ -449,10 +444,7 @@ export default {
     },
     orderSubmit() {
       // this.$router.push('/pay')
-      console.log(
-        'currentContactInfo',
-        Object.keys(this.currentContactInfo).length
-      )
+      console.log('currentContactInfo', Object.keys(this.currentContactInfo).length)
       if (Object.keys(this.currentContactInfo).length === 0) {
         this.$toast.fail('请选择承租人!')
         return false
@@ -538,6 +530,9 @@ export default {
       } else {
         this.thisReturnPrice = 0.0
       }
+    },
+    changeDataTime() {
+      this.$refs.tintPicker.showView(this.currentCarInfo.carModel)
     },
   },
 }

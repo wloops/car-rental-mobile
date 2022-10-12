@@ -8,22 +8,14 @@
 
       <div class="switchingRentalMode">
         <van-cell-group inset>
-          <van-tabs
-            v-model="tabsActiveName"
-            animated
-            @click="tabsChange"
-            :before-change="beforeChange"
-          >
+          <van-tabs v-model="tabsActiveName" animated @click="tabsChange" :before-change="beforeChange">
             <van-tab name="单位租">
               <template #title>
                 <span class="tabTitle">单位租</span>
               </template>
-              <date-time-section
-                :value="date"
-                @click.native="showPicker"
-              ></date-time-section>
+              <date-time-section :value="date" @click.native="showPicker"></date-time-section>
             </van-tab>
-            <van-tab name="个人租">
+            <!-- <van-tab name="个人租">
               <template #title>
                 <span class="tabTitle">个人租</span>
               </template>
@@ -31,16 +23,9 @@
                 :value="date"
                 @click.native="showPicker"
               ></date-time-section>
-            </van-tab>
+            </van-tab> -->
           </van-tabs>
-          <van-button
-            class="selectionCar"
-            color="#ffc65f"
-            block
-            size="normal"
-            @click="selectionCar"
-            >去选车</van-button
-          >
+          <van-button class="selectionCar" color="#ffc65f" block size="normal" @click="selectionCar">去选车</van-button>
           <tint-datetime-picker ref="tintPicker"></tint-datetime-picker>
         </van-cell-group>
       </div>
@@ -67,31 +52,10 @@
     <div class="otherModule">
       <van-cell-group inset>
         <van-grid clickable :column-num="4">
-          <van-grid-item
-            icon="question"
-            text="常见问题"
-            to="/problems"
-            @click="toProblems"
-          />
-          <van-grid-item
-            icon="smile-comment"
-            text="客户反馈"
-            route
-            @click="toFeedbacks"
-          />
-          <van-grid-item
-            icon="todo-list"
-            text="租车引导"
-            route
-            @click="toGuide"
-          />
-          <van-grid-item
-            color="red"
-            icon="friends"
-            text="联系我们"
-            route
-            to="/contactUs"
-          />
+          <van-grid-item icon="question" text="常见问题" to="/problems" @click="toProblems" />
+          <van-grid-item icon="smile-comment" text="客户反馈" route @click="toFeedbacks" />
+          <van-grid-item icon="todo-list" text="租车引导" route @click="toGuide" />
+          <van-grid-item color="red" icon="friends" text="联系我们" route to="/contactUs" />
         </van-grid>
       </van-cell-group>
     </div>
@@ -470,7 +434,7 @@ export default {
     toGuide() {
       // this.$toast.fail('租车引导功能暂未开放')
       this.$router.push({
-        name: 'guide'
+        name: 'guide',
       })
     },
   },

@@ -176,9 +176,7 @@ Vue.prototype.wxConfig = function () {
   var url = encodeURIComponent(location.href.split('#')[0])
   var that = this
   this.$http
-    .get(
-      'http://www.paytunnel.cn/carRentalServerRH/getJSSDKSignature?url=' + url
-    )
+    .get('http://www.paytunnel.cn/carRentalServerRH/getJSSDKSignature?url=' + url)
     .then(function (res) {
       var appId = res.data.appId
       var timestamp = res.data.timestamp
@@ -228,20 +226,10 @@ Vue.prototype.login = function (callback) {
   console.log('param::' + param)
   if (param.indexOf('appid') != -1) {
     appid = param.substring(param.indexOf('=') + 1, param.indexOf('code') - 1)
-    let code = param.substring(
-      param.indexOf('code') + 5,
-      param.indexOf('state') - 1
-    )
+    let code = param.substring(param.indexOf('code') + 5, param.indexOf('state') - 1)
     console.log('code::' + code)
     REALTERMTYPE = '微信预约点餐公众号'
-    url =
-      url +
-      '?code=' +
-      code +
-      '&appid=' +
-      appid +
-      '&REALTERMTYPE=' +
-      REALTERMTYPE
+    url = url + '?code=' + code + '&appid=' + appid + '&REALTERMTYPE=' + REALTERMTYPE
     storage.setItem('appid', appid)
   }
   if (appid.length < 18) {

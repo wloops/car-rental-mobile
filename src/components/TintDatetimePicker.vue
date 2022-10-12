@@ -1,12 +1,5 @@
 <template>
-  <van-popup
-    v-model="show"
-    position="top"
-    safe-area-inset-bottom
-    class="calendar"
-    @closed="onCalendarConfirm"
-    @opened="handleCalendarOpened"
-  >
+  <van-popup v-model="show" position="top" safe-area-inset-bottom class="calendar" @closed="onCalendarConfirm" @opened="handleCalendarOpened">
     <van-calendar
       ref="calendar"
       color="#ff7636"
@@ -15,29 +8,22 @@
       :poppable="false"
       :allow-same-day="true"
       :minDate="minDate"
+      :max-date="maxDate"
+      :max-range="maxRangeIndex"
+      :range-prompt="rangePrompt"
       :default-date="defaultDate"
       @confirm="onCalendarConfirm"
       @select="onCalendarSelect"
     >
       <div slot="title" class="calendar-header">
-        <i class="icon" name="fanhui_m" @click="handleBack"
-          ><van-icon name="arrow-left"
-        /></i>
+        <i class="icon" name="fanhui_m" @click="handleBack"><van-icon name="arrow-left" /></i>
         <div class="title">日期选择</div>
-        <span class="clear" v-show="startDate" @click.stop="handleClearDate"
-          >重置</span
-        >
+        <span class="clear" v-show="startDate" @click.stop="handleClearDate">重置</span>
       </div>
       <div slot="footer" class="calendar-footer">
         <!-- 显示当前选择的日期/时间/星期，以及共计几天 -->
         <date-time-section></date-time-section>
-        <van-picker
-          ref="picker"
-          :columns="columnsToday"
-          visible-item-count="3"
-          item-height="32"
-          @change="useCarTimeChange"
-        >
+        <van-picker ref="picker" :columns="columnsToday" visible-item-count="3" item-height="32" @change="useCarTimeChange">
           <template #columns-top>
             <div class="useCarTimeTitle">
               <span>取车时间</span>
@@ -45,19 +31,15 @@
             </div>
           </template>
         </van-picker>
-        <van-button
-          block
-          color="#ff7636"
-          :disabled="isDisabled"
-          @click="onCalendarConfirm"
-          >确定时间</van-button
-        >
+        <van-button block color="#ff7636" :disabled="isDisabled" @click="onCalendarConfirm">确定时间</van-button>
       </div>
     </van-calendar>
   </van-popup>
 </template>
 
 <script>
+import { queryCarRentableDate } from '@/api/carInfo'
+
 import DateTimeSection from '@/components/DateTimeSection.vue'
 import moment from 'moment'
 import { mapGetters, mapMutations } from 'vuex'
@@ -84,7 +66,7 @@ export default {
       minDate: new Date(),
       defaultDate: [new Date(), moment().add(1, 'day').toDate()],
       // maxDate: new Date(),
-      // maxDate: moment().add(90, 'day').toDate(),
+      maxDate: moment().add(60, 'day').toDate(),
       ...initData(),
       columnsToday: [],
       columns: [
@@ -255,8 +237,23 @@ export default {
       this.$refs.picker.setColumnValue(1, this.endTime)
       this.isDisabled = false
     },
-    showView() {
-      this.show = true
+    showView(carModel) {
+      if (carModel) {
+        // TODO: 查询当前选择车型的可选日期
+        queryCarRentableDate({
+          carModel: carModel,
+        }).then(res => {
+          console.log('查询当前选择车型的可选日期:', res.data)
+          if (res.data.rs === '1') {
+            this.dateLists = res.data.queryCarRentableDate
+            // let days = res.data.queryCarRentableDate_totalRecNum - 1
+            // this.maxDate = moment().add(days, 'day').toDate()
+            this.show = true
+          }
+        })
+      } else {
+        this.show = true
+      }
     },
     handleBack() {
       if (this.isDisabled === true) {
@@ -265,16 +262,38 @@ export default {
         this.show = false
       }
     },
-    formatDate(date) {
-      return `${date.getMonth() + 1}/${date.getDate()}`
+    formatDate(date, today) {
+      if (today) {
+        return `${date.getMonth() + 1}/${date.getDate()}`
+      } else {
+        let month0 = date.getMonth() + 1
+        let date0 = date.getDate()
+        month0 = month0 + '' // 先将其转化成字符串
+        date0 = date0 + ''
+        month0 = month0.padStart(2, '0') // 第一个参数是最大位数为2位，第二个参数是用 "0" 来补全前面缺少的位数 // padStart 是添加到头部，padEnd()就是添加到尾部
+        date0 = date0.padStart(2, '0')
+        return `${date.getYear() + 1900}${month0}${date0}`
+      }
     },
     formatter(day) {
       // const month = day.date.getMonth() + 1
       // const date = day.date.getDate()
-      const today = this.formatDate(new Date(new Date().toLocaleDateString()))
-      const dayday = this.formatDate(day.date)
-
-      // console.log(dayday)
+      const today = this.formatDate(new Date(new Date().toLocaleDateString()), 'today')
+      const dayday = this.formatDate(day.date, 'today')
+      let selectDay = this.formatDate(day.date)
+      // console.log('selectDay', day)
+      if (this.dateLists) {
+        let isDisabled = true
+        this.dateLists.forEach((item, index) => {
+          if (selectDay === item.rentableDate) {
+            // day.topInfo = '可选'
+            isDisabled = false
+          }
+        })
+        if (isDisabled) {
+          day.type = 'disabled'
+        }
+      }
       // 自定义日期选择时显示的文本
       if (day.type === 'start') {
         day.bottomInfo = '取车'
@@ -300,12 +319,72 @@ export default {
       }
       return day
     },
+    maxRange(select) {
+      // let select = '2022-10-12'
+      // this.dateLists 转YYYY-MM-DD
+      let days = []
+      this.dateLists.forEach(day => {
+        days.push(moment(day.rentableDate).format('YYYY-MM-DD'))
+      })
+      days = days.sort()
+
+      console.log('days', days)
+      let days_arr = []
+      var days_index = 0
+      let index = -1
+      days.forEach((item, i) => {
+        if (select === item) {
+          console.log('select index: ', i)
+          index = i
+        }
+        if (index >= 0) {
+          days_arr.push(item)
+          console.log(this.continueDays(days_arr))
+          if (this.continueDays(days_arr)) {
+            days_index++
+          } else {
+            // days_index = 0
+            console.log('days_index', days_index)
+          }
+        }
+      })
+
+      this.maxRangeIndex = days_index
+      this.rangePrompt = `当前选择租车时间最多不超过${days_index}天`
+      console.log('days_index', days_index)
+    },
+    continueDays(arr_days) {
+      console.log(arr_days)
+      // 先排序，然后转时间戳
+      let days = arr_days.sort().map((d, i) => {
+        let dt = new Date(d)
+        dt.setDate(dt.getDate() + 4 - i) // 处理为相同日期
+
+        // 抹去 时 分 秒 毫秒
+        dt.setHours(0)
+        dt.setMinutes(0)
+        dt.setSeconds(0)
+        dt.setMilliseconds(0)
+
+        return +dt
+      })
+
+      let ret = true
+
+      days.forEach(d => {
+        if (days[0] !== d) {
+          ret = false
+        }
+      })
+
+      return ret
+    },
     onCalendarConfirm() {
       this.$emit('confirm', { startTime: this.start, endTime: this.end })
       this.show = false
     },
     onCalendarSelect(val) {
-      // console.log(val)
+      console.log('当前选择日期:', val)
       // const today = moment(new Date()).format('YYYY-MM-DD')
 
       if (val[0]) {
@@ -314,7 +393,9 @@ export default {
         let startDateSelect = moment(val[0]).format('YYYY-MM-DD')
         this.$refs.picker.setColumnValue(0, this.startTime)
         this.$refs.picker.setColumnValue(1, this.endTime)
-
+        if (this.dateLists) {
+          this.maxRange(startDateSelect)
+        }
         // console.log('columns:', this.columns)
         // console.log('columsToday:', this.columnsToday)
         this.setStartDate(startDateSelect)
@@ -354,10 +435,7 @@ export default {
         this.columnsToday[i].values = this.columns[i].values.filter(item => {
           // let startTimeValue = this.$refs.picker.getColumnValue(0).split(':')[0]
 
-          let startTimeValue = moment()
-            .add(1, 'h')
-            .format('HH:mm')
-            .split(':')[0]
+          let startTimeValue = moment().add(1, 'h').format('HH:mm').split(':')[0]
 
           if (item.split(':')[0] >= startTimeValue) {
             return true

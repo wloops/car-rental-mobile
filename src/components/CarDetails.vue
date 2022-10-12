@@ -14,8 +14,8 @@
           <div class="carName">{{ carName }}</div>
           <div class="carMsg">{{ carMsg }}</div>
         </div>
-        <!-- <date-time-section @click.native="showPicker"></date-time-section> -->
-        <date-time-section></date-time-section>
+        <date-time-section @click.native="showPicker"></date-time-section>
+        <!-- <date-time-section></date-time-section> -->
         <div style="height: 4rem"></div>
         <div class="footerBtn">
           <div class="carPrice">￥{{ carPrice }} <span>日均</span></div>
@@ -23,13 +23,13 @@
         </div>
       </template>
     </van-popup>
-    <!-- <tint-datetime-picker ref="tintPicker"></tint-datetime-picker> -->
+    <tint-datetime-picker ref="tintPicker"></tint-datetime-picker>
   </div>
 </template>
 
 <script>
 import DateTimeSection from '@/components/DateTimeSection.vue'
-// import TintDatetimePicker from '@/components/TintDatetimePicker.vue'
+import TintDatetimePicker from '@/components/TintDatetimePicker.vue'
 import { ImagePreview } from 'vant'
 import { queryVehicleImages } from '@/api/carInfo'
 import { BASE_DOMAIN } from '@/global/config'
@@ -37,7 +37,7 @@ export default {
   name: 'CarDetails',
   components: {
     DateTimeSection,
-    // TintDatetimePicker,
+    TintDatetimePicker,
   },
   props: {},
   data() {
@@ -73,6 +73,9 @@ export default {
       this.getVehicleImages()
       console.log('currentCarInfo::', this.currentCarInfo)
       this.checklogin()
+    },
+    showPicker() {
+      this.$refs.tintPicker.showView(this.currentCarInfo.carModel)
     },
     toConfirmOrder() {
       let memberID = window.localStorage.getItem('memberID')

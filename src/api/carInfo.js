@@ -37,3 +37,12 @@ export const queryVehicleImages = params => {
     params,
   })
 }
+
+// 查询当前选择车型的可选日期
+export const queryCarRentableDate = params => {
+  return request({
+    method: 'GET',
+    url: '/search/queryCarRentableDate',
+    params,
+  })
+}
