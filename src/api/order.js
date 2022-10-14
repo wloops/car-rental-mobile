@@ -42,6 +42,24 @@ export const setCreatOrder = params => {
   })
 }
 
+// 修改订单时间 自驾
+export const ZCbtnModifySelfDrivingOrderTime = data => {
+  return request({
+    method: 'POST',
+    url: '/insertReturn/ZCbtnModifySelfDrivingOrderTime',
+    data,
+  })
+}
+
+// 修改订单时间 代驾
+export const ZCbtnModifyValetDrivingOrderTime = data => {
+  return request({
+    method: 'POST',
+    url: '/insertReturn/ZCbtnModifyValetDrivingOrderTime',
+    data,
+  })
+}
+
 // (取消租车订单)ZCbtnCancelOrder
 export const setCancelOrder = params => {
   return request({

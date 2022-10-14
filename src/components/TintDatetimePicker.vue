@@ -1,5 +1,13 @@
 <template>
-  <van-popup v-model="show" position="top" safe-area-inset-bottom class="calendar" @closed="onCalendarConfirm" @opened="handleCalendarOpened">
+  <van-popup
+    v-model="show"
+    position="top"
+    safe-area-inset-bottom
+    class="calendar"
+    @opened="handleCalendarOpened"
+    transition-appear
+    get-container="body"
+  >
     <van-calendar
       ref="calendar"
       color="#ff7636"
@@ -31,7 +39,7 @@
             </div>
           </template>
         </van-picker>
-        <van-button block color="#ff7636" :disabled="isDisabled" @click="onCalendarConfirm">确定时间</van-button>
+        <van-button block color="#ff7636" :disabled="isDisabled" @click="onCalendarConfirm">{{ subBtnText }}</van-button>
       </div>
     </van-calendar>
   </van-popup>
@@ -39,11 +47,13 @@
 
 <script>
 import { queryCarRentableDate } from '@/api/carInfo'
+import { ZCbtnModifyValetDrivingOrderTime, ZCbtnModifySelfDrivingOrderTime } from '@/api/order'
 
 import DateTimeSection from '@/components/DateTimeSection.vue'
 import moment from 'moment'
 import { mapGetters, mapMutations } from 'vuex'
 import { nextTimeOf } from '@/utils'
+import { BASE_COMNAME } from '@/global/config'
 
 var _ = require('lodash')
 
@@ -62,6 +72,7 @@ export default {
   },
   data() {
     return {
+      subBtnText: '确定时间',
       // minDate: moment().subtract(90, 'day').toDate(),
       minDate: new Date(),
       defaultDate: [new Date(), moment().add(1, 'day').toDate()],
@@ -208,6 +219,7 @@ export default {
       endTime: 'getEndTime',
       startDate: 'getStartDate',
       endDate: 'getEndDate',
+      count: 'getDayToDay',
     }),
   },
   created() {
@@ -221,7 +233,7 @@ export default {
       setEndTime: 'setEndTime',
       setStartDate: 'setStartDate',
       setEndDate: 'setEndDate',
-      setCount: 'setCount',
+      // setCount: 'setCount',
     }),
     // 清除日历数据
     handleClearDate() {
@@ -237,23 +249,36 @@ export default {
       this.$refs.picker.setColumnValue(1, this.endTime)
       this.isDisabled = false
     },
-    showView(carModel) {
-      if (carModel) {
+    showView(data, type) {
+      if (type) {
         // TODO: 查询当前选择车型的可选日期
+        let carModel = type === 'filter' ? data.carModel : data.carType
         queryCarRentableDate({
           carModel: carModel,
         }).then(res => {
           console.log('查询当前选择车型的可选日期:', res.data)
           if (res.data.rs === '1') {
             this.dateLists = res.data.queryCarRentableDate
-            // let days = res.data.queryCarRentableDate_totalRecNum - 1
-            // this.maxDate = moment().add(days, 'day').toDate()
+            this.subBtnText = '修改时间'
+            if (type === 'change') {
+              this.changeTimeData = data
+              this.changeTimeFlag = true
+            }
             this.show = true
           }
         })
       } else {
         this.show = true
       }
+
+      // let defaultStartDate = moment().format('YYYY-MM-DD')
+      // let defaultEndDate = moment().add(1, 'day').format('YYYY-MM-DD')
+      // console.log('defaultStartDate:', defaultStartDate)
+      // console.log('defaultEndDate:', defaultEndDate)
+      // // let defaultEndDate = moment(val[1]).format('YYYY-MM-DD')
+      // this.setStartDate(defaultStartDate)
+      // this.setEndDate(defaultEndDate)
+      // this.handleClearDate()
     },
     handleBack() {
       if (this.isDisabled === true) {
@@ -379,8 +404,67 @@ export default {
 
       return ret
     },
+    formatStoreDate(date) {
+      // 格式化时间为 yyyyMMdd
+      if (date.indexOf('-') > -1) {
+        date = date.replace(/-/g, '')
+      } else if (date.indexOf(':') > -1) {
+        date = date.replace(/:/g, '') + '00'
+      }
+      return date
+    },
     onCalendarConfirm() {
-      this.$emit('confirm', { startTime: this.start, endTime: this.end })
+      // this.$emit('confirm', { startTime: this.start, endTime: this.end })
+      if (this.changeTimeFlag) {
+        console.log('执行-->修改订单时间')
+        console.log('修改时间:startDate', this.formatStoreDate(this.startDate))
+        console.log('修改时间:endDate', this.formatStoreDate(this.endDate))
+        console.log('修改时间:startTime', this.formatStoreDate(this.startTime))
+        console.log('修改时间:endTime', this.formatStoreDate(this.endTime))
+        console.log('修改时间:count', this.count)
+        console.log('changeTimeData:', this.changeTimeData)
+        // 代驾跟自驾订单分别调用不同的按钮
+        let reqData = {
+          saleCmpName: BASE_COMNAME,
+          srlIDForEngine: 'Splenwise微信预约点餐系统',
+          busiNameForEngine: '汽车租赁业务',
+          busiFunNameForEngine: '修改租车订单',
+          miniProcNameForEngine: '修改订单租车日期',
+          billNo: this.changeTimeData.billNo,
+          orderDate: this.formatStoreDate(this.changeTimeData.carUseTimeBegin),
+          orderEndDate: this.formatStoreDate(this.changeTimeData.carUseTimeEnd),
+          startDate: this.formatStoreDate(this.startDate),
+          endDate: this.formatStoreDate(this.endDate),
+          startTime: this.formatStoreDate(this.startTime),
+          endTime: this.formatStoreDate(this.endTime),
+          attr128LenValue1: this.changeTimeData.carType,
+        }
+        // 发送修改时间请求
+        // 请求成功后,关闭弹窗并让父组件(订单列表)刷新
+        if (this.changeTimeData.orderDriveType === '代驾') {
+          ZCbtnModifyValetDrivingOrderTime(reqData).then(res => {
+            console.log('代驾', res.data)
+            if (res.data.rs === '1') {
+              this.$toast.success('修改成功')
+              this.$emit('refresh')
+            }else{
+             this.$toast(res.data.rs)
+            }
+          })
+        } else {
+          reqData.miniProcNameForEngine = '修改订单租车日期-自驾订单'
+          ZCbtnModifySelfDrivingOrderTime(reqData).then(res => {
+            console.log('自驾', res.data)
+            if (res.data.rs === '1') {
+              this.$toast.success('修改成功')
+              this.$emit('refresh')
+            }else{
+             this.$toast(res.data.rs)
+            }
+          })
+        }
+        console.log('修改订单时间请求参数:', reqData)
+      }
       this.show = false
     },
     onCalendarSelect(val) {

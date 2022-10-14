@@ -532,7 +532,7 @@ export default {
       }
     },
     changeDataTime() {
-      this.$refs.tintPicker.showView(this.currentCarInfo.carModel)
+      this.$refs.tintPicker.showView(this.currentCarInfo, 'filter')
     },
   },
 }

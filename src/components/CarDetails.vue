@@ -75,7 +75,7 @@ export default {
       this.checklogin()
     },
     showPicker() {
-      this.$refs.tintPicker.showView(this.currentCarInfo.carModel)
+      this.$refs.tintPicker.showView(this.currentCarInfo, 'filter')
     },
     toConfirmOrder() {
       let memberID = window.localStorage.getItem('memberID')

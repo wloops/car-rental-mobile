@@ -1,39 +1,21 @@
 <template>
   <div class="OrdersList">
     <!-- description 展示描述信息 -->
-    <van-action-sheet
-      v-model="showDescription"
-      :actions="actions"
-      cancel-text="关闭"
-      :description="descriptionText"
-      get-container="body"
-    />
+    <van-action-sheet v-model="showDescription" :actions="actions" cancel-text="关闭" :description="descriptionText" get-container="body" />
     <div class="orderList">
       <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-        <van-list
-          v-model="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          @load="onLoad"
-        >
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
           <van-grid :gutter="15" :column-num="1">
             <van-grid-item v-for="item in list" :key="item">
               <div class="orderItem">
                 <div class="useStatus">
-                  <span
-                    >{{ item.orderDriveType
-                    }}<van-tag color="#f4f4f4" text-color="#adadad"
-                      >用车</van-tag
-                    ></span
-                  >
+                  <span>{{ item.orderDriveType }}<van-tag color="#f4f4f4" text-color="#adadad">用车</van-tag></span>
                   <span
                     :class="{
                       statusShow: item.tradeStatus === '2',
                       defaultStatusShow: item.tradeStatus !== '2',
                     }"
-                    >{{
-                      item.tradeStatus !== '2' ? item.orderStatusShow : '已取消'
-                    }}</span
+                    >{{ item.tradeStatus !== '2' ? item.orderStatusShow : '已取消' }}</span
                   >
                 </div>
                 <div class="orderInfo">
@@ -45,47 +27,24 @@
                     <span>{{ item.carUseBeginTime }}</span>
                   </p>
                   <p>
-                    还车时间 : {{ item.carUseTimeEnd }}
-                    <span>{{ item.carUseEndTime }}</span> （{{
-                      item.useDays
-                    }}天）
+                    还车时间 : {{ item.carUseTimeEnd }} <span>{{ item.carUseEndTime }}</span> （{{ item.useDays }}天）
                   </p>
                   <p>联系人 : {{ item.receiverName }}</p>
                   <p>联系电话 : {{ item.receiverMobile }}</p>
                   <p>送车地址 : {{ item.receiverAddress }}</p>
                   <p>订单金额 : ￥{{ item.orderTotalPrice }}</p>
                   <div class="orderBtn" v-if="item.tradeStatus !== '2'">
-                    <template
-                      v-if="
-                        item.orderStatusShow !== '已提车' &&
-                        item.orderStatusShow !== '已还车'
-                      "
-                    >
-                      <van-button
-                        class="cancelOrder"
-                        size="small"
-                        type="warning"
-                        @click="cancelOrder(item)"
-                        >取消订单</van-button
-                      >
+                    <template v-if="item.orderStatusShow === '未提车'">
+                      <van-button class="feeDetailed" size="small" type="info" @click="changeTime(item)">修改时间</van-button>
+                    </template>
+                    <template v-if="item.orderStatusShow !== '已提车' && item.orderStatusShow !== '已还车'">
+                      <van-button class="cancelOrder" size="small" type="warning" @click="cancelOrder(item)">取消订单</van-button>
                     </template>
                     <template v-if="item.driver">
-                      <van-button
-                        class="checkDriver"
-                        size="small"
-                        type="primary"
-                        @click="checkDriver(item)"
-                        >查看司机</van-button
-                      >
+                      <van-button class="checkDriver" size="small" type="primary" @click="checkDriver(item)">查看司机</van-button>
                     </template>
                     <template v-if="item.orderStatusShow === '已还车'">
-                      <van-button
-                        class="feeDetailed"
-                        size="small"
-                        type="primary"
-                        @click="feeDetailed(item)"
-                        >费用明细</van-button
-                      >
+                      <van-button class="feeDetailed" size="small" type="primary" @click="feeDetailed(item)">费用明细</van-button>
                     </template>
                   </div>
                 </div>
@@ -96,21 +55,18 @@
         <div style="height: 3rem"></div>
       </van-pull-refresh>
     </div>
+    <tint-datetime-picker ref="tintPicker" @refresh="onRefresh"></tint-datetime-picker>
   </div>
 </template>
 
 <script>
-import {
-  getNotOutOrder,
-  getAllOrder,
-  setCancelOrder,
-  getOrderFeeDetailed,
-} from '@/api/order'
+import { getNotOutOrder, getAllOrder, setCancelOrder, getOrderFeeDetailed } from '@/api/order'
+import TintDatetimePicker from '@/components/TintDatetimePicker.vue'
 import { BASE_COMNAME } from '@/global/config'
 import moment from 'moment'
 export default {
   name: 'OrdersList',
-  components: {},
+  components: { TintDatetimePicker },
   props: ['thisTab'],
   data() {
     return {
@@ -294,8 +250,7 @@ export default {
 
         console.log('orders(全部) list', this.list, 'page:', this.page)
         this.loading = false
-        this.finished =
-          this.list.length >= res.data.queryMyAllCarOrders_totalRecNum
+        this.finished = this.list.length >= res.data.queryMyAllCarOrders_totalRecNum
       })
     },
     loadNotOutOrder() {
@@ -311,9 +266,11 @@ export default {
         this.totalNum = res.data.queryMyCarOrdersOfNoTravel_totalRecNum
         console.log('orders(未出行) list', this.list, 'page:', this.page)
         this.loading = false
-        this.finished =
-          this.list.length >= res.data.queryMyCarOrdersOfNoTravel_totalRecNum
+        this.finished = this.list.length >= res.data.queryMyCarOrdersOfNoTravel_totalRecNum
       })
+    },
+    changeTime(item) {
+      this.$refs.tintPicker.showView(item, 'change')
     },
   },
 }
