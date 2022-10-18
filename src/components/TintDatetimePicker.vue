@@ -1,9 +1,11 @@
 <template>
   <van-popup
     v-model="show"
+    v-if="show"
     position="top"
     safe-area-inset-bottom
     class="calendar"
+    @closed="handleClearDate"
     @opened="handleCalendarOpened"
     transition-appear
     get-container="body"
@@ -251,6 +253,7 @@ export default {
     },
     showView(data, type) {
       if (type) {
+        console.log('data:', data)
         // TODO: 查询当前选择车型的可选日期
         let carModel = type === 'filter' ? data.carModel : data.carType
         queryCarRentableDate({
@@ -442,13 +445,14 @@ export default {
         // 发送修改时间请求
         // 请求成功后,关闭弹窗并让父组件(订单列表)刷新
         if (this.changeTimeData.orderDriveType === '代驾') {
+          reqData.driver = this.changeTimeData.driver
           ZCbtnModifyValetDrivingOrderTime(reqData).then(res => {
             console.log('代驾', res.data)
             if (res.data.rs === '1') {
               this.$toast.success('修改成功')
               this.$emit('refresh')
-            }else{
-             this.$toast(res.data.rs)
+            } else {
+              this.$toast(res.data.rs)
             }
           })
         } else {
@@ -458,8 +462,8 @@ export default {
             if (res.data.rs === '1') {
               this.$toast.success('修改成功')
               this.$emit('refresh')
-            }else{
-             this.$toast(res.data.rs)
+            } else {
+              this.$toast(res.data.rs)
             }
           })
         }
