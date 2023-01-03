@@ -176,7 +176,7 @@ Vue.prototype.wxConfig = function () {
   var url = encodeURIComponent(location.href.split('#')[0])
   var that = this
   this.$http
-    .get('http://www.paytunnel.cn/carRentalServerRH/getJSSDKSignature?url=' + url)
+    .get('https://www.paytunnel.cn/carRentalServerRH/getJSSDKSignature?url=' + url)
     .then(function (res) {
       var appId = res.data.appId
       var timestamp = res.data.timestamp

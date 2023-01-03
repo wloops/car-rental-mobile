@@ -58,9 +58,9 @@ if (process.env.NODE_ENV === 'development') {
   BASE_COMNAME = window.localStorage.getItem('REALUSERNAME')
 } else if (process.env.NODE_ENV === 'production') {
   // 测试环境
-  BASE_URL = 'http://www.paytunnel.cn/carRentalServerRH'
-  BASE_DOMAIN = 'http://www.paytunnel.cn'
-  BASE_TO_HREF = 'http://www.paytunnel.cn/carRentalAdmin'
+  BASE_URL = 'https://www.paytunnel.cn/carRentalServerRH'
+  BASE_DOMAIN = 'https://www.paytunnel.cn'
+  BASE_TO_HREF = 'https://www.paytunnel.cn/carRentalAdmin'
   // BASE_TO_HREF =
   //   'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx24b187addab6fbae&redirect_uri=http%3A%2F%2Fwww.paytunnel.cn%2FcarRentalAdmin%2F%3fappid%3dwx24b187addab6fbae%26free=no%26REALTERMTYPE=%e5%be%ae%e4%bf%a1%e9%a2%84%e7%ba%a6%e7%82%b9%e9%a4%90%e5%85%ac%e4%bc%97%e5%8f%b7%26REALUSERNAME=%E5%B9%BF%E5%B7%9E%E7%9D%BF%E9%A2%A2%E8%BD%AF%E4%BB%B6%E6%8A%80%E6%9C%AF%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8&response_type=code&scope=snsapi_userinfo&state=STATE&connect_redirect=1#wechat_redirect'
   // 生产环境
